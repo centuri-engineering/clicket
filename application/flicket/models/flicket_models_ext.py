@@ -8,8 +8,8 @@ import os
 
 from application import app, db
 from application.flicket.scripts.flicket_upload import UploadAttachment
-from application.flicket.models.flicket_models import FlicketTicket, FlicketStatus, FlicketPriority, FlicketCategory, \
-    FlicketSubscription, FlicketHistory, FlicketUploads
+from application.flicket.models.flicket_models import (FlicketTicket, FlicketStatus, FlicketPriority, FlicketCategory,
+    FlicketSubscription, FlicketHistory, FlicketUploads)
 
 
 class FlicketTicketExt:
