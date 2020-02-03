@@ -127,19 +127,23 @@ from application.flicket.models.flicket_models import FlicketUploads
 from application.flicket_api.views.auth import token_auth
 
 
-@bp_api.route(api_url + 'upload/<int:id>', methods=['GET'])
+@bp_api.route(api_url + "upload/<int:id>", methods=["GET"])
 @token_auth.login_required
 def get_upload(id):
     return jsonify(FlicketUploads.query.get_or_404(id).to_dict())
 
 
-@bp_api.route(api_url + 'uploads/', methods=['GET'])
-@bp_api.route(api_url + 'uploads/<int:page>/', methods=['GET'])
+@bp_api.route(api_url + "uploads/", methods=["GET"])
+@bp_api.route(api_url + "uploads/<int:page>/", methods=["GET"])
 @token_auth.login_required
 def get_uploads(page=1):
     # todo: add filtering
 
     uploads = FlicketUploads.query
-    per_page = min(request.args.get('per_page', app.config['posts_per_page'], type=int), 100)
-    data = FlicketUploads.to_collection_dict(uploads, page, per_page, 'bp_api.get_uploads')
+    per_page = min(
+        request.args.get("per_page", app.config["posts_per_page"], type=int), 100
+    )
+    data = FlicketUploads.to_collection_dict(
+        uploads, page, per_page, "bp_api.get_uploads"
+    )
     return jsonify(data)

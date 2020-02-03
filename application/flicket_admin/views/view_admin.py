@@ -32,19 +32,21 @@ from . import admin_bp
 
 principals = Principal(app)
 # define flicket_admin role need
-admin_only = RoleNeed('flicket_admin')
+admin_only = RoleNeed("flicket_admin")
 admin_permission = Permission(admin_only)
 
 
 def create_user(username, password, email=None, name=None, job_title=None, locale=None):
     password = hash_password(password)
-    register = FlicketUser(username=username,
-                           email=email,
-                           name=name,
-                           password=password,
-                           job_title=job_title,
-                           date_added=datetime.datetime.now(),
-                           locale=locale)
+    register = FlicketUser(
+        username=username,
+        email=email,
+        name=name,
+        password=password,
+        job_title=job_title,
+        date_added=datetime.datetime.now(),
+        locale=locale,
+    )
     db.session.add(register)
     db.session.commit()
 
@@ -55,63 +57,70 @@ def on_identity_loaded(sender, identity):
     # set the identity user object
     identity.user = current_user
     # Add the UserNeed to the identity
-    if hasattr(current_user, 'id'):
+    if hasattr(current_user, "id"):
         identity.provides.add(UserNeed(current_user.id))
 
     # Assuming the User model has a list of groups, update the
     # identity with the groups that the user provides
-    if hasattr(current_user, 'flicket_groups'):
+    if hasattr(current_user, "flicket_groups"):
         the_user = FlicketUser.query.filter_by(id=current_user.id).first()
         for g in the_user.flicket_groups:
-            identity.provides.add(RoleNeed('{}'.format(g.group_name)))
+            identity.provides.add(RoleNeed("{}".format(g.group_name)))
 
 
-@admin_bp.route(app.config['ADMINHOME'])
+@admin_bp.route(app.config["ADMINHOME"])
 @login_required
 @admin_permission.require(http_exception=403)
 def index():
     # noinspection PyUnresolvedReferences
-    return render_template('admin.html', title='Admin')
+    return render_template("admin.html", title="Admin")
 
 
 # shows all users
-@admin_bp.route(app.config['ADMINHOME'] + 'users/', methods=['GET', 'POST'])
-@admin_bp.route(app.config['ADMINHOME'] + 'users/<int:page>', methods=['GET', 'POST'])
+@admin_bp.route(app.config["ADMINHOME"] + "users/", methods=["GET", "POST"])
+@admin_bp.route(app.config["ADMINHOME"] + "users/<int:page>", methods=["GET", "POST"])
 @login_required
 @admin_permission.require(http_exception=403)
 def users(page=1):
     users = FlicketUser.query.order_by(FlicketUser.username)
-    users = users.paginate(page, app.config['posts_per_page'])
+    users = users.paginate(page, app.config["posts_per_page"])
 
     # noinspection PyUnresolvedReferences
-    return render_template('admin_users.html', title='Users', users=users)
+    return render_template("admin_users.html", title="Users", users=users)
 
 
 # add user
-@admin_bp.route(app.config['ADMINHOME'] + 'add_user/', methods=['GET', 'POST'])
+@admin_bp.route(app.config["ADMINHOME"] + "add_user/", methods=["GET", "POST"])
 @login_required
 @admin_permission.require(http_exception=403)
 def add_user():
     form = AddUserForm()
     if form.validate_on_submit():
-        create_user(form.username.data,
-                    form.password.data,
-                    email=form.email.data,
-                    name=form.name.data,
-                    job_title=form.job_title.data,
-                    locale=form.locale.data)
-        flash(gettext(f'You have successfully registered new user "{form.username.data}".'), category='success')
-        return redirect(url_for('admin_bp.users'))
+        create_user(
+            form.username.data,
+            form.password.data,
+            email=form.email.data,
+            name=form.name.data,
+            job_title=form.job_title.data,
+            locale=form.locale.data,
+        )
+        flash(
+            gettext(
+                f'You have successfully registered new user "{form.username.data}".'
+            ),
+            category="success",
+        )
+        return redirect(url_for("admin_bp.users"))
     # noinspection PyUnresolvedReferences
-    return render_template('admin_user.html', title='Add User', form=form)
+    return render_template("admin_user.html", title="Add User", form=form)
 
 
 # edit user
-@admin_bp.route(app.config['ADMINHOME'] + 'edit_user/', methods=['GET', 'POST'])
+@admin_bp.route(app.config["ADMINHOME"] + "edit_user/", methods=["GET", "POST"])
 @login_required
 @admin_permission.require(http_exception=403)
 def edit_user():
-    _id = request.args.get('id')
+    _id = request.args.get("id")
     user = FlicketUser.query.filter_by(id=_id).first()
     if user:
         form = EditUserForm()
@@ -120,12 +129,12 @@ def edit_user():
             if user.username != form.username.data:
                 query = FlicketUser.query.filter_by(username=form.username.data)
                 if query.count() > 0:
-                    flash(gettext('Username already exists'), category='warning')
+                    flash(gettext("Username already exists"), category="warning")
                 else:
                     # change the username.
                     user.username = form.username.data
             # Don't change the password if nothing was entered.
-            if form.password.data != '':
+            if form.password.data != "":
                 user.password = hash_password(form.password.data)
 
             user.email = form.email.data
@@ -142,8 +151,8 @@ def edit_user():
                 group_id = FlicketGroup.query.filter_by(id=g).first()
                 group_id.users.append(user)
             db.session.commit()
-            flash(gettext(f"User {user.username} edited."), category='success')
-            return redirect(url_for('admin_bp.edit_user', id=_id))
+            flash(gettext(f"User {user.username} edited."), category="success")
+            return redirect(url_for("admin_bp.edit_user", id=_id))
 
         # populate form with form data retrieved from database.
         form.user_id.data = user.id
@@ -157,116 +166,123 @@ def edit_user():
             groups.append(g.id)
         form.groups.data = groups
     else:
-        flash(gettext("Could not find user."), category='warning')
-        return redirect(url_for('admin_bp.index'))
+        flash(gettext("Could not find user."), category="warning")
+        return redirect(url_for("admin_bp.index"))
 
     # noinspection PyUnresolvedReferences
-    return render_template('admin_user.html',
-                           title='Edit User',
-                           admin_edit=True,
-                           form=form, user=user)
+    return render_template(
+        "admin_user.html", title="Edit User", admin_edit=True, form=form, user=user
+    )
 
 
 # Delete user
-@admin_bp.route(app.config['ADMINHOME'] + 'delete_user/', methods=['GET', 'POST'])
+@admin_bp.route(app.config["ADMINHOME"] + "delete_user/", methods=["GET", "POST"])
 @login_required
 @admin_permission.require(http_exception=403)
 def delete_user():
     form = EnterPasswordForm()
-    id = request.args.get('id')
+    id = request.args.get("id")
     user_details = FlicketUser.query.filter_by(id=id).first()
 
     # we won't ever delete the flicket_admin user (id = 1)
-    if id == '1':
-        flash(gettext('Can\'t delete default flicket_admin user.'), category='warning')
-        return redirect(url_for('admin_bp.index'))
+    if id == "1":
+        flash(gettext("Can't delete default flicket_admin user."), category="warning")
+        return redirect(url_for("admin_bp.index"))
 
     if form.validate_on_submit():
         # delete the user.
-        flash(gettext(f'Deleted user {user_details.username}s'), category='success')
+        flash(gettext(f"Deleted user {user_details.username}s"), category="success")
         db.session.delete(user_details)
         db.session.commit()
-        return redirect(url_for('admin_bp.users'))
+        return redirect(url_for("admin_bp.users"))
     # populate form with logged in user details
     form.id.data = g.user.id
     # noinspection PyUnresolvedReferences
-    return render_template('admin_delete_user.html', title='Delete user',
-                           user_details=user_details, form=form)
+    return render_template(
+        "admin_delete_user.html",
+        title="Delete user",
+        user_details=user_details,
+        form=form,
+    )
 
 
 # Add new groups
-@admin_bp.route(app.config['ADMINHOME'] + 'groups/', methods=['GET', 'POST'])
+@admin_bp.route(app.config["ADMINHOME"] + "groups/", methods=["GET", "POST"])
 @login_required
 @admin_permission.require(http_exception=403)
 def groups():
     form = AddGroupForm()
     groups = FlicketGroup.query.all()
     if form.validate_on_submit():
-        add_group = FlicketGroup(
-            group_name=form.group_name.data
-        )
+        add_group = FlicketGroup(group_name=form.group_name.data)
         db.session.add(add_group)
         db.session.commit()
-        flash(gettext(f'New group "{form.group_name.data}" added.'), category='success')
-        return redirect(url_for('admin_bp.groups'))
+        flash(gettext(f'New group "{form.group_name.data}" added.'), category="success")
+        return redirect(url_for("admin_bp.groups"))
 
     # noinspection PyUnresolvedReferences
-    return render_template('admin_groups.html', title='Groups', form=form, groups=groups)
+    return render_template(
+        "admin_groups.html", title="Groups", form=form, groups=groups
+    )
 
 
 # Edit groups
-@admin_bp.route(app.config['ADMINHOME'] + 'edit_group/', methods=['GET', 'POST'])
+@admin_bp.route(app.config["ADMINHOME"] + "edit_group/", methods=["GET", "POST"])
 @login_required
 @admin_permission.require(http_exception=403)
 def admin_edit_group():
     form = AddGroupForm()
-    id = request.args.get('id')
+    id = request.args.get("id")
     group = FlicketGroup.query.filter_by(id=id).first()
 
     # if group can't be found in database.
     if not group:
-        flash(gettext(f'Could not find group {group.group_name}'), category='warning')
-        return redirect(url_for('admin_bp.index'))
+        flash(gettext(f"Could not find group {group.group_name}"), category="warning")
+        return redirect(url_for("admin_bp.index"))
 
     # prevent editing of flicket_admin group name as this is hard coded into flicket_admin view permissions.
-    if group.group_name == app.config['ADMIN_GROUP_NAME']:
-        flash(gettext(f'Can\'t edit group {app.config["ADMIN_GROUP_NAME"]}s.'), category='warning')
-        return redirect(url_for('admin_bp.index'))
+    if group.group_name == app.config["ADMIN_GROUP_NAME"]:
+        flash(
+            gettext(f'Can\'t edit group {app.config["ADMIN_GROUP_NAME"]}s.'),
+            category="warning",
+        )
+        return redirect(url_for("admin_bp.index"))
 
     if form.validate_on_submit():
         group.group_name = form.group_name.data
         db.session.commit()
-        flash(gettext(f'Group name changed to {group.group_name}.'), category='success')
-        return redirect(url_for('admin_bp.groups'))
+        flash(gettext(f"Group name changed to {group.group_name}."), category="success")
+        return redirect(url_for("admin_bp.groups"))
     form.group_name.data = group.group_name
 
     # noinspection PyUnresolvedReferences
-    return render_template('admin_edit_group.html', title='Edit Group', form=form)
+    return render_template("admin_edit_group.html", title="Edit Group", form=form)
 
 
 # Delete group
-@admin_bp.route(app.config['ADMINHOME'] + 'delete_group/', methods=['GET', 'POST'])
+@admin_bp.route(app.config["ADMINHOME"] + "delete_group/", methods=["GET", "POST"])
 @login_required
 @admin_permission.require(http_exception=403)
 def admin_delete_group():
     form = EnterPasswordForm()
-    id = request.args.get('id')
+    id = request.args.get("id")
     group_details = FlicketGroup.query.filter_by(id=id).first()
 
     # we won't ever delete the flicket_admin group (id = 1)
-    if id == '1':
-        flash(gettext('Can\'t delete default flicket_admin group.'), category='warning')
-        return redirect(url_for('admin_bp.index'))
+    if id == "1":
+        flash(gettext("Can't delete default flicket_admin group."), category="warning")
+        return redirect(url_for("admin_bp.index"))
 
     if form.validate_on_submit():
         # delete the group.
-        flash(gettext(f'Deleted group {group_details.group_name}s'), category="info")
+        flash(gettext(f"Deleted group {group_details.group_name}s"), category="info")
         db.session.delete(group_details)
         db.session.commit()
-        return redirect(url_for('admin_bp.groups'))
+        return redirect(url_for("admin_bp.groups"))
     # populate form with logged in user details
     form.id.data = g.user.id
-    title = gettext('Delete Group')
+    title = gettext("Delete Group")
     # noinspection PyUnresolvedReferences
-    return render_template('admin_delete_group.html', title=title,
-                           group_details=group_details, form=form)
+    return render_template(
+        "admin_delete_group.html", title=title, group_details=group_details, form=form
+    )

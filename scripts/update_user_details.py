@@ -15,24 +15,27 @@ class TotalUserPosts(Command):
 
     def run(self):
 
-        print('!!! Warning !!!!')
-        print('This script should not be run whilst the server is running.')
-        print('Calculated totals could change.')
-        input('Enter to continue.')
+        print("!!! Warning !!!!")
+        print("This script should not be run whilst the server is running.")
+        print("Calculated totals could change.")
+        input("Enter to continue.")
         users = FlicketUser.query.all()
         all_good = True
         for user in users:
             user_details_total = FlicketUserDetails(user).num_posts
             if user_details_total != user.total_posts:
-                print("{} had a calculated post count of {} and a table count of {}. This will be updated.".format(
-                    user.username, user_details_total, user.total_posts))
+                print(
+                    "{} had a calculated post count of {} and a table count of {}. This will be updated.".format(
+                        user.username, user_details_total, user.total_posts
+                    )
+                )
                 user.total_posts = user_details_total
                 db.session.commit()
                 all_good = False
         if all_good:
-            print('No updates were required.')
+            print("No updates were required.")
         else:
-            print('Updates were made.')
+            print("Updates were made.")
 
 
 class TotalUserAssigned(Command):
@@ -42,21 +45,24 @@ class TotalUserAssigned(Command):
 
     def run(self):
 
-        print('!!! Warning !!!!')
-        print('This script should not be run whilst the server is running.')
-        print('Calculated totals could change.')
-        input('Enter to continue.')
+        print("!!! Warning !!!!")
+        print("This script should not be run whilst the server is running.")
+        print("Calculated totals could change.")
+        input("Enter to continue.")
         users = FlicketUser.query.all()
         all_good = True
         for user in users:
             user_details_total = FlicketUserDetails(user).num_assigned
             if user_details_total != user.total_assigned:
-                print("{} had a calculated assigned count of {} and a table count of {}. This will be updated.".format(
-                    user.username, user_details_total, user.total_posts))
+                print(
+                    "{} had a calculated assigned count of {} and a table count of {}. This will be updated.".format(
+                        user.username, user_details_total, user.total_posts
+                    )
+                )
                 user.total_assigned = user_details_total
                 db.session.commit()
                 all_good = False
         if all_good:
-            print('No updates were required.')
+            print("No updates were required.")
         else:
-            print('Updates were made.')
+            print("Updates were made.")

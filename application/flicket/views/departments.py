@@ -14,8 +14,10 @@ from application.flicket.models.flicket_models import FlicketDepartment
 
 
 # create ticket
-@flicket_bp.route(app.config['FLICKET'] + 'departments/', methods=['GET', 'POST'])
-@flicket_bp.route(app.config['FLICKET'] + 'departments/<int:page>/', methods=['GET', 'POST'])
+@flicket_bp.route(app.config["FLICKET"] + "departments/", methods=["GET", "POST"])
+@flicket_bp.route(
+    app.config["FLICKET"] + "departments/<int:page>/", methods=["GET", "POST"]
+)
 @login_required
 def departments(page=1):
     form = DepartmentForm()
@@ -26,21 +28,29 @@ def departments(page=1):
         add_department = FlicketDepartment(department=form.department.data)
         db.session.add(add_department)
         db.session.commit()
-        flash(gettext(f'New department "{form.department.data}" added.'), category='success')
-        return redirect(url_for('flicket_bp.departments'))
+        flash(
+            gettext(f'New department "{form.department.data}" added.'),
+            category="success",
+        )
+        return redirect(url_for("flicket_bp.departments"))
 
-    _departments = query.paginate(page, app.config['posts_per_page'])
+    _departments = query.paginate(page, app.config["posts_per_page"])
 
-    title = gettext('Departments')
+    title = gettext("Departments")
 
-    return render_template('flicket_departments.html',
-                           title=title,
-                           form=form,
-                           page=page,
-                           departments=_departments)
+    return render_template(
+        "flicket_departments.html",
+        title=title,
+        form=form,
+        page=page,
+        departments=_departments,
+    )
 
 
-@flicket_bp.route(app.config['FLICKET'] + 'department_edit/<int:department_id>/', methods=['GET', 'POST'])
+@flicket_bp.route(
+    app.config["FLICKET"] + "department_edit/<int:department_id>/",
+    methods=["GET", "POST"],
+)
 @login_required
 def department_edit(department_id=False):
     if department_id:
@@ -52,14 +62,15 @@ def department_edit(department_id=False):
             query.department = form.department.data
             db.session.commit()
             flash(gettext('Department "%(value)s" edited.', value=form.department.data))
-            return redirect(url_for('flicket_bp.departments'))
+            return redirect(url_for("flicket_bp.departments"))
 
         form.department.data = query.department
 
-        return render_template('flicket_department_edit.html',
-                               title='Edit Department',
-                               form=form,
-                               department=query
-                               )
+        return render_template(
+            "flicket_department_edit.html",
+            title="Edit Department",
+            form=form,
+            department=query,
+        )
 
-    return redirect(url_for('flicket_bp.departments'))
+    return redirect(url_for("flicket_bp.departments"))

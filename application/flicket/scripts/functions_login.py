@@ -10,11 +10,13 @@ from flask_babel import gettext
 
 from application.flicket.models.flicket_user import FlicketUser
 
-password_requirements = gettext('Passwords shall adhere to the following:<br>'
-                                '1. Be a minimum of 8 characters.<br>'
-                                '2. Contain at least one digit.<br>'
-                                '3. Contain at least one upper and lower case character.<br>'
-                                '4. Not contain your username.<br>')
+password_requirements = gettext(
+    "Passwords shall adhere to the following:<br>"
+    "1. Be a minimum of 8 characters.<br>"
+    "2. Contain at least one digit.<br>"
+    "3. Contain at least one upper and lower case character.<br>"
+    "4. Not contain your username.<br>"
+)
 
 
 def check_password_format(password, username, email):
@@ -26,7 +28,9 @@ def check_password_format(password, username, email):
     :param email:
     :return: True if ok
     """
-    if not ((any(s.isupper() for s in password)) and (any(s.islower() for s in password))):
+    if not (
+        (any(s.isupper() for s in password)) and (any(s.islower() for s in password))
+    ):
         return False
     if len(password) < 8:
         return False
@@ -46,7 +50,7 @@ def check_email_format(email):
     :param email:
     :return: True if ok
     """
-    email_regex = re.compile(r'([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+(\.[a-zA-Z]{2,4}))')
+    email_regex = re.compile(r"([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+(\.[a-zA-Z]{2,4}))")
     if not email_regex.match(email):
         return False
     return True
@@ -74,7 +78,7 @@ def is_registered_password_correct(username, password):
 
     user = FlicketUser.query.filter_by(username=username).first()
     hashed = user.password
-    password = password.encode('utf-8')
+    password = password.encode("utf-8")
 
     if bcrypt.hashpw(password, hashed) == hashed:
         return True

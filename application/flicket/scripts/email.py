@@ -59,10 +59,20 @@ class FlicketMail:
         # remove user who actually replied.
         recipients = [r for r in recipients if r != user.email]
         if len(recipients) > 0:
-            title = 'Ticket #{} - {} has new replies.'.format(ticket.id_zfill, ticket.title)
-            ticket_url = app.config['base_url'] + url_for('flicket_bp.ticket_view', ticket_id=ticket.id)
-            html_body = render_template('email_ticket_replies.html', title=title, number=ticket.id_zfill,
-                                        ticket_url=ticket_url, ticket=ticket, reply=reply)
+            title = "Ticket #{} - {} has new replies.".format(
+                ticket.id_zfill, ticket.title
+            )
+            ticket_url = app.config["base_url"] + url_for(
+                "flicket_bp.ticket_view", ticket_id=ticket.id
+            )
+            html_body = render_template(
+                "email_ticket_replies.html",
+                title=title,
+                number=ticket.id_zfill,
+                ticket_url=ticket_url,
+                ticket=ticket,
+                reply=reply,
+            )
 
             self.send_email(title, self.sender, recipients, html_body)
 
@@ -73,10 +83,18 @@ class FlicketMail:
         """
 
         recipients = ticket.get_subscriber_emails()
-        title = 'Ticket #{} - {} has been assigned.'.format(ticket.id_zfill, ticket.title)
-        ticket_url = app.config['base_url'] + url_for('flicket_bp.ticket_view', ticket_id=ticket.id)
-        html_body = render_template('email_ticket_assign.html', ticket=ticket, number=ticket.id_zfill,
-                                    ticket_url=ticket_url)
+        title = "Ticket #{} - {} has been assigned.".format(
+            ticket.id_zfill, ticket.title
+        )
+        ticket_url = app.config["base_url"] + url_for(
+            "flicket_bp.ticket_view", ticket_id=ticket.id
+        )
+        html_body = render_template(
+            "email_ticket_assign.html",
+            ticket=ticket,
+            number=ticket.id_zfill,
+            ticket_url=ticket_url,
+        )
 
         self.send_email(title, self.sender, recipients, html_body)
 
@@ -89,10 +107,18 @@ class FlicketMail:
         """
 
         recipients = ticket.get_subscriber_emails()
-        title = 'Ticket #{} - {} has changed department and/or category.'.format(ticket.id_zfill, ticket.title)
-        ticket_url = app.config['base_url'] + url_for('flicket_bp.ticket_view', ticket_id=ticket.id)
-        html_body = render_template('email_ticket_department_category.html', ticket=ticket, number=ticket.id_zfill,
-                                    ticket_url=ticket_url)
+        title = "Ticket #{} - {} has changed department and/or category.".format(
+            ticket.id_zfill, ticket.title
+        )
+        ticket_url = app.config["base_url"] + url_for(
+            "flicket_bp.ticket_view", ticket_id=ticket.id
+        )
+        html_body = render_template(
+            "email_ticket_department_category.html",
+            ticket=ticket,
+            number=ticket.id_zfill,
+            ticket_url=ticket_url,
+        )
 
         self.send_email(title, self.sender, recipients, html_body)
 
@@ -103,10 +129,18 @@ class FlicketMail:
         """
 
         recipients = ticket.get_subscriber_emails()
-        title = 'Ticket #{} - {} has been released.'.format(ticket.id_zfill, ticket.title)
-        ticket_url = app.config['base_url'] + url_for('flicket_bp.ticket_view', ticket_id=ticket.id)
-        html_body = render_template('email_ticket_release.html', ticket=ticket, number=ticket.id_zfill,
-                                    ticket_url=ticket_url)
+        title = "Ticket #{} - {} has been released.".format(
+            ticket.id_zfill, ticket.title
+        )
+        ticket_url = app.config["base_url"] + url_for(
+            "flicket_bp.ticket_view", ticket_id=ticket.id
+        )
+        html_body = render_template(
+            "email_ticket_release.html",
+            ticket=ticket,
+            number=ticket.id_zfill,
+            ticket_url=ticket_url,
+        )
 
         self.send_email(title, self.sender, recipients, html_body)
 
@@ -117,9 +151,13 @@ class FlicketMail:
         """
 
         recipients = ticket.get_subscriber_emails()
-        title = 'Ticket #{} - {} has been closed.'.format(ticket.id_zfill, ticket.title)
-        ticket_url = app.config['base_url'] + url_for('flicket_bp.ticket_view', ticket_id=ticket.id)
-        html_body = render_template('email_ticket_close.html', ticket=ticket, ticket_url=ticket_url)
+        title = "Ticket #{} - {} has been closed.".format(ticket.id_zfill, ticket.title)
+        ticket_url = app.config["base_url"] + url_for(
+            "flicket_bp.ticket_view", ticket_id=ticket.id
+        )
+        html_body = render_template(
+            "email_ticket_close.html", ticket=ticket, ticket_url=ticket_url
+        )
 
         self.send_email(title, self.sender, recipients, html_body)
 
@@ -131,9 +169,12 @@ class FlicketMail:
         """
 
         recipient = [user.email]
-        title = 'Outstanding Ticket Notifications'
-        html_body = render_template('email_ticket_not_closed.html', tickets=tickets,
-                                    title="Tickets Still Awaiting Resolution")
+        title = "Outstanding Ticket Notifications"
+        html_body = render_template(
+            "email_ticket_not_closed.html",
+            tickets=tickets,
+            title="Tickets Still Awaiting Resolution",
+        )
 
         self.send_email(title, self.sender, recipient, html_body)
 
@@ -146,8 +187,10 @@ class FlicketMail:
         """
 
         recipient = [user.email]
-        title = 'Password Reset'
-        html_body = render_template('email_password_reset.html', title=title, new_password=new_password)
+        title = "Password Reset"
+        html_body = render_template(
+            "email_password_reset.html", title=title, new_password=new_password
+        )
 
         self.send_email(title, self.sender, recipient, html_body)
 
@@ -156,9 +199,9 @@ class FlicketMail:
         :return:
         """
 
-        html_body = render_template('email_test.html')
+        html_body = render_template("email_test.html")
 
-        self.send_email('Flicket Test Email', self.sender, recipients, html_body)
+        self.send_email("Flicket Test Email", self.sender, recipients, html_body)
 
     @send_async_email
     def send_email(self, subject, sender, recipients, html_body):
@@ -172,7 +215,9 @@ class FlicketMail:
         :return: nowt
         """
 
-        if not app.config['MAIL_SUPPRESS_SEND']:
+        if not app.config["MAIL_SUPPRESS_SEND"]:
             with app.app_context():
-                message = Message(subject, sender=sender, recipients=recipients, html=html_body)
+                message = Message(
+                    subject, sender=sender, recipients=recipients, html=html_body
+                )
                 self.mail.send(message)

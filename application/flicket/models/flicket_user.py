@@ -18,45 +18,50 @@ from application.flicket.models import Base
 from application.flicket_api.scripts.paginated_api import PaginatedAPIMixin
 
 user_field_size = {
-    'username_min': 4,
-    'username_max': 24,
-    'name_min': 4,
-    'name_max': 60,
-    'email_min': 6,
-    'email_max': 60,
-    'password_min': 6,
-    'password_max': 60,
-    'group_min': 3,
-    'group_max': 64,
-    'job_title': 64,
-    'avatar': 64
+    "username_min": 4,
+    "username_max": 24,
+    "name_min": 4,
+    "name_max": 60,
+    "email_min": 6,
+    "email_max": 60,
+    "password_min": 6,
+    "password_max": 60,
+    "group_min": 3,
+    "group_max": 64,
+    "job_title": 64,
+    "avatar": 64,
 }
 
-flicket_groups = db.Table('flicket_groups',
-                          db.Column('user_id', db.Integer, db.ForeignKey('flicket_users.id')),
-                          db.Column('group_id', db.Integer, db.ForeignKey('flicket_group.id'))
-                          )
+flicket_groups = db.Table(
+    "flicket_groups",
+    db.Column("user_id", db.Integer, db.ForeignKey("flicket_users.id")),
+    db.Column("group_id", db.Integer, db.ForeignKey("flicket_group.id")),
+)
 
 
 class FlicketUser(PaginatedAPIMixin, UserMixin, Base):
-    __tablename__ = 'flicket_users'
+    __tablename__ = "flicket_users"
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(user_field_size['username_max']), index=True, unique=True)
-    name = db.Column(db.String(user_field_size['name_max']))
-    password = db.Column(db.LargeBinary(user_field_size['password_max']))
-    email = db.Column(db.String(user_field_size['email_max']), unique=True)
+    username = db.Column(
+        db.String(user_field_size["username_max"]), index=True, unique=True
+    )
+    name = db.Column(db.String(user_field_size["name_max"]))
+    password = db.Column(db.LargeBinary(user_field_size["password_max"]))
+    email = db.Column(db.String(user_field_size["email_max"]), unique=True)
     date_added = db.Column(db.DateTime)
     date_modified = db.Column(db.DateTime, onupdate=datetime.now)
-    job_title = db.Column(db.String(user_field_size['job_title']))
-    avatar = db.Column(db.String(user_field_size['avatar']))
+    job_title = db.Column(db.String(user_field_size["job_title"]))
+    avatar = db.Column(db.String(user_field_size["avatar"]))
     total_posts = db.Column(db.Integer, default=0)
     total_assigned = db.Column(db.Integer, default=0)
     token = db.Column(db.String(32), index=True, unique=True)
     token_expiration = db.Column(db.DateTime)
     locale = db.Column(db.String(10))
 
-    def __init__(self, username, name, email, password, date_added, job_title=None, locale='en'):
+    def __init__(
+        self, username, name, email, password, date_added, job_title=None, locale="en"
+    ):
         """
         :param username: username, must be unique.
         :param name: Full name.
@@ -82,7 +87,7 @@ class FlicketUser(PaginatedAPIMixin, UserMixin, Base):
         """
         user = FlicketUser.query.filter_by(id=self.id).first()
         for g in user.flicket_groups:
-            if g.group_name == app.config['ADMIN_GROUP_NAME']:
+            if g.group_name == app.config["ADMIN_GROUP_NAME"]:
                 return True
         else:
             return False
@@ -95,7 +100,7 @@ class FlicketUser(PaginatedAPIMixin, UserMixin, Base):
         """
         user = FlicketUser.query.filter_by(id=self.id).first()
         for g in user.flicket_groups:
-            if g.group_name == app.config['SUPER_USER_GROUP_NAME']:
+            if g.group_name == app.config["SUPER_USER_GROUP_NAME"]:
                 return True
         else:
             return False
@@ -110,7 +115,7 @@ class FlicketUser(PaginatedAPIMixin, UserMixin, Base):
         if result.count() == 0:
             return False
         result = result.first()
-        if bcrypt.hashpw(password.encode('utf-8'), result.password) != result.password:
+        if bcrypt.hashpw(password.encode("utf-8"), result.password) != result.password:
             return False
         return True
 
@@ -120,25 +125,28 @@ class FlicketUser(PaginatedAPIMixin, UserMixin, Base):
         :return: dict()
         """
 
-        avatar_url = app.config['base_url'] + url_for('flicket_bp.static',
-                                                      filename='flicket_avatars/{}'.format("__default_profile.png"))
+        avatar_url = app.config["base_url"] + url_for(
+            "flicket_bp.static",
+            filename="flicket_avatars/{}".format("__default_profile.png"),
+        )
 
         if self.avatar:
-            avatar_url = app.config['base_url'] + url_for('flicket_bp.static',
-                                                          filename='flicket_avatars/{}'.format(self.avatar))
+            avatar_url = app.config["base_url"] + url_for(
+                "flicket_bp.static", filename="flicket_avatars/{}".format(self.avatar)
+            )
 
         data = {
-            'id': self.id,
-            'avatar': avatar_url,
-            'email': self.email,
-            'job_title': self.job_title if self.job_title else 'unknown',
-            'name': self.name,
-            'username': self.username,
-            'total_posts': self.total_posts,
-            'links': {
-                'self': app.config['base_url'] + url_for('bp_api.get_user', id=self.id),
-                'users': app.config['base_url'] + url_for('bp_api.get_users')
-            }
+            "id": self.id,
+            "avatar": avatar_url,
+            "email": self.email,
+            "job_title": self.job_title if self.job_title else "unknown",
+            "name": self.name,
+            "username": self.username,
+            "total_posts": self.total_posts,
+            "links": {
+                "self": app.config["base_url"] + url_for("bp_api.get_user", id=self.id),
+                "users": app.config["base_url"] + url_for("bp_api.get_users"),
+            },
         }
 
         return data
@@ -152,7 +160,7 @@ class FlicketUser(PaginatedAPIMixin, UserMixin, Base):
         now = datetime.utcnow()
         if self.token and self.token_expiration > now + timedelta(seconds=60):
             return self.token
-        self.token = base64.b64encode(os.urandom(24)).decode('utf-8')
+        self.token = base64.b64encode(os.urandom(24)).decode("utf-8")
         self.token_expiration = now + timedelta(seconds=expires_in)
         db.session.add(self)
         return self.token
@@ -185,7 +193,7 @@ class FlicketUser(PaginatedAPIMixin, UserMixin, Base):
         """
 
         characters = string.ascii_letters + string.digits
-        password = ''.join(random.sample(characters, 12))
+        password = "".join(random.sample(characters, 12))
 
         return password
 
@@ -194,23 +202,24 @@ class FlicketUser(PaginatedAPIMixin, UserMixin, Base):
 
         :return: str() with user details.
         """
-        return '<User: id={}, username={}, email={}>'.format(self.id, self.username, self.email)
+        return "<User: id={}, username={}, email={}>".format(
+            self.id, self.username, self.email
+        )
 
 
 class FlicketGroup(Base):
     """
     Flicket Group model class
     """
-    __tablename__ = 'flicket_group'
+
+    __tablename__ = "flicket_group"
     id = db.Column(db.Integer, primary_key=True)
-    group_name = db.Column(db.String(user_field_size['group_max']))
-    users = db.relationship(FlicketUser,
-                            secondary=flicket_groups,
-                            backref=db.backref('flicket_groups',
-                                               lazy='dynamic',
-                                               order_by=group_name
-                                               )
-                            )
+    group_name = db.Column(db.String(user_field_size["group_max"]))
+    users = db.relationship(
+        FlicketUser,
+        secondary=flicket_groups,
+        backref=db.backref("flicket_groups", lazy="dynamic", order_by=group_name),
+    )
 
     # this is for when a group has many groups
     # ie everyone in group 'flicket_admin' can be a member of group 'all'
@@ -234,4 +243,4 @@ class FlicketGroup(Base):
 
         :return: str() with group details.
         """
-        return '<Group: id={}. group_name={}>'.format(self.id, self.group_name)
+        return "<Group: id={}. group_name={}>".format(self.id, self.group_name)

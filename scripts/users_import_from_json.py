@@ -13,7 +13,6 @@ from application.flicket.models.flicket_user import FlicketUser
 
 
 class JsonUser:
-
     def __init__(self, username, name, email, password):
         self.username = username
         self.name = name
@@ -43,30 +42,45 @@ class ImportUsersFromJson(Command):
             json_users = json.load(data_file)
 
         # check formatting of json file
-        valid_json_fields = ['username', 'name', 'email', 'password']
+        valid_json_fields = ["username", "name", "email", "password"]
         for user in json_users:
             if not all(f in user for f in valid_json_fields):
-                print('json file not formatted correctly. Exiting.')
+                print("json file not formatted correctly. Exiting.")
                 exit()
 
         # add users to database.
         for user in json_users:
 
             # encode password to bytes
-            password = str.encode(user['password'])
+            password = str.encode(user["password"])
 
             # create json_user object
-            json_user = JsonUser(user['username'], user['name'], user['email'], password)
+            json_user = JsonUser(
+                user["username"], user["name"], user["email"], password
+            )
 
             # check tht user doesn't already exist.
             existing_user = FlicketUser.query.filter_by(email=json_user.email)
             if existing_user.count() > 0:
-                print('User {} {} already exists in the database.'.format(json_user.name, json_user.email))
+                print(
+                    "User {} {} already exists in the database.".format(
+                        json_user.name, json_user.email
+                    )
+                )
                 continue
 
             # add the user
-            print('Adding the user {} {} to the database.'.format(json_user.name, json_user.email))
-            new_user = FlicketUser(username=json_user.username, name=json_user.name, email=json_user.email,
-                                   password=json_user.password, date_added=datetime.datetime.now())
+            print(
+                "Adding the user {} {} to the database.".format(
+                    json_user.name, json_user.email
+                )
+            )
+            new_user = FlicketUser(
+                username=json_user.username,
+                name=json_user.name,
+                email=json_user.email,
+                password=json_user.password,
+                date_added=datetime.datetime.now(),
+            )
             db.session.add(new_user)
             db.session.commit()

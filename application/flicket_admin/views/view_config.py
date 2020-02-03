@@ -3,10 +3,7 @@
 #
 # Flicket - copyright Paul Bourne: evereux@gmail.com
 
-from flask import (flash,
-                   redirect,
-                   render_template,
-                   url_for)
+from flask import flash, redirect, render_template, url_for
 from flask_babel import gettext
 from flask_login import login_required
 
@@ -19,7 +16,7 @@ from .view_admin import admin_permission
 
 
 # Configuration view
-@admin_bp.route(app.config['ADMINHOME'] + 'config/', methods=['GET', 'POST'])
+@admin_bp.route(app.config["ADMINHOME"] + "config/", methods=["GET", "POST"])
 @login_required
 @admin_permission.require(http_exception=403)
 def config():
@@ -41,9 +38,9 @@ def config():
         config_details.mail_suppress_send = form.mail_suppress_send.data
         config_details.mail_ascii_attachments = form.mail_ascii_attachments.data
 
-        config_details.application_title = form.application_title.data,
-        config_details.posts_per_page = form.posts_per_page.data,
-        config_details.allowed_extensions = form.allowed_extensions.data,
+        config_details.application_title = (form.application_title.data,)
+        config_details.posts_per_page = (form.posts_per_page.data,)
+        config_details.allowed_extensions = (form.allowed_extensions.data,)
         config_details.ticket_upload_folder = form.ticket_upload_folder.data
         config_details.base_url = form.base_url.data
 
@@ -53,15 +50,17 @@ def config():
         config_details.csv_dump_limit = form.csv_dump_limit.data
 
         config_details.change_category = form.change_category.data
-        config_details.change_category_only_admin_or_super_user = form.change_category_only_admin_or_super_user.data
+        config_details.change_category_only_admin_or_super_user = (
+            form.change_category_only_admin_or_super_user.data
+        )
 
         # Don't change the password if nothing was entered.
-        if form.mail_password.data != '':
+        if form.mail_password.data != "":
             config_details.mail_password = form.mail_password.data
 
         db.session.commit()
-        flash(gettext('Config details updated.'))
-        return redirect(url_for('admin_bp.config'))
+        flash(gettext("Config details updated."))
+        return redirect(url_for("admin_bp.config"))
 
     # populate form with details from database.
     form.mail_server.data = config_details.mail_server
@@ -89,8 +88,10 @@ def config():
     form.csv_dump_limit.data = config_details.csv_dump_limit
 
     form.change_category.data = config_details.change_category
-    form.change_category_only_admin_or_super_user.data = config_details.change_category_only_admin_or_super_user
+    form.change_category_only_admin_or_super_user.data = (
+        config_details.change_category_only_admin_or_super_user
+    )
 
-    return render_template('admin_config.html',
-                           title='Flicket Configuration',
-                           form=form)
+    return render_template(
+        "admin_config.html", title="Flicket Configuration", form=form
+    )

@@ -16,7 +16,6 @@ from application.flicket.models.flicket_user import FlicketUser
 
 
 class UploadFile:
-
     def __init__(self, file):
         """
         Takes a file object from form submission.
@@ -35,7 +34,7 @@ class UploadFile:
 
     def get_extension(self):
         try:
-            _ext = self.file.filename.rsplit('.', 1)[1]
+            _ext = self.file.filename.rsplit(".", 1)[1]
             return _ext
         except IndexError:
             return False
@@ -49,8 +48,8 @@ class UploadFile:
 
         while True:
             chars = string.ascii_lowercase + string.digits
-            output_string = ''.join(random.choice(chars) for _ in range(characters))
-            new_file_name = output_string + '.' + self.file_extension
+            output_string = "".join(random.choice(chars) for _ in range(characters))
+            new_file_name = output_string + "." + self.file_extension
             if not os.path.isfile(new_file_name):
                 break
 
@@ -62,7 +61,7 @@ class UploadFile:
         Returns True if valid
         :return: Boolean
         """
-        return '.' in self.file_name and self.file_extension in self.allowed_extensions
+        return "." in self.file_name and self.file_extension in self.allowed_extensions
 
     def upload_file(self):
         """
@@ -86,12 +85,11 @@ class UploadFile:
 
 
 class UploadAvatar(UploadFile):
-
     def __init__(self, file, user):
         super().__init__(file)
-        self.allowed_extensions = ['jpg']
+        self.allowed_extensions = ["jpg"]
         self.user = user
-        self.upload_folder = app.config['avatar_upload_folder']
+        self.upload_folder = app.config["avatar_upload_folder"]
         self.delete_existing_avatar()
 
     def delete_existing_avatar(self):
@@ -124,8 +122,8 @@ class UploadAttachment(object):
 
     def __init__(self, files):
         self.files = files
-        self.allowed_extensions = app.config['allowed_extensions']
-        self.upload_folder = app.config['ticket_upload_folder']
+        self.allowed_extensions = app.config["allowed_extensions"]
+        self.upload_folder = app.config["ticket_upload_folder"]
         self.new_files = None
 
     def are_attachments(self):
@@ -137,7 +135,7 @@ class UploadAttachment(object):
         if len(self.files) == 0:
             return False
 
-        if self.files[0].filename == '':
+        if self.files[0].filename == "":
             return False
 
         return True
@@ -168,20 +166,23 @@ class UploadAttachment(object):
     def populate_db(self, flicketobject):
         topic = None
         post = None
-        if type(flicketobject).__name__ == 'FlicketTicket':
+        if type(flicketobject).__name__ == "FlicketTicket":
             topic = flicketobject
-        if type(flicketobject).__name__ == 'FlicketPost':
+        if type(flicketobject).__name__ == "FlicketPost":
             post = flicketobject
         if self.new_files:
             for new_file in self.new_files:
                 if new_file[1] is False:
-                    flash('There was a problem uploading one or more of the files.', category='warning')
+                    flash(
+                        "There was a problem uploading one or more of the files.",
+                        category="warning",
+                    )
                 else:
                     # all looks good, so add file to the database.
                     new_image = FlicketUploads(
                         topic=topic,
                         post=post,
                         filename=new_file[1],
-                        original_filename=new_file[0]
+                        original_filename=new_file[0],
                     )
                     db.session.add(new_image)

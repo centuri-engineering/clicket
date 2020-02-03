@@ -62,17 +62,17 @@ from application import db
 from application.flicket_api.views.auth import basic_auth, token_auth
 
 
-@bp_api.route(api_url + 'tokens', methods=['POST'])
+@bp_api.route(api_url + "tokens", methods=["POST"])
 @basic_auth.login_required
 def get_token():
     token = g.current_user.get_token()
     db.session.commit()
-    return jsonify({'token': token})
+    return jsonify({"token": token})
 
 
-@bp_api.route(api_url + 'tokens', methods=['DELETE'])
+@bp_api.route(api_url + "tokens", methods=["DELETE"])
 @token_auth.login_required
 def revoke_token():
     g.current_user.revoke_token()
     db.session.commit()
-    return '', 204
+    return "", 204

@@ -15,7 +15,10 @@ from application.flicket.scripts.email import FlicketMail
 
 
 # close ticket
-@flicket_bp.route(app.config['FLICKET'] + 'change_status/<ticket_id>/<status>/', methods=['GET', 'POST'])
+@flicket_bp.route(
+    app.config["FLICKET"] + "change_status/<ticket_id>/<status>/",
+    methods=["GET", "POST"],
+)
 @login_required
 def change_status(ticket_id, status):
     ticket = FlicketTicket.query.filter_by(id=ticket_id).first()
@@ -31,25 +34,32 @@ def change_status(ticket_id, status):
         edit = True
 
     if not edit:
-        flash(gettext('Only the person to which the ticket has been assigned, creator or Admin can close this ticket.'),
-              category='warning')
-        return redirect(url_for('flicket_bp.ticket_view', ticket_id=ticket_id))
+        flash(
+            gettext(
+                "Only the person to which the ticket has been assigned, creator or Admin can close this ticket."
+            ),
+            category="warning",
+        )
+        return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket_id))
 
     # Check to see if the ticket is already closed.
-    if ticket.current_status.status == 'Closed':
-        flash(gettext('Ticket is already closed.'), category='warning')
-        return redirect(url_for('flicket_bp.ticket_view', ticket_id=ticket.id))
+    if ticket.current_status.status == "Closed":
+        flash(gettext("Ticket is already closed."), category="warning")
+        return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket.id))
 
     f_mail = FlicketMail()
     f_mail.close_ticket(ticket)
 
     # add action record
-    add_action(ticket, 'close')
+    add_action(ticket, "close")
 
     ticket.current_status = closed
     ticket.assigned_id = None
     db.session.commit()
 
-    flash(gettext('Ticket %(value)s closed.', value=str(ticket_id).zfill(5)), category='success')
+    flash(
+        gettext("Ticket %(value)s closed.", value=str(ticket_id).zfill(5)),
+        category="success",
+    )
 
-    return redirect(url_for('flicket_bp.tickets'))
+    return redirect(url_for("flicket_bp.tickets"))

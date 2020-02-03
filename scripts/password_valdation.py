@@ -9,7 +9,6 @@ password_length = 8
 
 
 class PasswordStrength:
-
     def __init__(self, password, special_characters=False):
         """
         Checks validity of password.
@@ -49,11 +48,12 @@ class PasswordStrength:
 
     @staticmethod
     def message_rules():
-        return ("Password must: \n"
-                "  * be a minimum of {} characters long.\n"
-                "  * contain numbers and letters.\n"
-                "  * contain one lowercase and one uppercase letter."
-                ).format(password_length)
+        return (
+            "Password must: \n"
+            "  * be a minimum of {} characters long.\n"
+            "  * contain numbers and letters.\n"
+            "  * contain one lowercase and one uppercase letter."
+        ).format(password_length)
 
     def __repr__(self):
         return "<PasswordValidator>"

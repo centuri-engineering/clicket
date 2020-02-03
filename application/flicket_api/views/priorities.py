@@ -118,17 +118,21 @@ from application.flicket.models.flicket_models import FlicketPriority
 from application.flicket_api.views.auth import token_auth
 
 
-@bp_api.route(api_url + 'priority/<int:id>', methods=['GET'])
+@bp_api.route(api_url + "priority/<int:id>", methods=["GET"])
 @token_auth.login_required
 def get_priority(id):
     return jsonify(FlicketPriority.query.get_or_404(id).to_dict())
 
 
-@bp_api.route(api_url + 'priorities/', methods=['GET'])
-@bp_api.route(api_url + 'priorities/<int:page>/', methods=['GET'])
+@bp_api.route(api_url + "priorities/", methods=["GET"])
+@bp_api.route(api_url + "priorities/<int:page>/", methods=["GET"])
 @token_auth.login_required
 def get_priorities(page=1):
     priorities = FlicketPriority.query
-    per_page = min(request.args.get('per_page', app.config['posts_per_page'], type=int), 100)
-    data = FlicketPriority.to_collection_dict(priorities, page, per_page, 'bp_api.get_priorities')
+    per_page = min(
+        request.args.get("per_page", app.config["posts_per_page"], type=int), 100
+    )
+    data = FlicketPriority.to_collection_dict(
+        priorities, page, per_page, "bp_api.get_priorities"
+    )
     return jsonify(data)

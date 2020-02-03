@@ -19,7 +19,7 @@ from .view_admin import admin_permission
 
 
 # Configuration view
-@admin_bp.route(app.config['ADMINHOME'] + 'test_email/', methods=['GET', 'POST'])
+@admin_bp.route(app.config["ADMINHOME"] + "test_email/", methods=["GET", "POST"])
 @login_required
 @admin_permission.require(http_exception=403)
 def email_test():
@@ -29,12 +29,15 @@ def email_test():
         # send email notification
         mail = FlicketMail()
         mail.test_email([form.email_address.data])
-        flash(Markup(gettext(
-            f'Flicket has tried to send an email to the address you entered. Please check your inbox. If no email has '
-            f'arrived please double check the <a href="{app.config["base_url"]}{url_for("admin_bp.config")}">config</a>'
-            f' settings.')),
-            category='warning')
+        flash(
+            Markup(
+                gettext(
+                    f"Flicket has tried to send an email to the address you entered. Please check your inbox. If no email has "
+                    f'arrived please double check the <a href="{app.config["base_url"]}{url_for("admin_bp.config")}">config</a>'
+                    f" settings."
+                )
+            ),
+            category="warning",
+        )
 
-    return render_template('admin_email_test.html',
-                           title='Send Email Test',
-                           form=form)
+    return render_template("admin_email_test.html", title="Send Email Test", form=form)

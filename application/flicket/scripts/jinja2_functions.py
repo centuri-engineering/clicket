@@ -23,8 +23,15 @@ def display_post_box(ticket=None, post=None, replies=None, loop=None, page=None)
     else:
         content = post
 
-    return render_template('flicket_post.html', ticket=ticket, post=post, content=content, replies=replies, loop=loop,
-                           page=page)
+    return render_template(
+        "flicket_post.html",
+        ticket=ticket,
+        post=post,
+        content=content,
+        replies=replies,
+        loop=loop,
+        page=page,
+    )
 
 
 def show_markdown(text):
@@ -39,4 +46,4 @@ def show_markdown(text):
 
 
 def now_year():
-    return datetime.datetime.now().strftime('%Y')
+    return datetime.datetime.now().strftime("%Y")

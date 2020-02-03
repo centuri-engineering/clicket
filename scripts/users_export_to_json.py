@@ -8,7 +8,7 @@ from flask_script import Command
 
 from application.flicket.models.flicket_user import FlicketUser as User
 
-json_user_file = 'users.json'
+json_user_file = "users.json"
 
 
 class ExportUsersToJson(Command):
@@ -36,10 +36,10 @@ class ExportUsersToJson(Command):
 
         for u in users:
             loop_dict = dict()
-            loop_dict['username'] = u.username
-            loop_dict['name'] = u.name
-            loop_dict['email'] = u.email
-            loop_dict['password'] = u.password.decode('utf-8')
+            loop_dict["username"] = u.username
+            loop_dict["name"] = u.name
+            loop_dict["email"] = u.email
+            loop_dict["password"] = u.password.decode("utf-8")
             output_list.append(loop_dict)
 
         return output_list
@@ -56,15 +56,14 @@ class ExportUsersToJson(Command):
         if os.path.isfile(json_user_file):
 
             while True:
-                over_write = input('json user file already exists. Over write? (Y/n)> ')
-                if over_write == 'Y':
+                over_write = input("json user file already exists. Over write? (Y/n)> ")
+                if over_write == "Y":
                     return False
                 else:
-                    print('You have opted to not over write. Exiting ....')
+                    print("You have opted to not over write. Exiting ....")
                     exit()
 
         file_text = json.dumps(json_list)
 
-        with open(json_user_file, 'w') as f:
+        with open(json_user_file, "w") as f:
             f.write(file_text)
-

@@ -10,22 +10,18 @@ from zipfile import ZipFile, ZIP_DEFLATED
 from application import __version__
 
 exclude_dirs = [
-    '.git',
-    '.idea',
-    'dist',
-    'env',
-    'migrations',
-    'tmp',
-    '__pycache__',
-    '__archive__',
-    'docs']
-
-exclude_files = [
-    '.gitignore',
-    'alembic.ini',
-    'config.json',
-    'flicket_freezer.py'
+    ".git",
+    ".idea",
+    "dist",
+    "env",
+    "migrations",
+    "tmp",
+    "__pycache__",
+    "__archive__",
+    "docs",
 ]
+
+exclude_files = [".gitignore", "alembic.ini", "config.json", "flicket_freezer.py"]
 
 
 def zip_files(path, zipper):
@@ -37,10 +33,10 @@ def zip_files(path, zipper):
             zipper.write(os.path.join(rel_path, file))
 
 
-bundle_name = 'flicket_{}.zip'.format(__version__)
+bundle_name = "flicket_{}.zip".format(__version__)
 
 current_path = os.getcwd()
-bundle_name = os.path.join(current_path, 'dist', bundle_name)
+bundle_name = os.path.join(current_path, "dist", bundle_name)
 
-with ZipFile(bundle_name, 'w', ZIP_DEFLATED) as zipper:
+with ZipFile(bundle_name, "w", ZIP_DEFLATED) as zipper:
     zip_files(os.getcwd(), zipper)

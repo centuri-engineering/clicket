@@ -12,7 +12,7 @@ from application import app
 
 
 # view users
-@flicket_bp.route(app.config['FLICKET'] + 'markdown_primer/', methods=['GET', 'POST'])
+@flicket_bp.route(app.config["FLICKET"] + "markdown_primer/", methods=["GET", "POST"])
 @login_required
 def markdown_primer():
-    return render_template('markdown_primer.html')
+    return render_template("markdown_primer.html")

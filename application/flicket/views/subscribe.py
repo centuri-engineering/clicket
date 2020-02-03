@@ -16,7 +16,9 @@ from . import flicket_bp
 
 
 # view to subscribe user to a ticket.
-@flicket_bp.route(app.config['FLICKET'] + 'subscribe/<int:ticket_id>/', methods=['GET', 'POST'])
+@flicket_bp.route(
+    app.config["FLICKET"] + "subscribe/<int:ticket_id>/", methods=["GET", "POST"]
+)
 @login_required
 def subscribe_ticket(ticket_id=None):
 
@@ -29,17 +31,19 @@ def subscribe_ticket(ticket_id=None):
             subscribe = FlicketSubscription(user=g.user, ticket=ticket)
             db.session.add(subscribe)
             db.session.commit()
-            flash(gettext('You have been subscribed to this ticket.'))
+            flash(gettext("You have been subscribed to this ticket."))
 
         else:
 
-            flash(gettext('Already subscribed to this ticket'))
+            flash(gettext("Already subscribed to this ticket"))
 
-        return redirect(url_for('flicket_bp.ticket_view', ticket_id=ticket_id))
+        return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket_id))
 
 
 # view to unsubscribe user from a ticket.
-@flicket_bp.route(app.config['FLICKET'] + 'unsubscribe/<int:ticket_id>/', methods=['GET', 'POST'])
+@flicket_bp.route(
+    app.config["FLICKET"] + "unsubscribe/<int:ticket_id>/", methods=["GET", "POST"]
+)
 @login_required
 def unsubscribe_ticket(ticket_id=None):
 
@@ -49,14 +53,16 @@ def unsubscribe_ticket(ticket_id=None):
 
         if ticket.is_subscribed(g.user):
 
-            subscription = FlicketSubscription.query.filter_by(user=g.user, ticket=ticket).one()
+            subscription = FlicketSubscription.query.filter_by(
+                user=g.user, ticket=ticket
+            ).one()
             # unsubscribe user to ticket
             db.session.delete(subscription)
             db.session.commit()
-            flash(gettext('You have been unsubscribed from this ticket.'))
+            flash(gettext("You have been unsubscribed from this ticket."))
 
         else:
 
-            flash(gettext('You are already subscribed from this ticket'))
+            flash(gettext("You are already subscribed from this ticket"))
 
-        return redirect(url_for('flicket_bp.ticket_view', ticket_id=ticket_id))
+        return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket_id))

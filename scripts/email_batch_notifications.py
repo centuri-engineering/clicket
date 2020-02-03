@@ -24,10 +24,11 @@ class EmailOutStandingTickets(Command):
         users = FlicketUser.query.all()
         for user in users:
             # that have created a ticket or have a ticket assigned to them.
-            tickets = FlicketTicket.query.filter(
-                FlicketTicket.user == user).filter(
-                FlicketTicket.assigned == user).filter(
-                FlicketTicket.status_id != 2)
+            tickets = (
+                FlicketTicket.query.filter(FlicketTicket.user == user)
+                .filter(FlicketTicket.assigned == user)
+                .filter(FlicketTicket.status_id != 2)
+            )
 
             if tickets.count() > 0:
                 mail = FlicketMail()

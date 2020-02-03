@@ -20,13 +20,14 @@ def nt_log_on(domain, username, password):
     valid_os = False
     authenticated = False
 
-    if os.name == 'nt':
+    if os.name == "nt":
         try:
             import pywintypes
             import win32security
+
             valid_os = True
         except ModuleNotFoundError:
-            raise ModuleNotFoundError('Is pywin32 installed?')
+            raise ModuleNotFoundError("Is pywin32 installed?")
 
     if valid_os:
 
@@ -36,7 +37,8 @@ def nt_log_on(domain, username, password):
                 domain,
                 password,
                 win32security.LOGON32_LOGON_NETWORK,
-                win32security.LOGON32_PROVIDER_DEFAULT)
+                win32security.LOGON32_PROVIDER_DEFAULT,
+            )
             authenticated = bool(token)
         except pywintypes.error:
             pass

@@ -36,7 +36,8 @@ class FlicketConfig(Base):
     :param bool change_category_only_admin_or_super_user: Only admins or super users can change category.
 
     """
-    __tablename__ = 'flicket_config'
+
+    __tablename__ = "flicket_config"
 
     def __init__(self, **kwargs):
         """

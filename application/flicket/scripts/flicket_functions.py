@@ -30,7 +30,7 @@ def add_action(ticket, action, data=None, recipient=None):
         data=data,
         user=g.user,
         recipient=recipient,
-        date=datetime.datetime.now()
+        date=datetime.datetime.now(),
     )
     db.session.add(new_action)
     db.session.commit()
@@ -38,8 +38,8 @@ def add_action(ticket, action, data=None, recipient=None):
 
 def is_ticket_closed(status):
     # check to see if topic is closed. ticket can't be edited once it's closed.
-    if status == 'Closed':
-        flash('Users can not edit closed tickets.', category='danger')
+    if status == "Closed":
+        flash("Users can not edit closed tickets.", category="danger")
         return True
 
 
@@ -51,12 +51,12 @@ def block_quoter(foo):
     """
 
     foo = foo.strip()
-    split_string = foo.split('\n')
-    new_string = ''
+    split_string = foo.split("\n")
+    new_string = ""
     if len(split_string) > 0:
         for i in split_string:
-            temp_string = '> ' + i
+            temp_string = "> " + i
             new_string += temp_string
         return new_string
     else:
-        return '> ' + foo
+        return "> " + foo

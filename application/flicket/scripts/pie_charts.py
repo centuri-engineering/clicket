@@ -14,12 +14,13 @@ from application.flicket.models.flicket_models import FlicketTicket
 
 
 def count_department_tickets(department, status):
-    query = FlicketTicket.query. \
-        join(FlicketCategory). \
-        join(FlicketStatus). \
-        join(FlicketDepartment). \
-        filter(FlicketDepartment.department == department). \
-        filter(FlicketStatus.status == status)
+    query = (
+        FlicketTicket.query.join(FlicketCategory)
+        .join(FlicketStatus)
+        .join(FlicketDepartment)
+        .filter(FlicketDepartment.department == department)
+        .filter(FlicketStatus.status == status)
+    )
 
     return query.count()
 
@@ -52,29 +53,28 @@ def create_pie_chart_dict():
                         dict(
                             labels=graph_labels,
                             values=graph_values,
-                            type='pie',
+                            type="pie",
                             marker=dict(
-                                colors=['darkorange', 'darkgreen', 'green', 'lightgreen']
+                                colors=[
+                                    "darkorange",
+                                    "darkgreen",
+                                    "green",
+                                    "lightgreen",
+                                ]
                             ),
-                            sort=False
+                            sort=False,
                         )
                     ],
                     layout=dict(
                         title=graph_title,
                         autosize=True,
-                        margin=dict(
-                            b=0,
-                            t=40,
-                            l=0,
-                            r=0
-                        ),
+                        margin=dict(b=0, t=40, l=0, r=0),
                         height=400,
-
                     ),
                 )
             )
 
-    ids = [f'Graph {i}' for i, _ in enumerate(graphs)]
+    ids = [f"Graph {i}" for i, _ in enumerate(graphs)]
     graph_json = json.dumps(graphs, cls=plotly.utils.PlotlyJSONEncoder)
 
     return ids, graph_json

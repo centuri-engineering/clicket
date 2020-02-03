@@ -32,31 +32,37 @@ def login_user_exist(form, field):
     username = form.username.data
     password = form.password.data
 
-    if app.config['use_auth_domain']:
-        nt_authenticated = nt_log_on(app.config['auth_domain'], username, password)
+    if app.config["use_auth_domain"]:
+        nt_authenticated = nt_log_on(app.config["auth_domain"], username, password)
     else:
         nt_authenticated = False
 
     result = FlicketUser.query.filter(
-        or_(func.lower(FlicketUser.username) == username.lower(), func.lower(FlicketUser.email) == username.lower()))
+        or_(
+            func.lower(FlicketUser.username) == username.lower(),
+            func.lower(FlicketUser.email) == username.lower(),
+        )
+    )
     if result.count() == 0:
         # couldn't find username in database so check if the user is authenticated on the domain.
         if nt_authenticated:
             # user might have tried to login with full email?
-            username = username.split('@')[0]
+            username = username.split("@")[0]
             # create the previously unregistered user.
             create_user(username, password, name=username)
         else:
             # user can't be authenticated on the domain or found in the database.
-            field.errors.append('Invalid username or email.')
+            field.errors.append("Invalid username or email.")
         return False
     result = result.first()
-    if bcrypt.hashpw(password.encode('utf-8'), result.password) != result.password:
+    if bcrypt.hashpw(password.encode("utf-8"), result.password) != result.password:
         if nt_authenticated:
             # update password in database.
             result.password = hash_password(password)
             return True
-        field.errors.append('Invalid password. Please contact admin is this problem persists.')
+        field.errors.append(
+            "Invalid password. Please contact admin is this problem persists."
+        )
         return False
 
     return True
@@ -64,12 +70,16 @@ def login_user_exist(form, field):
 
 class LogInForm(FlaskForm):
     """ Log in form. """
-    username = StringField(lazy_gettext('username'), validators=[DataRequired(), login_user_exist])
-    password = PasswordField(lazy_gettext('password'), validators=[DataRequired()])
-    remember_me = BooleanField(lazy_gettext('remember_me'), default=False)
+
+    username = StringField(
+        lazy_gettext("username"), validators=[DataRequired(), login_user_exist]
+    )
+    password = PasswordField(lazy_gettext("password"), validators=[DataRequired()])
+    remember_me = BooleanField(lazy_gettext("remember_me"), default=False)
 
 
 class PasswordResetForm(FlaskForm):
     """ Log in form. """
-    email = StringField(lazy_gettext('email'), validators=[DataRequired()])
-    submit = SubmitField(lazy_gettext('reset password'), render_kw=form_class_button)
+
+    email = StringField(lazy_gettext("email"), validators=[DataRequired()])
+    submit = SubmitField(lazy_gettext("reset password"), render_kw=form_class_button)

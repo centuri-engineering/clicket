@@ -6,7 +6,7 @@
 
 import unittest
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # cov = coverage(branch=True, omit=['*python-env*', 'migrate', 'env*', 'tests*'])
     # cov.start()
     unittest.main(exit=False)

@@ -8,8 +8,15 @@ import os
 
 from application import app, db
 from application.flicket.scripts.flicket_upload import UploadAttachment
-from application.flicket.models.flicket_models import (FlicketTicket, FlicketStatus, FlicketPriority, FlicketCategory,
-    FlicketSubscription, FlicketHistory, FlicketUploads)
+from application.flicket.models.flicket_models import (
+    FlicketTicket,
+    FlicketStatus,
+    FlicketPriority,
+    FlicketCategory,
+    FlicketSubscription,
+    FlicketHistory,
+    FlicketUploads,
+)
 
 
 class FlicketTicketExt:
@@ -21,7 +28,15 @@ class FlicketTicketExt:
     """
 
     @staticmethod
-    def create_ticket(title=None, user=None, content=None, priority=None, category=None, files=None, hours=0):
+    def create_ticket(
+        title=None,
+        user=None,
+        content=None,
+        priority=None,
+        category=None,
+        files=None,
+        hours=0,
+    ):
         """
         :param title:
         :param user:
@@ -42,15 +57,16 @@ class FlicketTicketExt:
             upload_attachments.upload_files()
 
         # submit ticket data to database
-        new_ticket = FlicketTicket(title=title,
-                                   date_added=datetime.datetime.now(),
-                                   user=user,
-                                   current_status=ticket_status,
-                                   content=content,
-                                   ticket_priority=ticket_priority,
-                                   category=ticket_category,
-                                   hours=hours,
-                                   )
+        new_ticket = FlicketTicket(
+            title=title,
+            date_added=datetime.datetime.now(),
+            user=user,
+            current_status=ticket_status,
+            content=content,
+            ticket_priority=ticket_priority,
+            category=ticket_category,
+            hours=hours,
+        )
 
         db.session.add(new_ticket)
         # add attachments to the database
@@ -67,8 +83,17 @@ class FlicketTicketExt:
         return new_ticket
 
     @staticmethod
-    def edit_ticket(ticket=None, title=None, user=None, content=None, priority=None, category=None,
-                    files=None, form_uploads=None, hours=None):
+    def edit_ticket(
+        ticket=None,
+        title=None,
+        user=None,
+        content=None,
+        priority=None,
+        category=None,
+        files=None,
+        form_uploads=None,
+        hours=None,
+    ):
         """
 
         :param ticket:
@@ -93,7 +118,7 @@ class FlicketTicketExt:
                 original_content=ticket.content,
                 topic=ticket,
                 date_modified=datetime.datetime.now(),
-                user_id=history_id
+                user_id=history_id,
             )
             db.session.add(history)
 
@@ -103,7 +128,9 @@ class FlicketTicketExt:
                 # get the upload document information from the database.
                 query = FlicketUploads.query.filter_by(id=i).first()
                 # define the full uploaded filename
-                the_file = os.path.join(app.config['ticket_upload_folder'], query.filename)
+                the_file = os.path.join(
+                    app.config["ticket_upload_folder"], query.filename
+                )
 
                 if os.path.isfile(the_file):
                     # delete the file from the folder

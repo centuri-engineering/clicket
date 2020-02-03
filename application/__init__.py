@@ -34,10 +34,10 @@ from application.flicket.scripts.jinja2_functions import display_post_box
 from application.flicket.scripts.jinja2_functions import now_year
 from application.flicket.scripts.jinja2_functions import show_markdown
 
-__version__ = '0.2.1'
+__version__ = "0.2.1"
 
 app = Flask(__name__)
-app.config.from_object('config.BaseConfiguration')
+app.config.from_object("config.BaseConfiguration")
 app.config.update(TEMPLATES_AUTO_RELOAD=True)
 
 db = SQLAlchemy(app)
@@ -47,88 +47,123 @@ pagedown = PageDown(app)
 babel = Babel(app)
 
 # import jinja function
-app.jinja_env.globals.update(display_post_box=display_post_box, show_markdown=show_markdown, now_year=now_year)
+app.jinja_env.globals.update(
+    display_post_box=display_post_box, show_markdown=show_markdown, now_year=now_year
+)
 
 # import models so alembic can see them
 # noinspection PyPep8
 from application.flicket.models import flicket_user, flicket_models
+
 # noinspection PyPep8
 from application.flicket_admin.models import flicket_config
 
 lm = LoginManager()
 lm.init_app(app)
-lm.login_view = 'flicket_bp.login'
+lm.login_view = "flicket_bp.login"
 
 # noinspection PyPep8
 from .flicket_admin.views import view_admin
+
 # noinspection PyPep8
 from .flicket_admin.views import view_config
+
 # noinspection PyPep8
 from .flicket_admin.views import view_email_test
 
 # noinspection PyPep8
 from .flicket.views import assign
+
 # noinspection PyPep8
 from .flicket.views import categories
+
 # noinspection PyPep8
 from .flicket.views import edit_status
+
 # noinspection PyPep8
 from .flicket.views import claim
+
 # noinspection PyPep8
 from .flicket.views import create
+
 # noinspection PyPep8
 from .flicket.views import delete
+
 # noinspection PyPep8
 from .flicket.views import departments
+
 # noinspection PyPep8
 from .flicket.views import edit
+
 # noinspection PyPep8
 from .flicket.views import history
+
 # noinspection PyPep8
 from .flicket.views import index
+
 # noinspection PyPep8
 from .flicket.views import login
+
 # noinspection PyPep8
 from .flicket.views import help
+
 # noinspection PyPep8
 from .flicket.views import tickets
+
 # noinspection PyPep8
 from .flicket.views import release
+
 # noinspection PyPep8
 from .flicket.views import render_uploads
+
 # noinspection PyPep8
 from .flicket.views import subscribe
+
 # noinspection PyPep8
 from .flicket.views import user_edit
+
 # noinspection PyPep8
 from .flicket.views import users
+
 # noinspection PyPep8
 from .flicket.views import view_ticket
+
 # noinspection PyPep8
 from .flicket.views import department_category
 
 # noinspection PyPep8
 from .flicket_api.views import actions
+
 # noinspection PyPep8
 from .flicket_api.views import categories
+
 # noinspection PyPep8
 from .flicket_api.views import departments
+
 # noinspection PyPep8
 from .flicket_api.views import histories
+
 # noinspection PyPep8
 from .flicket_api.views import posts
+
 # noinspection PyPep8
 from .flicket_api.views import priorities
+
 # noinspection PyPep8
 from .flicket_api.views import status
+
 # noinspection PyPep8
 from .flicket_api.views import subscriptions
+
 # noinspection PyPep8
 from .flicket_api.views import tickets
+
 # noinspection PyPep8
 from .flicket_api.views import tokens
+
 # noinspection PyPep8
 from .flicket_api.views import uploads
+
 # noinspection PyPep8
 from .flicket_api.views import users
 from .flicket_api.views import department_categories
@@ -150,31 +185,31 @@ app.register_blueprint(bp_errors)
 @babel.localeselector
 def get_locale():
     # if a user is logged in, use the locale from the user settings
-    user = getattr(g, 'user', None)
-    if hasattr(user, 'locale'):
+    user = getattr(g, "user", None)
+    if hasattr(user, "locale"):
         return user.locale
     # otherwise try to guess the language from the user accept
     # header the browser transmits.  We support de/fr/en in this
     # example.  The best match wins.
-    return request.accept_languages.best_match(app.config['SUPPORTED_LANGUAGES'].keys())
+    return request.accept_languages.best_match(app.config["SUPPORTED_LANGUAGES"].keys())
 
 
 @app.url_defaults
 def set_language_code(endpoint, values):
-    if 'lang_code' in values or not g.get('lang_code', None):
+    if "lang_code" in values or not g.get("lang_code", None):
         return
-    if app.url_map.is_endpoint_expecting(endpoint, 'lang_code'):
-        values['lang_code'] = g.lang_code
+    if app.url_map.is_endpoint_expecting(endpoint, "lang_code"):
+        values["lang_code"] = g.lang_code
 
 
 @app.url_value_preprocessor
 def get_lang_code(endpoint, values):
     if values is not None:
-        g.lang_code = values.pop('lang_code', None)
+        g.lang_code = values.pop("lang_code", None)
 
 
 @app.before_request
 def ensure_lang_support():
-    lang_code = g.get('lang_code', None)
-    if lang_code and lang_code not in app.config['SUPPORTED_LANGUAGES'].keys():
+    lang_code = g.get("lang_code", None)
+    if lang_code and lang_code not in app.config["SUPPORTED_LANGUAGES"].keys():
         return abort(404)

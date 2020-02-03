@@ -213,45 +213,62 @@ from flask import g, jsonify, request, url_for
 from .sphinx_helper import api_url
 from . import bp_api
 from application import app, db
-from application.flicket.models.flicket_models import FlicketPriority, FlicketTicket, FlicketCategory
+from application.flicket.models.flicket_models import (
+    FlicketPriority,
+    FlicketTicket,
+    FlicketCategory,
+)
 from application.flicket_api.views.auth import token_auth
 from application.flicket_api.views.errors import bad_request
 
 
-@bp_api.route(api_url + 'ticket/<int:id>', methods=['GET'])
+@bp_api.route(api_url + "ticket/<int:id>", methods=["GET"])
 @token_auth.login_required
 def get_ticket(id):
     return jsonify(FlicketTicket.query.get_or_404(id).to_dict())
 
 
-@bp_api.route(api_url + 'tickets/', methods=['GET'])
-@bp_api.route(api_url + 'tickets/<int:page>/', methods=['GET'])
+@bp_api.route(api_url + "tickets/", methods=["GET"])
+@bp_api.route(api_url + "tickets/<int:page>/", methods=["GET"])
 @token_auth.login_required
 def get_tickets(page=1):
     # todo: add filtering
 
     tickets = FlicketTicket.query
-    per_page = min(request.args.get('per_page', app.config['posts_per_page'], type=int), 100)
-    data = FlicketTicket.to_collection_dict(tickets, page, per_page, 'bp_api.get_tickets')
+    per_page = min(
+        request.args.get("per_page", app.config["posts_per_page"], type=int), 100
+    )
+    data = FlicketTicket.to_collection_dict(
+        tickets, page, per_page, "bp_api.get_tickets"
+    )
     return jsonify(data)
 
 
-@bp_api.route(api_url + 'tickets', methods=['POST'])
+@bp_api.route(api_url + "tickets", methods=["POST"])
 @token_auth.login_required
 def create_ticket():
     data = request.get_json() or {}
 
-    if 'title' not in data or 'content' not in data or 'category_id' not in data or 'ticket_priority_id' not in data:
-        return bad_request('Must include title, content, category_id and ticket_priority_id.')
+    if (
+        "title" not in data
+        or "content" not in data
+        or "category_id" not in data
+        or "ticket_priority_id" not in data
+    ):
+        return bad_request(
+            "Must include title, content, category_id and ticket_priority_id."
+        )
 
-    if not isinstance(data['category_id'], int) or not isinstance(data['ticket_priority_id'], int):
-        return bad_request('ticket_priority_id and category_id must be integers.')
+    if not isinstance(data["category_id"], int) or not isinstance(
+        data["ticket_priority_id"], int
+    ):
+        return bad_request("ticket_priority_id and category_id must be integers.")
 
-    if not FlicketCategory.query.filter_by(id=data['category_id']).first():
-        return bad_request('not a valid category_id')
+    if not FlicketCategory.query.filter_by(id=data["category_id"]).first():
+        return bad_request("not a valid category_id")
 
-    if not FlicketPriority.query.filter_by(id=data['ticket_priority_id']).first():
-        return bad_request('not a valid ticket_priority_id')
+    if not FlicketPriority.query.filter_by(id=data["ticket_priority_id"]).first():
+        return bad_request("not a valid ticket_priority_id")
 
     ticket = FlicketTicket()
     ticket.from_dict(data)
@@ -264,6 +281,6 @@ def create_ticket():
 
     response = jsonify(ticket.to_dict())
     response.status_code = 201
-    response.headers['Location'] = url_for('bp_api.get_ticket', id=ticket.id)
+    response.headers["Location"] = url_for("bp_api.get_ticket", id=ticket.id)
 
     return response

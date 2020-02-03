@@ -23,11 +23,14 @@ def login_user_exist(form, field):
     """
     result = FlicketUser.query.filter_by(username=form.username.data)
     if result.count() == 0:
-        field.errors.append('Invalid username.')
+        field.errors.append("Invalid username.")
         return False
     result = result.first()
-    if bcrypt.hashpw(form.password.data.encode('utf-8'), result.password) != result.password:
-        field.errors.append('Invalid password.')
+    if (
+        bcrypt.hashpw(form.password.data.encode("utf-8"), result.password)
+        != result.password
+    ):
+        field.errors.append("Invalid password.")
         return False
 
     return True
@@ -35,6 +38,9 @@ def login_user_exist(form, field):
 
 class LogInForm(FlaskForm):
     """ Log in form. """
-    username = StringField(lazy_gettext('username'), validators=[DataRequired(), login_user_exist])
-    password = PasswordField(lazy_gettext('password'), validators=[DataRequired()])
-    remember_me = BooleanField(lazy_gettext('remember_me'), default=False)
+
+    username = StringField(
+        lazy_gettext("username"), validators=[DataRequired(), login_user_exist]
+    )
+    password = PasswordField(lazy_gettext("password"), validators=[DataRequired()])
+    remember_me = BooleanField(lazy_gettext("remember_me"), default=False)
