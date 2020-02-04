@@ -23,6 +23,7 @@ from application.flicket.models.flicket_models import (
     FlicketCategory,
     FlicketDepartment,
     FlicketPriority,
+    FlicketRequesterRole,
     FlicketStatus,
     FlicketTicket,
     FlicketDepartmentCategory,
@@ -46,7 +47,7 @@ def does_email_exist(form, field):
     """
     if form.email.data:
         result = FlicketUser.query.filter_by(email=form.email.data).count()
-        if result == 0:
+        if not result:
             field.errors.append(gettext("Can't find user."))
             return False
     else:
@@ -135,6 +136,10 @@ class CreateTicketForm(FlaskForm):
         self.priority.choices = [
             (p.id, p.priority) for p in FlicketPriority.query.all()
         ]
+        self.requester_role.choices = [
+            (p.id, p.requester_role) for p in FlicketRequesterRole.query.all()
+        ]
+
         self.category.choices = [
             (c.id, "{} - {}".format(c.department.department, c.category))
             for c in FlicketCategory.query.join(FlicketDepartment)
@@ -147,6 +152,7 @@ class CreateTicketForm(FlaskForm):
     """ Log in form. """
     title = StringField(
         lazy_gettext("username"),
+        description=lazy_gettext("Short description of the request"),
         validators=[
             DataRequired(),
             Length(
@@ -154,6 +160,20 @@ class CreateTicketForm(FlaskForm):
             ),
         ],
     )
+    requester = StringField(
+        lazy_gettext("requester"),
+        description=lazy_gettext("name and contact of the requester"),
+        validators=[
+            DataRequired(),
+            Length(
+                min=field_size["title_min_length"], max=field_size["title_max_length"]
+            ),
+        ],
+    )
+    requester_role = SelectField(
+        lazy_gettext("requester role"), validators=[DataRequired()], coerce=int
+    )
+
     content = PageDownField(
         lazy_gettext("content"),
         validators=[
@@ -164,6 +184,7 @@ class CreateTicketForm(FlaskForm):
             ),
         ],
     )
+
     priority = SelectField(
         lazy_gettext("priority"), validators=[DataRequired()], coerce=int
     )

@@ -12,6 +12,7 @@ from application.flicket.models.flicket_models import (
     FlicketTicket,
     FlicketStatus,
     FlicketPriority,
+    FlicketRequesterRole,
     FlicketCategory,
     FlicketSubscription,
     FlicketHistory,
@@ -32,7 +33,9 @@ class FlicketTicketExt:
         title=None,
         user=None,
         content=None,
+        requester=None,
         priority=None,
+        requester_role=None,
         category=None,
         files=None,
         hours=0,
@@ -42,6 +45,7 @@ class FlicketTicketExt:
         :param user:
         :param content:
         :param priority:
+        :param requester_role:
         :param category:
         :param files:
         :param hours:
@@ -51,6 +55,7 @@ class FlicketTicketExt:
         ticket_status = FlicketStatus.query.filter_by(status="Open").first()
         ticket_priority = FlicketPriority.query.filter_by(id=int(priority)).first()
         ticket_category = FlicketCategory.query.filter_by(id=int(category)).first()
+        ticket_requester_role = FlicketRequesterRole.query.filter_by(id=int(requester_role)).first()
 
         upload_attachments = UploadAttachment(files)
         if upload_attachments.are_attachments():
@@ -63,7 +68,9 @@ class FlicketTicketExt:
             user=user,
             current_status=ticket_status,
             content=content,
+            requester=requester,
             ticket_priority=ticket_priority,
+            ticket_requester_role=ticket_requester_role,
             category=ticket_category,
             hours=hours,
         )
@@ -88,7 +95,9 @@ class FlicketTicketExt:
         title=None,
         user=None,
         content=None,
+        requester=None,
         priority=None,
+        requester_role=None,
         category=None,
         files=None,
         form_uploads=None,
@@ -122,6 +131,15 @@ class FlicketTicketExt:
             )
             db.session.add(history)
 
+        if ticket.requester != requester:
+            history = FlicketHistory(
+                original_requester=ticket.requester,
+                topic=ticket,
+                date_modified=datetime.datetime.now(),
+                user_id=history_id,
+            )
+            db.session.add(history)
+
         # loop through the selected uploads for deletion.
         if len(form_uploads) > 0:
             for i in form_uploads:
@@ -139,13 +157,16 @@ class FlicketTicketExt:
                 db.session.delete(query)
 
         ticket_priority = FlicketPriority.query.filter_by(id=int(priority)).first()
+        ticket_requester_role = FlicketRequesterRole.query.filter_by(id=int(requester_role)).first()
         ticket_category = FlicketCategory.query.filter_by(id=int(category)).first()
 
         ticket.content = content
+        ticket.requester = requester
         ticket.title = title
         ticket.modified = user
         ticket.date_modified = datetime.datetime.now()
         ticket.ticket_priority = ticket_priority
+        ticket.ticket_requester_role = ticket_requester_role
         ticket.category = ticket_category
         ticket.hours = hours
 

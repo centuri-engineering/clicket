@@ -164,11 +164,40 @@ class FlicketPriority(PaginatedAPIMixin, Base):
         return "<FlicketPriority: id={}, priority={}>".format(self.id, self.priority)
 
 
+class FlicketRequesterRole(PaginatedAPIMixin, Base):
+    __tablename__ = "flicket_requester_roles"
+
+    id = db.Column(db.Integer, primary_key=True)
+    requester_role = db.Column(db.String(field_size["priority_max_length"]))
+
+    def to_dict(self):
+        """
+        Returns a dictionary object about the category and its department
+        :return:
+        """
+        data = {
+            "id": self.id,
+            "role": self.requester_role,
+            "links": {
+                "self": app.config["base_url"]
+                + url_for("bp_api.get_requester_role", id=self.id),
+                "requester_roles": app.config["base_url"] + url_for("bp_api.get_requester_roles"),
+            },
+        }
+
+        return data
+
+    def __repr__(self):
+        return "<FlicketRequesterRole: id={}, requester_role={}>".format(self.id, self.requester_role)
+
+
+
 class FlicketTicket(PaginatedAPIMixin, Base):
     __tablename__ = "flicket_topic"
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(field_size["title_max_length"]), index=True)
+    requester = db.Column(db.String(field_size["title_max_length"]), index=True)
     content = db.Column(db.String(field_size["content_max_length"]))
 
     started_id = db.Column(db.Integer, db.ForeignKey(FlicketUser.id))
@@ -191,6 +220,10 @@ class FlicketTicket(PaginatedAPIMixin, Base):
 
     ticket_priority_id = db.Column(db.Integer, db.ForeignKey(FlicketPriority.id))
     ticket_priority = db.relationship(FlicketPriority)
+
+    ticket_requester_role_id = db.Column(db.Integer, db.ForeignKey(FlicketRequesterRole.id))
+    ticket_requester_role = db.relationship(FlicketRequesterRole)
+
 
     posts = db.relationship("FlicketPost", back_populates="ticket")
 
@@ -421,6 +454,14 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             ticket_query = ticket_query.order_by(
                 FlicketTicket.ticket_priority_id.desc(), FlicketTicket.id
             )
+        if sort == "requester_role":
+            ticket_query = ticket_query.order_by(
+                FlicketTicket.ticket_requester_role_id, FlicketTicket.id
+            )
+        elif sort == "requester_role_desc":
+            ticket_query = ticket_query.order_by(
+                FlicketTicket.ticket_requester_role_id.desc(), FlicketTicket.id
+            )
         elif sort == "title":
             ticket_query = ticket_query.order_by(FlicketTicket.title, FlicketTicket.id)
         elif sort == "title_desc":
@@ -524,7 +565,13 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         :param data:
         :return:
         """
-        for field in ["title", "content", "category_id", "ticket_priority_id"]:
+        for field in [
+                "title",
+                "content",
+                "requester",
+                "category_id",
+                "ticket_priority_id",
+                "ticket_requester_role_id"]:
             if field in data:
                 setattr(self, field, data[field])
 
@@ -552,6 +599,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "assigned_id": self.assigned_id,
             "category_id": self.category_id,
             "content": self.content,
+            "requester": self.requester,
             "date_added": self.date_added,
             "date_modified": self.date_modified,
             "modified_id": self.modified_id,
@@ -559,12 +607,15 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "status_id": self.status_id,
             "title": self.title,
             "ticket_priority_id": self.ticket_priority_id,
+            "ticket_requester_role_id": self.ticket_requester_role_id,
             "links": {
                 "self": app.config["base_url"]
                 + url_for("bp_api.get_ticket", id=self.id),
                 "assigned": assigned,
                 "priority": app.config["base_url"]
                 + url_for("bp_api.get_priority", id=self.ticket_priority_id),
+                "requester_role": app.config["base_url"]
+                + url_for("bp_api.get_requester_role", id=self.ticket_requester_role_id),
                 "started_ny": app.config["base_url"]
                 + url_for("bp_api.get_user", id=self.started_id),
                 "modified_by": modified_by,
@@ -889,6 +940,12 @@ class FlicketAction(PaginatedAPIMixin, Base):
         if self.action == "priority":
             return (
                 f'Ticket priority has been changed to "{self.data["priority"]}"'
+                f' by <a href="mailto:{self.user.email}">{self.user.name}</a> | {_date}'
+            )
+
+        if self.action == "requester_role":
+            return (
+                f'Ticket requester role has been changed to "{self.data["requester_role"]}"'
                 f' by <a href="mailto:{self.user.email}">{self.user.name}</a> | {_date}'
             )
 

@@ -28,6 +28,7 @@ def ticket_create():
             title=form.title.data,
             user=g.user,
             content=form.content.data,
+            requester=form.requester.data,
             category=form.category.data,
             priority=form.priority.data,
             hours=form.hours.data,

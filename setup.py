@@ -1,5 +1,5 @@
 #! usr/bin/python3
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 
 import datetime
 from getpass import getpass
@@ -12,6 +12,7 @@ from application.flicket_admin.models.flicket_config import FlicketConfig
 from application.flicket.models.flicket_models import (
     FlicketStatus,
     FlicketPriority,
+    FlicketRequesterRole,
     FlicketDepartment,
     FlicketCategory,
 )
@@ -43,17 +44,38 @@ flicket_config = {
     "avatar_upload_folder": "application/flicket/static/flicket_avatars",
 }
 
+# Default specialities
+specialities = [
+    "Bioinformatics",
+    "Database Management",
+    "Image data processing",
+    "Optics and biophotonics",
+    "Software Development"
+]
+
+departments = [
+    "IBDM",
+    "Institut Fresnel",
+    "CIML",
+    "INMED",
+    'CINAM',
+    "LAI",
+    "IRPHE",
+    "M2P2",
+    "TAGC",
+    "IUSTI",
+    "TAGC",
+    "Ciphe",
+    "CPT",
+    "IMM",
+    "Centrale Marseille",
+    "LIS"
+]
+
 # departments and categories defaults for flicket
 depart_categories = [
-    {"department": "Design", "category": ["Dataset", "ECN", "ECR", "Other"]},
-    {
-        "department": "Manufacturing",
-        "category": ["Process Planning", "Tooling", "Equipment", "Other"],
-    },
-    {"department": "IT", "category": ["Internet", "Intranet", "Other"]},
-    {"department": "Quality", "category": ["Procedures", "Manuals", "Other"]},
-    {"department": "Human Resources", "category": ["Holidays", "Sick Leave", "Other"]},
-    {"department": "Commercial", "category": ["Approved Suppliers", "Other"]},
+    {"department": dep,  "category": specialities}
+    for dep in departments
 ]
 
 
@@ -232,6 +254,22 @@ class RunSetUP(Command):
 
                 if not silent:
                     print("Added priority level {}".format(p))
+
+    @staticmethod
+    def create_default_requester_role_levels(silent=False):
+        """ set up default requester_role levels """
+
+        pl = ["PhD", "PostDoc", "Engineer", "Researcher"]
+        for p in pl:
+            requester_role = FlicketRequesterRole.query.filter_by(requester_role=p).first()
+
+            if not requester_role:
+                add_requester_role = FlicketRequesterRole(requester_role=p)
+                db.session.add(add_requester_role)
+
+                if not silent:
+                    print("Added requester role level {}".format(p))
+
 
     @staticmethod
     def create_default_depts(silent=False):
