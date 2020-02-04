@@ -47,26 +47,26 @@ footer {
     font-size: 0.7rem;
     color: darkslategray;
     text-align: center;
-    border-top: solid 1px #F1592A;
+    border-top: solid 1px #0098C3;
     padding: 0.4rem;
     margin-top: 2rem;
-    background: -moz-linear-gradient(left, rgba(241, 86, 39, 1) 0%, rgba(237, 187, 173, 1) 61%, rgba(237, 187, 173, 1) 100%);
-    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(241, 86, 39, 1)), color-stop(61%, rgba(237, 187, 173, 1)), color-stop(100%, rgba(237, 187, 173, 1)));
-    background: -webkit-linear-gradient(left, rgba(241, 86, 39, 1) 0%, rgba(237, 187, 173, 1) 61%, rgba(237, 187, 173, 1) 100%);
-    background: -o-linear-gradient(left, rgba(241, 86, 39, 1) 0%, rgba(237, 187, 173, 1) 61%, rgba(237, 187, 173, 1) 100%);
-    background: -ms-linear-gradient(left, rgba(241, 86, 39, 1) 0%, rgba(237, 187, 173, 1) 61%, rgba(237, 187, 173, 1) 100%);
-    background: linear-gradient(to right, rgba(241, 86, 39, 1) 0%, rgba(237, 187, 173, 1) 61%, rgba(237, 187, 173, 1) 100%);
+    background: -moz-linear-gradient(left, rgba(0, 152, 195, 1) 0%, rgba(130, 212, 235,, 1) 61%, rgba(192, 230, 241, 1) 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(0, 152, 195, 1)), color-stop(61%, rgba(192, 230, 241, 1)), color-stop(100%, rgba(192, 230, 241, 1)));
+    background: -webkit-linear-gradient(left, rgba(0, 152, 195, 1) 0%, rgba(192, 230, 241, 1) 61%, rgba(192, 230, 241, 1) 100%);
+    background: -o-linear-gradient(left, rgba(0, 152, 195, 1) 0%, rgba(192, 230, 241, 1) 61%, rgba(192, 230, 241, 1) 100%);
+    background: -ms-linear-gradient(left, rgba(0, 152, 195, 1) 0%, rgba(192, 230, 241, 1) 61%, rgba(192, 230, 241, 1) 100%);
+    background: linear-gradient(to right, rgba(0, 152, 195, 1) 0%, rgba(192, 230, 241, 1) 61%, rgba(192, 230, 241, 1) 100%);
 }
 
 header {
-    background: rgba(241, 86, 39, 1);
-    background: -moz-linear-gradient(left, rgba(241, 86, 39, 1) 0%, rgba(237, 187, 173, 1) 61%, rgba(237, 187, 173, 1) 100%);
+    background: rgba(0, 152, 195, 1);
+    background: -moz-linear-gradient(left, rgba(0, 152, 195, 1) 0%, rgba(192, 230, 241, 1) 61%, rgba(192, 230, 241, 1) 100%);
     /*noinspection CssInvalidFunction*/
-    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(241, 86, 39, 1)), color-stop(61%, rgba(237, 187, 173, 1)), color-stop(100%, rgba(237, 187, 173, 1)));
-    background: -webkit-linear-gradient(left, rgba(241, 86, 39, 1) 0%, rgba(237, 187, 173, 1) 61%, rgba(237, 187, 173, 1) 100%);
-    background: -o-linear-gradient(left, rgba(241, 86, 39, 1) 0%, rgba(237, 187, 173, 1) 61%, rgba(237, 187, 173, 1) 100%);
-    background: -ms-linear-gradient(left, rgba(241, 86, 39, 1) 0%, rgba(237, 187, 173, 1) 61%, rgba(237, 187, 173, 1) 100%);
-    background: linear-gradient(to right, rgba(241, 86, 39, 1) 0%, rgba(237, 187, 173, 1) 61%, rgba(237, 187, 173, 1) 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(0, 152, 195, 1)), color-stop(61%, rgba(192, 230, 241, 1)), color-stop(100%, rgba(192, 230, 241, 1)));
+    background: -webkit-linear-gradient(left, rgba(0, 152, 195, 1) 0%, rgba(192, 230, 241, 1) 61%, rgba(192, 230, 241, 1) 100%);
+    background: -o-linear-gradient(left, rgba(0, 152, 195, 1) 0%, rgba(192, 230, 241, 1) 61%, rgba(192, 230, 241, 1) 100%);
+    background: -ms-linear-gradient(left, rgba(0, 152, 195, 1) 0%, rgba(192, 230, 241, 1) 61%, rgba(192, 230, 241, 1) 100%);
+    background: linear-gradient(to right, rgba(0, 152, 195, 1) 0%, rgba(192, 230, 241, 1) 61%, rgba(192, 230, 241, 1) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f15627', endColorstr='#edbbad', GradientType=1);
     color: white;
     padding: 10pt;
@@ -86,7 +86,7 @@ input[type="radio"] {
 }
 
 .flicket-action {
-    background-color: rgba(254, 203, 190, 0.3);
+    background-color: rgba(192, 230, 241, 0.3);
     font-size: 0.8rem;
 }
 
@@ -142,12 +142,12 @@ input[type="radio"] {
 }
 
 .flicket-status-high {
-    border-bottom: red solid 0.3rem;
+    border-bottom: black solid 0.3rem;
 
 }
 
 .flicket-status-medium {
-    border-bottom: rgba(255, 181, 145, 0.58) solid 0.3rem;
+    border-bottom: rgba(192, 230, 241, 0.58) solid 0.3rem;
 }
 
 .flicket-status-low {
