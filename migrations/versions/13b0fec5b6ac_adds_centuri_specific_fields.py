@@ -17,24 +17,27 @@ depends_on = None
 
 
 def upgrade():
-    op.add_column(
-        "flicket_topic", sa.Column("requester", sa.String(length=128), nullable=True)
-    )
-    op.add_column(
-        "flicket_topic",
-        sa.Column(
-            "requester_role",
-            sa.Integer(),
-            sa.ForeignKey("requester_roles"),
-            nullable=True,
-        ),
-    )
 
     op.create_table(
         "flicket_requester_roles",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("requester_role", sa.String(length=12), nullable=True),
         sa.PrimaryKeyConstraint("id"),
+    )
+    op.add_column(
+        "flicket_topic", sa.Column("requester", sa.String(length=128), nullable=True)
+    )
+    op.add_column(
+        "flicket_topic", sa.Column("requester_role", sa.Integer(), nullable=True,),
+    )
+    op.add_column(
+        "flicket_topic",
+        sa.Column(
+            "requester_role_id",
+            sa.Integer(),
+            sa.ForeignKey("flicket_requester_roles.id"),
+            nullable=True,
+        ),
     )
 
 
