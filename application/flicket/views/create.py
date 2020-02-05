@@ -29,6 +29,7 @@ def ticket_create():
             user=g.user,
             content=form.content.data,
             requester=form.requester.data,
+            requester_role=form.requester_role.data,
             category=form.category.data,
             priority=form.priority.data,
             hours=form.hours.data,

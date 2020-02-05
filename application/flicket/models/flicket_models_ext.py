@@ -56,7 +56,7 @@ class FlicketTicketExt:
         ticket_status = FlicketStatus.query.filter_by(status="Open").first()
         ticket_priority = FlicketPriority.query.filter_by(id=int(priority)).first()
         ticket_category = FlicketCategory.query.filter_by(id=int(category)).first()
-        ticket_requester_role = FlicketRequesterRole.query.filter_by(
+        requester_role = FlicketRequesterRole.query.filter_by(
             id=int(requester_role)
         ).first()
 
@@ -73,7 +73,7 @@ class FlicketTicketExt:
             content=content,
             requester=requester,
             ticket_priority=ticket_priority,
-            ticket_requester_role=ticket_requester_role,
+            requester_role=requester_role,
             category=ticket_category,
             hours=hours,
         )
@@ -160,7 +160,7 @@ class FlicketTicketExt:
                 db.session.delete(query)
 
         ticket_priority = FlicketPriority.query.filter_by(id=int(priority)).first()
-        ticket_requester_role = FlicketRequesterRole.query.filter_by(
+        requester_role = FlicketRequesterRole.query.filter_by(
             id=int(requester_role)
         ).first()
         ticket_category = FlicketCategory.query.filter_by(id=int(category)).first()
@@ -171,7 +171,7 @@ class FlicketTicketExt:
         ticket.modified = user
         ticket.date_modified = datetime.datetime.now()
         ticket.ticket_priority = ticket_priority
-        ticket.ticket_requester_role = ticket_requester_role
+        ticket.requester_role = requester_role
         ticket.category = ticket_category
         ticket.hours = hours
 

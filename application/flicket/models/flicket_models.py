@@ -181,15 +181,17 @@ class FlicketRequesterRole(PaginatedAPIMixin, Base):
             "links": {
                 "self": app.config["base_url"]
                 + url_for("bp_api.get_requester_role", id=self.id),
-                "requester_roles": app.config["base_url"] + url_for("bp_api.get_requester_roles"),
+                "requester_roles": app.config["base_url"]
+                + url_for("bp_api.get_requester_roles"),
             },
         }
 
         return data
 
     def __repr__(self):
-        return "<FlicketRequesterRole: id={}, requester_role={}>".format(self.id, self.requester_role)
-
+        return "<FlicketRequesterRole: id={}, requester_role={}>".format(
+            self.id, self.requester_role
+        )
 
 
 class FlicketTicket(PaginatedAPIMixin, Base):
@@ -221,9 +223,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
     ticket_priority_id = db.Column(db.Integer, db.ForeignKey(FlicketPriority.id))
     ticket_priority = db.relationship(FlicketPriority)
 
-    ticket_requester_role_id = db.Column(db.Integer, db.ForeignKey(FlicketRequesterRole.id))
-    ticket_requester_role = db.relationship(FlicketRequesterRole)
-
+    requester_role_id = db.Column(db.Integer, db.ForeignKey(FlicketRequesterRole.id))
+    requester_role = db.relationship(FlicketRequesterRole)
 
     posts = db.relationship("FlicketPost", back_populates="ticket")
 
@@ -566,12 +567,13 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         :return:
         """
         for field in [
-                "title",
-                "content",
-                "requester",
-                "category_id",
-                "ticket_priority_id",
-                "ticket_requester_role_id"]:
+            "title",
+            "content",
+            "requester",
+            "category_id",
+            "ticket_priority_id",
+            "ticket_requester_role_id",
+        ]:
             if field in data:
                 setattr(self, field, data[field])
 
@@ -615,7 +617,9 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 "priority": app.config["base_url"]
                 + url_for("bp_api.get_priority", id=self.ticket_priority_id),
                 "requester_role": app.config["base_url"]
-                + url_for("bp_api.get_requester_role", id=self.ticket_requester_role_id),
+                + url_for(
+                    "bp_api.get_requester_role", id=self.ticket_requester_role_id
+                ),
                 "started_ny": app.config["base_url"]
                 + url_for("bp_api.get_user", id=self.started_id),
                 "modified_by": modified_by,
