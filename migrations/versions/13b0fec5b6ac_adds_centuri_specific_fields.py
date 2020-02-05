@@ -21,7 +21,13 @@ def upgrade():
         "flicket_topic", sa.Column("requester", sa.String(length=128), nullable=True)
     )
     op.add_column(
-        "flicket_topic", sa.Column("requester_role", sa.Integer(), nullable=True)
+        "flicket_topic",
+        sa.Column(
+            "requester_role",
+            sa.Integer(),
+            sa.ForeignKey("requester_roles"),
+            nullable=True,
+        ),
     )
 
     op.create_table(
