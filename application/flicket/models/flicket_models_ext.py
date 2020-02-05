@@ -45,6 +45,7 @@ class FlicketTicketExt:
         :param user:
         :param content:
         :param priority:
+        :param requester:
         :param requester_role:
         :param category:
         :param files:
@@ -55,7 +56,9 @@ class FlicketTicketExt:
         ticket_status = FlicketStatus.query.filter_by(status="Open").first()
         ticket_priority = FlicketPriority.query.filter_by(id=int(priority)).first()
         ticket_category = FlicketCategory.query.filter_by(id=int(category)).first()
-        ticket_requester_role = FlicketRequesterRole.query.filter_by(id=int(requester_role)).first()
+        ticket_requester_role = FlicketRequesterRole.query.filter_by(
+            id=int(requester_role)
+        ).first()
 
         upload_attachments = UploadAttachment(files)
         if upload_attachments.are_attachments():
@@ -157,7 +160,9 @@ class FlicketTicketExt:
                 db.session.delete(query)
 
         ticket_priority = FlicketPriority.query.filter_by(id=int(priority)).first()
-        ticket_requester_role = FlicketRequesterRole.query.filter_by(id=int(requester_role)).first()
+        ticket_requester_role = FlicketRequesterRole.query.filter_by(
+            id=int(requester_role)
+        ).first()
         ticket_category = FlicketCategory.query.filter_by(id=int(category)).first()
 
         ticket.content = content

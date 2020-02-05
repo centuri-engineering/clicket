@@ -50,7 +50,7 @@ specialities = [
     "Database Management",
     "Image data processing",
     "Optics and biophotonics",
-    "Software Development"
+    "Software Development",
 ]
 
 departments = [
@@ -58,7 +58,7 @@ departments = [
     "Institut Fresnel",
     "CIML",
     "INMED",
-    'CINAM',
+    "CINAM",
     "LAI",
     "IRPHE",
     "M2P2",
@@ -69,13 +69,12 @@ departments = [
     "CPT",
     "IMM",
     "Centrale Marseille",
-    "LIS"
+    "LIS",
 ]
 
 # departments and categories defaults for flicket
 depart_categories = [
-    {"department": dep,  "category": specialities}
-    for dep in departments
+    {"department": dep, "category": specialities} for dep in departments
 ]
 
 
@@ -92,6 +91,7 @@ class RunSetUP(Command):
         self.create_admin_group()
         self.create_default_ticket_status()
         self.create_default_priority_levels()
+        self.create_default_requester_role_levels()
         self.create_default_depts()
         # commit changes to the database
         db.session.commit()
@@ -261,7 +261,9 @@ class RunSetUP(Command):
 
         pl = ["PhD", "PostDoc", "Engineer", "Researcher"]
         for p in pl:
-            requester_role = FlicketRequesterRole.query.filter_by(requester_role=p).first()
+            requester_role = FlicketRequesterRole.query.filter_by(
+                requester_role=p
+            ).first()
 
             if not requester_role:
                 add_requester_role = FlicketRequesterRole(requester_role=p)
@@ -269,7 +271,6 @@ class RunSetUP(Command):
 
                 if not silent:
                     print("Added requester role level {}".format(p))
-
 
     @staticmethod
     def create_default_depts(silent=False):
