@@ -134,14 +134,15 @@ class FlicketTicketExt:
             )
             db.session.add(history)
 
-        if ticket.requester != requester:
-            history = FlicketHistory(
-                original_requester=ticket.requester,
-                topic=ticket,
-                date_modified=datetime.datetime.now(),
-                user_id=history_id,
-            )
-            db.session.add(history)
+        # See GH #1
+        # if ticket.requester != requester:
+        #     history = FlicketHistory(
+        #         original_requester=ticket.requester,
+        #         topic=ticket,
+        #         date_modified=datetime.datetime.now(),
+        #         user_id=history_id,
+        #     )
+        #     db.session.add(history)
 
         # loop through the selected uploads for deletion.
         if len(form_uploads) > 0:

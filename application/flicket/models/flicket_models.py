@@ -572,7 +572,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "requester",
             "category_id",
             "ticket_priority_id",
-            "ticket_requester_role_id",
+            "requester_role_id",
         ]:
             if field in data:
                 setattr(self, field, data[field])
@@ -609,7 +609,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "status_id": self.status_id,
             "title": self.title,
             "ticket_priority_id": self.ticket_priority_id,
-            "ticket_requester_role_id": self.ticket_requester_role_id,
+            "requester_role_id": self.requester_role_id,
             "links": {
                 "self": app.config["base_url"]
                 + url_for("bp_api.get_ticket", id=self.id),
@@ -617,9 +617,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 "priority": app.config["base_url"]
                 + url_for("bp_api.get_priority", id=self.ticket_priority_id),
                 "requester_role": app.config["base_url"]
-                + url_for(
-                    "bp_api.get_requester_role", id=self.ticket_requester_role_id
-                ),
+                + url_for("bp_api.get_requester_role", id=self.requester_role_id),
                 "started_ny": app.config["base_url"]
                 + url_for("bp_api.get_user", id=self.started_id),
                 "modified_by": modified_by,
