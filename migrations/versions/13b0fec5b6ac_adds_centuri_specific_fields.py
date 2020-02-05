@@ -24,6 +24,13 @@ def upgrade():
         "flicket_topic", sa.Column("requester_role", sa.Integer(), nullable=True)
     )
 
+    op.create_table(
+        "flicket_requester_roles",
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("requester_role", sa.String(length=12), nullable=True),
+        sa.PrimaryKeyConstraint("id"),
+    )
+
 
 def downgrade():
     pass
