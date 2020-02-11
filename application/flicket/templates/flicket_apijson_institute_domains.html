@@ -1,23 +1,23 @@
 
 <script type="text/javascript">
     $(function () {
-        $('#autocomplete-department_category').autocomplete({
+        $('#autocomplete-institute_domain').autocomplete({
             source: function (request, response) {
                 $.ajax({
-                    url: '/flicket-api/department_categories/',
+                    url: '/flicket-api/institute_domains/',
                     datatype: 'json',
                     headers: {
                         'Authorization' : 'Bearer {{ g.user.token }}'
                     },
                     data: {
-                        department_category: request.term
+                        institute_domain: request.term
                     },
                     success: function (data) {
                         console.log(data.items);
                         response($.map(data.items, function (item) {
                             return {
-                                label: item.department_category,
-                                value: item.department_category
+                                label: item.institute_domain,
+                                value: item.institute_domain
                             }
                         }));
                     }

@@ -13,7 +13,7 @@ from application.flicket.models.flicket_models import (
     FlicketStatus,
     FlicketPriority,
     FlicketRequesterRole,
-    FlicketCategory,
+    FlicketDomain,
     FlicketSubscription,
     FlicketHistory,
     FlicketUploads,
@@ -36,7 +36,7 @@ class FlicketTicketExt:
         requester=None,
         priority=None,
         requester_role=None,
-        category=None,
+        domain=None,
         files=None,
         hours=0,
     ):
@@ -47,7 +47,7 @@ class FlicketTicketExt:
         :param priority:
         :param requester:
         :param requester_role:
-        :param category:
+        :param domain:
         :param files:
         :param hours:
         :return:
@@ -55,7 +55,7 @@ class FlicketTicketExt:
 
         ticket_status = FlicketStatus.query.filter_by(status="Open").first()
         ticket_priority = FlicketPriority.query.filter_by(id=int(priority)).first()
-        ticket_category = FlicketCategory.query.filter_by(id=int(category)).first()
+        ticket_domain = FlicketDomain.query.filter_by(id=int(domain)).first()
         requester_role = FlicketRequesterRole.query.filter_by(
             id=int(requester_role)
         ).first()
@@ -74,7 +74,7 @@ class FlicketTicketExt:
             requester=requester,
             ticket_priority=ticket_priority,
             requester_role=requester_role,
-            category=ticket_category,
+            domain=ticket_domain,
             hours=hours,
         )
 
@@ -101,7 +101,7 @@ class FlicketTicketExt:
         requester=None,
         priority=None,
         requester_role=None,
-        category=None,
+        domain=None,
         files=None,
         form_uploads=None,
         hours=None,
@@ -113,7 +113,7 @@ class FlicketTicketExt:
         :param user:
         :param content:
         :param priority:
-        :param category:
+        :param domain:
         :param files:
         :param form_uploads:
         :param hours:
@@ -164,7 +164,7 @@ class FlicketTicketExt:
         requester_role = FlicketRequesterRole.query.filter_by(
             id=int(requester_role)
         ).first()
-        ticket_category = FlicketCategory.query.filter_by(id=int(category)).first()
+        ticket_domain = FlicketDomain.query.filter_by(id=int(domain)).first()
 
         ticket.content = content
         ticket.requester = requester
@@ -173,7 +173,7 @@ class FlicketTicketExt:
         ticket.date_modified = datetime.datetime.now()
         ticket.ticket_priority = ticket_priority
         ticket.requester_role = requester_role
-        ticket.category = ticket_category
+        ticket.domain = ticket_domain
         ticket.hours = hours
 
         files = files

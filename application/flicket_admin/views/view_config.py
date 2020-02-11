@@ -49,9 +49,9 @@ def config():
 
         config_details.csv_dump_limit = form.csv_dump_limit.data
 
-        config_details.change_category = form.change_category.data
-        config_details.change_category_only_admin_or_super_user = (
-            form.change_category_only_admin_or_super_user.data
+        config_details.change_domain = form.change_domain.data
+        config_details.change_domain_only_admin_or_super_user = (
+            form.change_domain_only_admin_or_super_user.data
         )
 
         # Don't change the password if nothing was entered.
@@ -87,9 +87,9 @@ def config():
 
     form.csv_dump_limit.data = config_details.csv_dump_limit
 
-    form.change_category.data = config_details.change_category
-    form.change_category_only_admin_or_super_user.data = (
-        config_details.change_category_only_admin_or_super_user
+    form.change_domain.data = config_details.change_domain
+    form.change_domain_only_admin_or_super_user.data = (
+        config_details.change_domain_only_admin_or_super_user
     )
 
     return render_template(

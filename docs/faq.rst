@@ -74,43 +74,43 @@ Searching
 ~~~~~~~~~
 
 The ticket main page can be filtered to show only results of a specific
-interest to you. Tickets can be filtered by department, category, user
+interest to you. Tickets can be filtered by institute, domain, user
 and a text string.
 
 
-Departments
+Institutes
 ~~~~~~~~~~~
 
 .. note::
-    Only administrators or super users can add / edit or delete departments.
+    Only administrators or super users can add / edit or delete institutes.
 
-1. How do I add new departments?
+1. How do I add new institutes?
 
-   Navigate to Departments via the menu bar and use the add departments form.
+   Navigate to Institutes via the menu bar and use the add institutes form.
 
-2. How do I edit departments?
+2. How do I edit institutes?
 
-   Navigate to [departments](/flicket/departments/) and select the edit
-   link against the department name.
+   Navigate to [institutes](/flicket/institutes/) and select the edit
+   link against the institute name.
 
-3. How do I delete departments?
+3. How do I delete institutes?
 
-   Navigate to [departments](/flicket/departments/) and select the remove
-   link against the department name. This is represented with a cross.
+   Navigate to [institutes](/flicket/institutes/) and select the remove
+   link against the institute name. This is represented with a cross.
 
 
 Categories
 ~~~~~~~~~~
 
 .. note::
-    Only administrators or super users can add / edit or delete categories.
+    Only administrators or super users can add / edit or delete domains.
 
-1. How do I add categories?
+1. How do I add domains?
 
-   Navigate to [departments](/flicket/departments/) and select the link
-   to add categories against the appropriate department name.
+   Navigate to [institutes](/flicket/institutes/) and select the link
+   to add domains against the appropriate institute name.
 
-1. How do I edit categories?
+1. How do I edit domains?
 
-   Navigate to [departments](/flicket/departments/) and select the link
-   to add categories against the appropriate department name.
+   Navigate to [institutes](/flicket/institutes/) and select the link
+   to add domains against the appropriate institute name.

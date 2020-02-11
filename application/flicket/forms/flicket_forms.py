@@ -20,13 +20,13 @@ from wtforms.validators import DataRequired, Length
 from wtforms.widgets import ListWidget, CheckboxInput
 
 from application.flicket.models.flicket_models import (
-    FlicketCategory,
-    FlicketDepartment,
+    FlicketDomain,
+    FlicketInstitute,
     FlicketPriority,
     FlicketRequesterRole,
     FlicketStatus,
     FlicketTicket,
-    FlicketDepartmentCategory,
+    FlicketInstituteDomain,
     field_size,
 )
 from application.flicket.models.flicket_user import FlicketUser, user_field_size
@@ -74,22 +74,22 @@ def does_user_exist(form, field):
     return True
 
 
-def does_department_exist(form, field):
+def does_institute_exist(form, field):
     """
     Username must be unique so we check against the database to ensure it doesn't
     :param form:
     :param field:
     :return True / False:
     """
-    result = FlicketDepartment.query.filter_by(department=form.department.data).count()
+    result = FlicketInstitute.query.filter_by(institute=form.institute.data).count()
     if result > 0:
-        field.errors.append(gettext("Department already exists."))
+        field.errors.append(gettext("Institute already exists."))
         return False
 
     return True
 
 
-def does_category_exist(form, field):
+def does_domain_exist(form, field):
     """
     Username must be unique so we check against the database to ensure it doesn't
     :param form:
@@ -97,33 +97,33 @@ def does_category_exist(form, field):
     :return True / False:
     """
     result = (
-        FlicketCategory.query.filter_by(category=form.category.data)
-        .filter_by(department_id=form.department_id.data)
+        FlicketDomain.query.filter_by(domain=form.domain.data)
+        .filter_by(institute_id=form.institute_id.data)
         .count()
     )
     if result > 0:
-        field.errors.append(gettext("Category already exists."))
+        field.errors.append(gettext("Domain already exists."))
         return False
 
     return True
 
 
-def does_unique_department_category_exist(form, field):
+def does_unique_institute_domain_exist(form, field):
     """
-    DepartmentCategory is CONCAT of '{FlicketDepartment.department} / {FlicketCategory.category}'
+    InstituteDomain is CONCAT of '{FlicketInstitute.institute} / {FlicketDomain.domain}'
     :param form:
     :param field:
     :return True / False:
     """
-    result = FlicketDepartmentCategory.query.filter_by(
-        department_category=form.department_category.data
+    result = FlicketInstituteDomain.query.filter_by(
+        institute_domain=form.institute_domain.data
     ).count()
     if result == 0:
-        field.errors.append(gettext("Category does not exist."))
+        field.errors.append(gettext("Domain does not exist."))
         return False
     if result > 1:
         field.errors.append(
-            gettext("Ambiguous department / category, contact administrator to fix it!")
+            gettext("Ambiguous institute / domain, contact administrator to fix it!")
         )
         return False
 
@@ -140,13 +140,13 @@ class CreateTicketForm(FlaskForm):
             (p.id, p.requester_role) for p in FlicketRequesterRole.query.all()
         ]
 
-        self.category.choices = [
-            (c.id, "{} - {}".format(c.department.department, c.category))
-            for c in FlicketCategory.query.join(FlicketDepartment)
-            .order_by(FlicketDepartment.department)
-            .order_by(FlicketCategory.category)
+        self.domain.choices = [
+            (c.id, "{} - {}".format(c.institute.institute, c.domain))
+            for c in FlicketDomain.query.join(FlicketInstitute)
+            .order_by(FlicketInstitute.institute)
+            .order_by(FlicketDomain.domain)
             .all()
-            if c.department
+            if c.institute
         ]
 
     """ Log in form. """
@@ -188,8 +188,8 @@ class CreateTicketForm(FlaskForm):
     priority = SelectField(
         lazy_gettext("priority"), validators=[DataRequired()], coerce=int
     )
-    category = SelectField(
-        lazy_gettext("category"), validators=[DataRequired()], coerce=int
+    domain = SelectField(
+        lazy_gettext("domain"), validators=[DataRequired()], coerce=int
     )
     file = FileField(lazy_gettext("Upload Documents"), render_kw={"multiple": True})
     hours = DecimalField(lazy_gettext("hours"), default=0)
@@ -304,56 +304,56 @@ class SubscribeUser(SearchUserForm):
     submit = SubmitField(lazy_gettext("subscribe user"), render_kw=form_class_button)
 
 
-class DepartmentForm(FlaskForm):
-    """ Department form. """
+class InstituteForm(FlaskForm):
+    """ Institute form. """
 
-    department = StringField(
-        lazy_gettext("Department"),
+    institute = StringField(
+        lazy_gettext("Institute"),
         validators=[
             DataRequired(),
             Length(
-                min=field_size["department_min_length"],
-                max=field_size["department_max_length"],
+                min=field_size["institute_min_length"],
+                max=field_size["institute_max_length"],
             ),
-            does_department_exist,
+            does_institute_exist,
         ],
     )
-    submit = SubmitField(lazy_gettext("add department"), render_kw=form_class_button)
+    submit = SubmitField(lazy_gettext("add institute"), render_kw=form_class_button)
 
 
-class CategoryForm(FlaskForm):
-    """ Category form. """
+class DomainForm(FlaskForm):
+    """ Domain form. """
 
-    category = StringField(
-        lazy_gettext("Category"),
+    domain = StringField(
+        lazy_gettext("Domain"),
         validators=[
             DataRequired(),
             Length(
-                min=field_size["category_min_length"],
-                max=field_size["category_max_length"],
+                min=field_size["domain_min_length"],
+                max=field_size["domain_max_length"],
             ),
-            does_category_exist,
+            does_domain_exist,
         ],
     )
-    department_id = HiddenField("department_id")
-    submit = SubmitField(lazy_gettext("add category"), render_kw=form_class_button)
+    institute_id = HiddenField("institute_id")
+    submit = SubmitField(lazy_gettext("add domain"), render_kw=form_class_button)
 
 
-class SearchDepartmentCategoryForm(FlaskForm):
-    """ Search department / category. """
+class SearchInstituteDomainForm(FlaskForm):
+    """ Search institute / domain. """
 
-    department_category = StringField(
-        lazy_gettext("Department / Category"),
-        validators=[DataRequired(), does_unique_department_category_exist],
+    institute_domain = StringField(
+        lazy_gettext("Institute / Domain"),
+        validators=[DataRequired(), does_unique_institute_domain_exist],
     )
     submit = SubmitField(
-        lazy_gettext("search department / category"), render_kw=form_class_button
+        lazy_gettext("search institute / domain"), render_kw=form_class_button
     )
 
 
-class ChangeDepartmentCategoryForm(SearchDepartmentCategoryForm):
-    """ Change department / category. """
+class ChangeInstituteDomainForm(SearchInstituteDomainForm):
+    """ Change institute / domain. """
 
     submit = SubmitField(
-        lazy_gettext("change department / category"), render_kw=form_class_button
+        lazy_gettext("change institute / domain"), render_kw=form_class_button
     )

@@ -19,10 +19,10 @@ field_size = {
     "content_max_length": 5000,
     "status_min_length": 3,
     "status_max_length": 20,
-    "department_min_length": 3,
-    "department_max_length": 30,
-    "category_min_length": 3,
-    "category_max_length": 30,
+    "institute_min_length": 3,
+    "institute_max_length": 30,
+    "domain_min_length": 3,
+    "domain_max_length": 30,
     "filename_min_length": 3,
     "filename_max_length": 128,
     "priority_min_length": 3,
@@ -58,83 +58,83 @@ class FlicketStatus(PaginatedAPIMixin, Base):
         return "<FlicketStatus: id={}, status={}>".format(self.id, self.status)
 
 
-class FlicketDepartment(PaginatedAPIMixin, Base):
-    __tablename__ = "flicket_department"
+class FlicketInstitute(PaginatedAPIMixin, Base):
+    __tablename__ = "flicket_institute"
 
     id = db.Column(db.Integer, primary_key=True)
-    department = db.Column(db.String(field_size["department_max_length"]))
-    categories = db.relationship("FlicketCategory", back_populates="department")
+    institute = db.Column(db.String(field_size["institute_max_length"]))
+    domains = db.relationship("FlicketDomain", back_populates="institute")
 
-    def __init__(self, department):
+    def __init__(self, institute):
         """
 
-        :param department:
+        :param institute:
         """
-        self.department = department
+        self.institute = institute
 
     def to_dict(self):
         """
-        Returns a dictionary object about the department
+        Returns a dictionary object about the institute
         :return:
         """
         data = {
             "id": self.id,
-            "department": self.department,
+            "institute": self.institute,
             "links": {
                 "self": app.config["base_url"]
-                + url_for("bp_api.get_department", id=self.id),
-                "departments": app.config["base_url"]
-                + url_for("bp_api.get_departments"),
+                + url_for("bp_api.get_institute", id=self.id),
+                "institutes": app.config["base_url"]
+                + url_for("bp_api.get_institutes"),
             },
         }
 
         return data
 
     def __repr__(self):
-        return "<FlicketDepartment: id={}, department={}>".format(
-            self.id, self.department
+        return "<FlicketInstitute: id={}, institute={}>".format(
+            self.id, self.institute
         )
 
 
-class FlicketCategory(PaginatedAPIMixin, Base):
-    __tablename__ = "flicket_category"
+class FlicketDomain(PaginatedAPIMixin, Base):
+    __tablename__ = "flicket_domain"
 
     id = db.Column(db.Integer, primary_key=True)
-    category = db.Column(db.String(field_size["category_max_length"]))
+    domain = db.Column(db.String(field_size["domain_max_length"]))
 
-    department_id = db.Column(db.Integer, db.ForeignKey(FlicketDepartment.id))
-    department = db.relationship(FlicketDepartment, back_populates="categories")
+    institute_id = db.Column(db.Integer, db.ForeignKey(FlicketInstitute.id))
+    institute = db.relationship(FlicketInstitute, back_populates="domains")
 
-    def __init__(self, category, department):
+    def __init__(self, domain, institute):
         """
 
-        :param category:
+        :param domain:
         """
-        self.category = category
-        self.department = department
+        self.domain = domain
+        self.institute = institute
 
     def to_dict(self):
         """
-        Returns a dictionary object about the category and its department
+        Returns a dictionary object about the domain and its institute
         :return:
         """
         data = {
             "id": self.id,
-            "category": self.category,
-            "department": self.department.department,
+            "domain": self.domain,
+            "institute": self.institute.institute,
             "links": {
                 "self": app.config["base_url"]
-                + url_for("bp_api.get_category", id=self.id),
-                "categories": app.config["base_url"] + url_for("bp_api.get_categories"),
-                "department": app.config["base_url"]
-                + url_for("bp_api.get_department", id=self.department_id),
+                + url_for("bp_api.get_domain", id=self.id),
+                "domains": app.config["base_url"] + url_for("bp_api.get_domains"),
+                "institute": app.config["base_url"]
+                + url_for("bp_api.get_institute", id=self.institute_id),
             },
         }
 
         return data
 
     def __repr__(self):
-        return "<FlicketCategory: id={}, category={}>".format(self.id, self.category)
+        return "<FlicketDomain: id={}, domain={}>".format(self.id, self.domain)
 
 
 class FlicketPriority(PaginatedAPIMixin, Base):
@@ -145,7 +145,7 @@ class FlicketPriority(PaginatedAPIMixin, Base):
 
     def to_dict(self):
         """
-        Returns a dictionary object about the category and its department
+        Returns a dictionary object about the domain and its institute
         :return:
         """
         data = {
@@ -172,7 +172,7 @@ class FlicketRequesterRole(PaginatedAPIMixin, Base):
 
     def to_dict(self):
         """
-        Returns a dictionary object about the category and its department
+        Returns a dictionary object about the domain and its institute
         :return:
         """
         data = {
@@ -214,8 +214,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
     status_id = db.Column(db.Integer, db.ForeignKey(FlicketStatus.id))
     current_status = db.relationship(FlicketStatus)
 
-    category_id = db.Column(db.Integer, db.ForeignKey(FlicketCategory.id))
-    category = db.relationship(FlicketCategory)
+    domain_id = db.Column(db.Integer, db.ForeignKey(FlicketDomain.id))
+    domain = db.relationship(FlicketDomain)
 
     assigned_id = db.Column(db.Integer, db.ForeignKey(FlicketUser.id))
     assigned = db.relationship(FlicketUser, foreign_keys="FlicketTicket.assigned_id")
@@ -263,8 +263,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         return str(self.id).zfill(5)
 
     @property
-    def department_category(self):
-        return f"{self.category.department.department} / {self.category.category}"
+    def institute_domain(self):
+        return f"{self.domain.institute.institute} / {self.domain.domain}"
 
     def is_subscribed(self, user):
         for s in self.subscribers:
@@ -296,8 +296,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         :return:
         """
 
-        department = ""
-        category = ""
+        institute = ""
+        domain = ""
         status = ""
         user_id = ""
 
@@ -306,15 +306,15 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             user_id = user.id
 
         # convert form inputs to it's table title
-        if form.department.data:
-            department = (
-                FlicketDepartment.query.filter_by(id=form.department.data)
+        if form.institute.data:
+            institute = (
+                FlicketInstitute.query.filter_by(id=form.institute.data)
                 .first()
-                .department
+                .institute
             )
-        if form.category.data:
-            category = (
-                FlicketCategory.query.filter_by(id=form.category.data).first().category
+        if form.domain.data:
+            domain = (
+                FlicketDomain.query.filter_by(id=form.domain.data).first().domain
             )
         if form.status.data:
             status = FlicketStatus.query.filter_by(id=form.status.data).first().status
@@ -322,8 +322,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         redirect_url = url_for(
             url,
             content=form.content.data,
-            department=department,
-            category=category,
+            institute=institute,
+            domain=domain,
             status=status,
             user_id=user_id,
         )
@@ -397,25 +397,25 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                         FlicketStatus.query.filter_by(status=value).first().id
                     )
 
-            if key == "category" and value:
+            if key == "domain" and value:
                 ticket_query = ticket_query.filter(
-                    FlicketTicket.category.has(FlicketCategory.category == value)
+                    FlicketTicket.domain.has(FlicketDomain.domain == value)
                 )
                 if form:
-                    form.category.data = (
-                        FlicketCategory.query.filter_by(category=value).first().id
+                    form.domain.data = (
+                        FlicketDomain.query.filter_by(domain=value).first().id
                     )
-            if key == "department" and value:
-                department_filter = FlicketDepartment.query.filter_by(
-                    department=value
+            if key == "institute" and value:
+                institute_filter = FlicketInstitute.query.filter_by(
+                    institute=value
                 ).first()
                 ticket_query = ticket_query.filter(
-                    FlicketTicket.category.has(
-                        FlicketCategory.department == department_filter
+                    FlicketTicket.domain.has(
+                        FlicketDomain.institute == institute_filter
                     )
                 )
                 if form:
-                    form.department.data = department_filter.id
+                    form.institute.data = institute_filter.id
             if key == "user_id" and value:
                 # ticket_query = ticket_query.filter_by(assigned_id=int(value))
                 ticket_query = ticket_query.filter(
@@ -503,23 +503,23 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 .group_by(FlicketTicket.id)
                 .order_by(replies_count.desc(), FlicketTicket.id)
             )
-        elif sort == "department_category":
+        elif sort == "institute_domain":
             ticket_query = (
-                ticket_query.join(FlicketCategory, FlicketTicket.category)
-                .join(FlicketDepartment, FlicketCategory.department)
+                ticket_query.join(FlicketDomain, FlicketTicket.domain)
+                .join(FlicketInstitute, FlicketDomain.institute)
                 .order_by(
-                    FlicketDepartment.department,
-                    FlicketCategory.category,
+                    FlicketInstitute.institute,
+                    FlicketDomain.domain,
                     FlicketTicket.id,
                 )
             )
-        elif sort == "department_category_desc":
+        elif sort == "institute_domain_desc":
             ticket_query = (
-                ticket_query.join(FlicketCategory, FlicketTicket.category)
-                .join(FlicketDepartment, FlicketCategory.department)
+                ticket_query.join(FlicketDomain, FlicketTicket.domain)
+                .join(FlicketInstitute, FlicketDomain.institute)
                 .order_by(
-                    FlicketDepartment.department.desc(),
-                    FlicketCategory.category.desc(),
+                    FlicketInstitute.institute.desc(),
+                    FlicketDomain.domain.desc(),
                     FlicketTicket.id,
                 )
             )
@@ -570,7 +570,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "title",
             "content",
             "requester",
-            "category_id",
+            "domain_id",
             "ticket_priority_id",
             "requester_role_id",
         ]:
@@ -599,7 +599,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         data = {
             "id": self.id,
             "assigned_id": self.assigned_id,
-            "category_id": self.category_id,
+            "domain_id": self.domain_id,
             "content": self.content,
             "requester": self.requester,
             "date_added": self.date_added,
@@ -621,8 +621,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 "started_ny": app.config["base_url"]
                 + url_for("bp_api.get_user", id=self.started_id),
                 "modified_by": modified_by,
-                "category": app.config["base_url"]
-                + url_for("bp_api.get_category", id=self.category_id),
+                "domain": app.config["base_url"]
+                + url_for("bp_api.get_domain", id=self.domain_id),
                 "status": app.config["base_url"]
                 + url_for("bp_api.get_status", id=self.status_id),
                 "subscribers": app.config["base_url"]
@@ -641,7 +641,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             f"id={self.id}, "
             f'title="{self.title}", '
             f"created_by={self.user}, "
-            f"category={self.category}"
+            f"domain={self.domain}"
             f"status={self.current_status}"
             f"assigned={self.assigned}>"
         )
@@ -963,9 +963,9 @@ class FlicketAction(PaginatedAPIMixin, Base):
                 f' by <a href="mailto:{self.user.email}">{self.user.name}</a> | {_date}'
             )
 
-        if self.action == "department_category":
+        if self.action == "institute_domain":
             return (
-                f'Ticket category has been changed to "{self.data["department_category"]}"'
+                f'Ticket domain has been changed to "{self.data["institute_domain"]}"'
                 f' by <a href="mailto:{self.user.email}">{self.user.name}</a> | {_date}'
             )
 
@@ -1001,50 +1001,50 @@ class FlicketAction(PaginatedAPIMixin, Base):
         )
 
 
-# Virtual Model Flicket DepartmentCategory
+# Virtual Model Flicket InstituteDomain
 # xdml: as not sure how to best implement it, I created "Virtual Model" or how to call it
-# that is similar to SQL VIEW, it is simple SELECT FROM flicket_category JOIN flicket_department
+# that is similar to SQL VIEW, it is simple SELECT FROM flicket_domain JOIN flicket_institute
 # query, setting primary_key, so Flask SqlAlchemy ORM can be used as on regular SQL table
-class FlicketDepartmentCategory(PaginatedAPIMixin, Base):
+class FlicketInstituteDomain(PaginatedAPIMixin, Base):
     __table__ = (
         select(
             [
                 func.concat(
-                    FlicketDepartment.department, " / ", FlicketCategory.category
-                ).label("department_category"),
-                FlicketCategory.id.label("category_id"),
-                FlicketCategory.category.label("category"),
-                FlicketDepartment.id.label("department_id"),
-                FlicketDepartment.department.label("department"),
+                    FlicketInstitute.institute, " / ", FlicketDomain.domain
+                ).label("institute_domain"),
+                FlicketDomain.id.label("domain_id"),
+                FlicketDomain.domain.label("domain"),
+                FlicketInstitute.id.label("institute_id"),
+                FlicketInstitute.institute.label("institute"),
             ]
         )
         .select_from(
             join(
-                FlicketCategory,
-                FlicketDepartment,
-                FlicketCategory.department_id == FlicketDepartment.id,
+                FlicketDomain,
+                FlicketInstitute,
+                FlicketDomain.institute_id == FlicketInstitute.id,
             )
         )
         .alias()
     )
-    __mapper_args__ = {"primary_key": [FlicketCategory.id]}
+    __mapper_args__ = {"primary_key": [FlicketDomain.id]}
 
     def to_dict(self):
         data = {
-            "department_category": self.department_category,
-            "category_id": self.category_id,
-            "category": self.category,
-            "department_id": self.department_id,
-            "department": self.department,
+            "institute_domain": self.institute_domain,
+            "domain_id": self.domain_id,
+            "domain": self.domain,
+            "institute_id": self.institute_id,
+            "institute": self.institute,
             "links": {
                 "self": app.config["base_url"]
-                + url_for("bp_api.get_department_category", id=self.category_id),
-                "department_categories": app.config["base_url"]
-                + url_for("bp_api.get_department_categories"),
-                "department": app.config["base_url"]
-                + url_for("bp_api.get_department", id=self.department_id),
-                "category": app.config["base_url"]
-                + url_for("bp_api.get_category", id=self.category_id),
+                + url_for("bp_api.get_institute_domain", id=self.domain_id),
+                "institute_domains": app.config["base_url"]
+                + url_for("bp_api.get_institute_domains"),
+                "institute": app.config["base_url"]
+                + url_for("bp_api.get_institute", id=self.institute_id),
+                "domain": app.config["base_url"]
+                + url_for("bp_api.get_domain", id=self.domain_id),
             },
         }
 
@@ -1052,6 +1052,6 @@ class FlicketDepartmentCategory(PaginatedAPIMixin, Base):
 
     def __repr__(self):
         return (
-            f"<FlicketDepartmentCategory: department_category='{self.department_category}',"
-            f" category_id={self.category_id}>"
+            f"<FlicketInstituteDomain: institute_domain='{self.institute_domain}',"
+            f" domain_id={self.domain_id}>"
         )

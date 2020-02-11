@@ -13,8 +13,8 @@ from application.flicket.models.flicket_models import (
     FlicketStatus,
     FlicketPriority,
     FlicketRequesterRole,
-    FlicketDepartment,
-    FlicketCategory,
+    FlicketInstitute,
+    FlicketDomain,
 )
 from application.flicket.models.flicket_user import FlicketUser, FlicketGroup
 from application.flicket.scripts.hash_password import hash_password
@@ -53,7 +53,7 @@ specialities = [
     "Software Development",
 ]
 
-departments = [
+institutes = [
     "IBDM",
     "Institut Fresnel",
     "CIML",
@@ -72,9 +72,9 @@ departments = [
     "LIS",
 ]
 
-# departments and categories defaults for flicket
-depart_categories = [
-    {"department": dep, "category": specialities} for dep in departments
+# institutes and domains defaults for flicket
+depart_domains = [
+    {"institute": dep, "domain": specialities} for dep in institutes
 ]
 
 
@@ -274,31 +274,31 @@ class RunSetUP(Command):
 
     @staticmethod
     def create_default_depts(silent=False):
-        """ creates default departments and categories. """
+        """ creates default institutes and domains. """
 
-        for d in depart_categories:
+        for d in depart_domains:
 
-            department = d["department"]
-            categories = d["category"]
+            institute = d["institute"]
+            domains = d["domain"]
 
-            query = FlicketDepartment.query.filter_by(department=department).first()
+            query = FlicketInstitute.query.filter_by(institute=institute).first()
             if not query:
-                add_department = FlicketDepartment(department=department)
-                db.session.add(add_department)
+                add_institute = FlicketInstitute(institute=institute)
+                db.session.add(add_institute)
 
                 if not silent:
-                    print("department {} added.".format(department))
+                    print("institute {} added.".format(institute))
 
-                for c in categories:
-                    query = FlicketCategory.query.filter_by(category=c).first()
+                for c in domains:
+                    query = FlicketDomain.query.filter_by(domain=c).first()
                     if not query:
-                        add_category = FlicketCategory(
-                            category=c, department=add_department
+                        add_domain = FlicketDomain(
+                            domain=c, institute=add_institute
                         )
-                        db.session.add(add_category)
+                        db.session.add(add_domain)
 
                         if silent is False:
-                            print("category {} added.".format(c))
+                            print("domain {} added.".format(c))
 
     @staticmethod
     def set_email_config(silent=False):

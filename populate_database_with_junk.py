@@ -16,7 +16,7 @@ from application.flicket.models.flicket_models import (
     FlicketTicket,
     FlicketStatus,
     FlicketPriority,
-    FlicketCategory,
+    FlicketDomain,
     FlicketPost,
     field_size,
 )
@@ -51,11 +51,11 @@ def get_random_priority():
     return FlicketPriority.query.filter_by(id=id_).first()
 
 
-def get_random_category():
-    category = FlicketCategory.query
-    id_ = randint(1, category.count())
+def get_random_domain():
+    domain = FlicketDomain.query
+    id_ = randint(1, domain.count())
 
-    return FlicketCategory.query.filter_by(id=id_).first()
+    return FlicketDomain.query.filter_by(id=id_).first()
 
 
 def create_ticket_reply(new_ticket):
@@ -138,7 +138,7 @@ def topic_creation(num_topics_):
             date_added=datetime.datetime.now(),
             current_status=get_random_status(),
             ticket_priority=get_random_priority(),
-            category=get_random_category(),
+            domain=get_random_domain(),
             assigned=get_random_user(),
         )
 

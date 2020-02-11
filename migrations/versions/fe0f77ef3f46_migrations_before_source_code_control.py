@@ -44,9 +44,9 @@ def upgrade():
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
-        "flicket_department",
+        "flicket_institute",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("department", sa.String(length=30), nullable=True),
+        sa.Column("institute", sa.String(length=30), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
@@ -93,11 +93,11 @@ def upgrade():
         op.f("ix_flicket_users_username"), "flicket_users", ["username"], unique=True
     )
     op.create_table(
-        "flicket_category",
+        "flicket_domain",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("category", sa.String(length=30), nullable=True),
-        sa.Column("department_id", sa.Integer(), nullable=True),
-        sa.ForeignKeyConstraint(["department_id"], ["flicket_department.id"],),
+        sa.Column("domain", sa.String(length=30), nullable=True),
+        sa.Column("institute_id", sa.Integer(), nullable=True),
+        sa.ForeignKeyConstraint(["institute_id"], ["flicket_institute.id"],),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
@@ -117,11 +117,11 @@ def upgrade():
         sa.Column("date_modified", sa.DateTime(), nullable=True),
         sa.Column("modified_id", sa.Integer(), nullable=True),
         sa.Column("status_id", sa.Integer(), nullable=True),
-        sa.Column("category_id", sa.Integer(), nullable=True),
+        sa.Column("domain_id", sa.Integer(), nullable=True),
         sa.Column("assigned_id", sa.Integer(), nullable=True),
         sa.Column("ticket_priority_id", sa.Integer(), nullable=True),
         sa.ForeignKeyConstraint(["assigned_id"], ["flicket_users.id"],),
-        sa.ForeignKeyConstraint(["category_id"], ["flicket_category.id"],),
+        sa.ForeignKeyConstraint(["domain_id"], ["flicket_domain.id"],),
         sa.ForeignKeyConstraint(["modified_id"], ["flicket_users.id"],),
         sa.ForeignKeyConstraint(["started_id"], ["flicket_users.id"],),
         sa.ForeignKeyConstraint(["status_id"], ["flicket_status.id"],),
@@ -212,13 +212,13 @@ def downgrade():
     op.drop_index(op.f("ix_flicket_topic_title"), table_name="flicket_topic")
     op.drop_table("flicket_topic")
     op.drop_table("flicket_groups")
-    op.drop_table("flicket_category")
+    op.drop_table("flicket_domain")
     op.drop_index(op.f("ix_flicket_users_username"), table_name="flicket_users")
     op.drop_index(op.f("ix_flicket_users_token"), table_name="flicket_users")
     op.drop_table("flicket_users")
     op.drop_table("flicket_status")
     op.drop_table("flicket_priorities")
     op.drop_table("flicket_group")
-    op.drop_table("flicket_department")
+    op.drop_table("flicket_institute")
     op.drop_table("flicket_config")
     # ### end Alembic commands ###

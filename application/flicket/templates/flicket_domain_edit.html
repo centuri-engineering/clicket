@@ -12,7 +12,7 @@
             <div class="col">
 
                 <div class="row mb-1">
-                    <div class="col">{{ _('Department') }}: {{ department }}</div>
+                    <div class="col">{{ _('Institute') }}: {{ institute }}</div>
                 </div>
                 <form action=""
                       class="form-horizontal"
@@ -21,20 +21,20 @@
                       name="create_ticket">
                     {{ form.hidden_tag() }}
                     <div class="row">
-                        <label class="sr-only">{{ _('Category') }}</label>
+                        <label class="sr-only">{{ _('Domain') }}</label>
                         <div class="col">
-                            {{ form.category(class="form-control form-control-sm", title="category") }}
+                            {{ form.domain(class="form-control form-control-sm", title="domain") }}
                         </div>
                         <div class="col">
-                            <input class="btn btn-primary btn-sm" type="submit" value="edit category"/>
+                            <input class="btn btn-primary btn-sm" type="submit" value="edit domain"/>
                         </div>
                     </div>
 
 
-                    {% if form.category.errors %}
+                    {% if form.domain.errors %}
                         <div class="row">
                             <div class="alert alert-warning small">
-                                {% for error in form.category.errors %}
+                                {% for error in form.domain.errors %}
                                     {{ error }}
                                 {% endfor %}
                             </div>

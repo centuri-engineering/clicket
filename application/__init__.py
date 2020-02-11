@@ -75,7 +75,7 @@ from .flicket_admin.views import view_email_test
 from .flicket.views import assign
 
 # noinspection PyPep8
-from .flicket.views import categories
+from .flicket.views import domains
 
 # noinspection PyPep8
 from .flicket.views import edit_status
@@ -90,7 +90,7 @@ from .flicket.views import create
 from .flicket.views import delete
 
 # noinspection PyPep8
-from .flicket.views import departments
+from .flicket.views import institutes
 
 # noinspection PyPep8
 from .flicket.views import edit
@@ -129,16 +129,16 @@ from .flicket.views import users
 from .flicket.views import view_ticket
 
 # noinspection PyPep8
-from .flicket.views import department_category
+from .flicket.views import institute_domain
 
 # noinspection PyPep8
 from .flicket_api.views import actions
 
 # noinspection PyPep8
-from .flicket_api.views import categories
+from .flicket_api.views import domains
 
 # noinspection PyPep8
-from .flicket_api.views import departments
+from .flicket_api.views import institutes
 
 # noinspection PyPep8
 from .flicket_api.views import histories
@@ -166,7 +166,7 @@ from .flicket_api.views import uploads
 
 # noinspection PyPep8
 from .flicket_api.views import users
-from .flicket_api.views import department_categories
+from .flicket_api.views import institute_domains
 
 # noinspection PyPep8
 from .flicket_errors import handlers

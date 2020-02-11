@@ -24,24 +24,24 @@
 
                         <div class="row m-0">
                             <div class="col">
-                                <div class="flicket-tickets-title">{{ _('Department') }}</div>
+                                <div class="flicket-tickets-title">{{ _('Institute') }}</div>
                                 <div class="flicket-tickets-content">
-                                    {{ ticket.category.department.department }}
-                                    {%- if change_category %}
-                                        <a href="{{ url_for('flicket_bp.ticket_department_category', ticket_id = ticket.id) }}"
-                                           title="{{ _('category') }}">
+                                    {{ ticket.domain.institute.institute }}
+                                    {%- if change_domain %}
+                                        <a href="{{ url_for('flicket_bp.ticket_institute_domain', ticket_id = ticket.id) }}"
+                                           title="{{ _('domain') }}">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     {%- endif %}
                                 </div>
                             </div>
                             <div class="col">
-                                <div class="flicket-tickets-title">{{ _('Category') }}</div>
+                                <div class="flicket-tickets-title">{{ _('Domain') }}</div>
                                 <div class="flicket-tickets-content">
-                                    {{ ticket.category.category }}
-                                    {%- if change_category %}
-                                        <a href="{{ url_for('flicket_bp.ticket_department_category', ticket_id = ticket.id) }}"
-                                           title="{{ _('department') }}">
+                                    {{ ticket.domain.domain }}
+                                    {%- if change_domain %}
+                                        <a href="{{ url_for('flicket_bp.ticket_institute_domain', ticket_id = ticket.id) }}"
+                                           title="{{ _('institute') }}">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     {%- endif %}

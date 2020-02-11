@@ -35,7 +35,7 @@
 
             {
                 "assigned_id": 7,
-                "category_id": 1,
+                "domain_id": 1,
                 "content": "She spent her earliest years reading classic literature, and writing poetry. Haskell
                 features a type system with type inference and lazy evaluation. They are written as strings of
                 consecutive alphanumeric characters, the first character being lowercase. Tuples are containers for
@@ -50,7 +50,7 @@
                 "id": 1,
                 "links": {
                     "assigned": "http://localhost:5000/flicket-api/user/7",
-                    "category": "http://localhost:5000/flicket-api/category/1",
+                    "domain": "http://localhost:5000/flicket-api/domain/1",
                     "histories": "http://localhost:5000/flicket-api/histories/?topic_id=1",
                     "modified_by": null,
                     "priority": "http://localhost:5000/flicket-api/priority/3",
@@ -107,7 +107,7 @@
                 "items": [
                     {
                         "assigned_id": 7,
-                        "category_id": 1,
+                        "domain_id": 1,
                         "content": "She spent her earliest years reading classic literature, and writing poetry. Haskell
                         features a type system with type inference and lazy evaluation. They are written as strings of
                         consecutive alphanumeric characters, the first character being lowercase. Tuples are containers
@@ -123,7 +123,7 @@
                         "id": 1,
                         "links": {
                             "assigned": "http://localhost:5000/flicket-api/user/7",
-                            "category": "http://localhost:5000/flicket-api/category/1",
+                            "domain": "http://localhost:5000/flicket-api/domain/1",
                             "histories": "http://localhost:5000/flicket-api/histories/?topic_id=1",
                             "modified_by": null,
                             "priority": "http://localhost:5000/flicket-api/priority/3",
@@ -146,7 +146,7 @@
     Create Ticket
     ~~~~~~~~~~~~~
 
-    .. http:post:: /flicket-api/tickets(str:title,str:content,int:category_id,int:ticket_priority_id)
+    .. http:post:: /flicket-api/tickets(str:title,str:content,int:domain_id,int:ticket_priority_id)
 
         **Request**
 
@@ -160,7 +160,7 @@
             {
                 "title": "this is my ticket",
                 "content": "this is my content",
-                "category_id": 1,
+                "domain_id": 1,
                 "ticket_priority_id": 1
             }
 
@@ -177,14 +177,14 @@
 
                 {
                     "assigned_id": null,
-                    "category_id": 1,
+                    "domain_id": 1,
                     "content": "this is my content",
                     "date_added": "Fri, 28 Jun 2019 13:04:59 GMT",
                     "date_modified": null,
                     "id": 10001,
                     "links": {
                         "assigned": null,
-                        "category": "http://localhost:5000/flicket-api/category/1",
+                        "domain": "http://localhost:5000/flicket-api/domain/1",
                         "histories": "http://localhost:5000/flicket-api/histories/?topic_id=10001",
                         "modified_by": null,
                         "priority": "http://localhost:5000/flicket-api/priority/1",
@@ -216,7 +216,7 @@ from application import app, db
 from application.flicket.models.flicket_models import (
     FlicketPriority,
     FlicketTicket,
-    FlicketCategory,
+    FlicketDomain,
 )
 from application.flicket_api.views.auth import token_auth
 from application.flicket_api.views.errors import bad_request
@@ -252,20 +252,20 @@ def create_ticket():
     if (
         "title" not in data
         or "content" not in data
-        or "category_id" not in data
+        or "domain_id" not in data
         or "ticket_priority_id" not in data
     ):
         return bad_request(
-            "Must include title, content, category_id and ticket_priority_id."
+            "Must include title, content, domain_id and ticket_priority_id."
         )
 
-    if not isinstance(data["category_id"], int) or not isinstance(
+    if not isinstance(data["domain_id"], int) or not isinstance(
         data["ticket_priority_id"], int
     ):
-        return bad_request("ticket_priority_id and category_id must be integers.")
+        return bad_request("ticket_priority_id and domain_id must be integers.")
 
-    if not FlicketCategory.query.filter_by(id=data["category_id"]).first():
-        return bad_request("not a valid category_id")
+    if not FlicketDomain.query.filter_by(id=data["domain_id"]).first():
+        return bad_request("not a valid domain_id")
 
     if not FlicketPriority.query.filter_by(id=data["ticket_priority_id"]).first():
         return bad_request("not a valid ticket_priority_id")

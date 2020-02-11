@@ -23,11 +23,11 @@ msgid "Can't find user."
 msgstr ""
 
 #: application/flicket/forms/flicket_forms.py:74
-msgid "Department already exists."
+msgid "Institute already exists."
 msgstr ""
 
 #: application/flicket/forms/flicket_forms.py:90
-msgid "Category already exists."
+msgid "Domain already exists."
 msgstr ""
 
 #: application/flicket/forms/flicket_forms.py:112
@@ -90,11 +90,11 @@ msgid "subscribe user"
 msgstr ""
 
 #: application/flicket/forms/flicket_forms.py:189
-msgid "add department"
+msgid "add institute"
 msgstr ""
 
 #: application/flicket/forms/flicket_forms.py:198
-msgid "add category"
+msgid "add domain"
 msgstr ""
 
 #: application/flicket/templates/403.html:5
@@ -188,19 +188,19 @@ msgstr ""
 msgid "a simple ticket system"
 msgstr ""
 
-#: application/flicket/templates/flicket_categories.html:36
+#: application/flicket/templates/flicket_domains.html:36
 msgid "Existing Categories"
 msgstr ""
 
-#: application/flicket/templates/flicket_categories.html:41
-#: application/flicket/templates/flicket_category_edit.html:17
+#: application/flicket/templates/flicket_domains.html:41
+#: application/flicket/templates/flicket_domain_edit.html:17
 #: application/flicket/templates/flicket_include_ticket.html:58
 #: application/flicket/templates/flicket_tickets.html:149
 #: application/flicket/templates/flicket_view.html:36
-msgid "Category"
+msgid "Domain"
 msgstr ""
 
-#: application/flicket/templates/flicket_categories.html:48
+#: application/flicket/templates/flicket_domains.html:48
 msgid "edit"
 msgstr ""
 
@@ -211,14 +211,14 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: application/flicket/templates/flicket_department_edit.html:16
+#: application/flicket/templates/flicket_institute_edit.html:16
 #: application/flicket/templates/flicket_view.html:32
-msgid "Department"
+msgid "Institute"
 msgstr ""
 
-#: application/flicket/templates/flicket_departments.html:6
+#: application/flicket/templates/flicket_institutes.html:6
 msgid ""
-"If you require new departments and / or categories added / deleted, "
+"If you require new institutes and / or domains added / deleted, "
 "please raise a ticket."
 msgstr ""
 
@@ -304,8 +304,8 @@ msgstr ""
 
 #: application/flicket/templates/flicket_index.html:18
 #: application/flicket/templates/flicket_navbar.html:20
-#: application/flicket/views/departments.py:34
-msgid "Departments"
+#: application/flicket/views/institutes.py:34
+msgid "Institutes"
 msgstr ""
 
 #: application/flicket/templates/flicket_navbar.html:17
@@ -470,17 +470,17 @@ msgstr ""
 msgid "Email Address"
 msgstr ""
 
-#: application/flicket/views/categories.py:30
+#: application/flicket/views/domains.py:30
 #, python-format
-msgid "New category %(value)s added."
+msgid "New domain %(value)s added."
 msgstr ""
 
-#: application/flicket/views/categories.py:33
+#: application/flicket/views/domains.py:33
 msgid "Categories"
 msgstr ""
 
-#: application/flicket/views/categories.py:59
-msgid "Edit Category"
+#: application/flicket/views/domains.py:59
+msgid "Edit Domain"
 msgstr ""
 
 #: application/flicket/views/delete.py:29
@@ -501,36 +501,36 @@ msgid "Delete Post"
 msgstr ""
 
 #: application/flicket/views/delete.py:114
-msgid "You are not authorised to delete categories."
+msgid "You are not authorised to delete domains."
 msgstr ""
 
 #: application/flicket/views/delete.py:146
-msgid "Delete Category"
+msgid "Delete Domain"
 msgstr ""
 
 #: application/flicket/views/delete.py:162
-msgid "You are not authorised to delete departments."
+msgid "You are not authorised to delete institutes."
 msgstr ""
 
 #: application/flicket/views/delete.py:189
 #, python-format
 msgid ""
-"You are trying to delete department <span class=\"label label-"
+"You are trying to delete institute <span class=\"label label-"
 "default\">%(value)s</span>."
 msgstr ""
 
 #: application/flicket/views/delete.py:193
-msgid "Delete Department"
+msgid "Delete Institute"
 msgstr ""
 
-#: application/flicket/views/departments.py:29
+#: application/flicket/views/institutes.py:29
 #, python-format
-msgid "New department \"%(value)s\" added."
+msgid "New institute \"%(value)s\" added."
 msgstr ""
 
-#: application/flicket/views/departments.py:54
+#: application/flicket/views/institutes.py:54
 #, python-format
-msgid "Department \"%(value)s\" edited."
+msgid "Institute \"%(value)s\" edited."
 msgstr ""
 
 #: application/flicket/views/edit.py:35

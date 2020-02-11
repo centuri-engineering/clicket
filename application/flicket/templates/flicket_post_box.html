@@ -67,8 +67,8 @@
             {{ form.priority(class="form-control form-control-sm m-0") }}
         </div>
         <div class="col align-self-end">
-            <label class="m-0 flicket-tickets-title">{{ _('Category') }}</label>
-            {{ form.category(class="form-control form-control-sm m-0") }}
+            <label class="m-0 flicket-tickets-title">{{ _('Domain') }}</label>
+            {{ form.domain(class="form-control form-control-sm m-0") }}
         </div>
         <div class="col-1 align-self-end">
             <label class="m-0 flicket-tickets-title">{{ form.hours.label.text }}</label>
@@ -96,9 +96,9 @@
     {% endif %}
 
 
-    {% if form.category.errors %}
+    {% if form.domain.errors %}
         <div class="alert alert-warning small">
-            {% for error in form.category.errors %}
+            {% for error in form.domain.errors %}
                 {{ error }}
             {% endfor %}
         </div>

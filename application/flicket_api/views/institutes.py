@@ -4,19 +4,19 @@
 # Flicket - copyright Paul Bourne: evereux@gmail.com
 
 """
-    Departments
+    Institutes
     ===========
 
-    Get Department by ID
+    Get Institute by ID
     ~~~~~~~~~~~~~~~~~~~~
 
-    .. http:get:: /flicket-api/department/(int:department_id)
+    .. http:get:: /flicket-api/institute/(int:institute_id)
 
         **Request**
 
         .. sourcecode:: http
 
-            GET /flicket-api/department/1 HTTP/1.1
+            GET /flicket-api/institute/1 HTTP/1.1
             HOST: localhost:5000
             Accept: application/json
             Authorization: Bearer <token>
@@ -32,24 +32,24 @@
             Server: Werkzeug/0.14.1 Python/3.7.3
 
             {
-                "department": "Design",
+                "institute": "Design",
                 "id": 1,
                 "links": {
-                    "departments": "http://127.0.0.1:5000/flicket-api/departments/",
-                    "self": "http://127.0.0.1:5000/flicket-api/department/1"
+                    "institutes": "http://127.0.0.1:5000/flicket-api/institutes/",
+                    "self": "http://127.0.0.1:5000/flicket-api/institute/1"
                 }
             }
 
-    Get Departments
+    Get Institutes
     ~~~~~~~~~~~~~~~~
 
-    .. http:get:: /flicket-api/departments/
+    .. http:get:: /flicket-api/institutes/
 
         **Request**
 
         .. sourcecode:: http
 
-            GET /flicket-api/departments/ HTTP/1.1
+            GET /flicket-api/institutes/ HTTP/1.1
             HOST: localhost:5000
             Accept: application/json
             Authorization: Bearer <token>
@@ -68,7 +68,7 @@
                 "_links": {
                     "next": null,
                     "prev": null,
-                    "self": "http://127.0.0.1:5000/flicket-api/departments/?page=1&per_page=50"
+                    "self": "http://127.0.0.1:5000/flicket-api/institutes/?page=1&per_page=50"
                 },
                 "_meta": {
                     "page": 1,
@@ -78,57 +78,57 @@
                 },
                 "items": [
                     {
-                        "department": "Commercial",
+                        "institute": "Commercial",
                         "id": 6,
                         "links": {
-                            "departments": "http://127.0.0.1:5000/flicket-api/departments/",
-                            "self": "http://127.0.0.1:5000/flicket-api/department/6"
+                            "institutes": "http://127.0.0.1:5000/flicket-api/institutes/",
+                            "self": "http://127.0.0.1:5000/flicket-api/institute/6"
                         }
                     },
                     {
-                        "department": "Design",
+                        "institute": "Design",
                         "id": 1,
                         "links": {
-                            "departments": "http://127.0.0.1:5000/flicket-api/departments/",
-                            "self": "http://127.0.0.1:5000/flicket-api/department/1"
+                            "institutes": "http://127.0.0.1:5000/flicket-api/institutes/",
+                            "self": "http://127.0.0.1:5000/flicket-api/institute/1"
                         }
                     },
                     {
-                        "department": "Human Resources",
+                        "institute": "Human Resources",
                         "id": 5,
                         "links": {
-                            "departments": "http://127.0.0.1:5000/flicket-api/departments/",
-                            "self": "http://127.0.0.1:5000/flicket-api/department/5"
+                            "institutes": "http://127.0.0.1:5000/flicket-api/institutes/",
+                            "self": "http://127.0.0.1:5000/flicket-api/institute/5"
                         }
                     },
                     {
-                        "department": "IT",
+                        "institute": "IT",
                         "id": 3,
                         "links": {
-                            "departments": "http://127.0.0.1:5000/flicket-api/departments/",
-                            "self": "http://127.0.0.1:5000/flicket-api/department/3"
+                            "institutes": "http://127.0.0.1:5000/flicket-api/institutes/",
+                            "self": "http://127.0.0.1:5000/flicket-api/institute/3"
                         }
                     }
                 ]
             }
 
 
-    Create Department
+    Create Institute
     ~~~~~~~~~~~~~~~~~
 
-    .. http:post:: http://localhost:5000/flicket-api/departments(str:department)
+    .. http:post:: http://localhost:5000/flicket-api/institutes(str:institute)
 
         **Request**
 
         .. sourcecode:: http
 
-            POST /flicket-api/departments HTTP/1.1
+            POST /flicket-api/institutes HTTP/1.1
             HOST: localhost:5000
             Accept: application/json
             Authorization: Bearer <token>
 
             {
-                "department": "new department"
+                "institute": "new institute"
             }
 
         **Response**
@@ -139,15 +139,15 @@
             Content-Length: 201
             Content-Type: application/json
             Date: Sun, 30 Jun 2019 12:45:35 GMT
-            Location: http://localhost:5000/flicket-api/department/12
+            Location: http://localhost:5000/flicket-api/institute/12
             Server: Werkzeug/0.14.1 Python/3.7.3
 
             {
-                "department": "New Department",
+                "institute": "New Institute",
                 "id": 12,
                 "links": {
-                    "departments": "http://127.0.0.1:5000/flicket-api/departments/",
-                    "self": "http://127.0.0.1:5000/flicket-api/department/12"
+                    "institutes": "http://127.0.0.1:5000/flicket-api/institutes/",
+                    "self": "http://127.0.0.1:5000/flicket-api/institute/12"
                 }
             }
 """
@@ -157,57 +157,57 @@ from flask import jsonify, request, url_for
 from .sphinx_helper import api_url
 from . import bp_api
 from application import app, db
-from application.flicket.models.flicket_models import FlicketDepartment
+from application.flicket.models.flicket_models import FlicketInstitute
 from application.flicket_api.views.auth import token_auth
 from application.flicket_api.views.errors import bad_request
 
 
-@bp_api.route(api_url + "department/<int:id>", methods=["GET"])
+@bp_api.route(api_url + "institute/<int:id>", methods=["GET"])
 @token_auth.login_required
-def get_department(id):
+def get_institute(id):
     return jsonify(
-        FlicketDepartment.query.order_by(FlicketDepartment.department.asc())
+        FlicketInstitute.query.order_by(FlicketInstitute.institute.asc())
         .get_or_404(id)
         .to_dict()
     )
 
 
-@bp_api.route(api_url + "departments/", methods=["GET"])
+@bp_api.route(api_url + "institutes/", methods=["GET"])
 @token_auth.login_required
-def get_departments():
+def get_institutes():
     page = request.args.get("page", 1, type=int)
     per_page = min(
         request.args.get("per_page", app.config["posts_per_page"], type=int), 100
     )
-    data = FlicketDepartment.to_collection_dict(
-        FlicketDepartment.query.order_by(FlicketDepartment.department.asc()),
+    data = FlicketInstitute.to_collection_dict(
+        FlicketInstitute.query.order_by(FlicketInstitute.institute.asc()),
         page,
         per_page,
-        "bp_api.get_departments",
+        "bp_api.get_institutes",
     )
     return jsonify(data)
 
 
-@bp_api.route(api_url + "departments", methods=["POST"])
+@bp_api.route(api_url + "institutes", methods=["POST"])
 @token_auth.login_required
-def create_department():
+def create_institute():
 
     # todo add authentication. only those in the admin or super_user groups should be allowed to create.
 
     data = request.get_json() or {}
 
-    if "department" not in data:
-        return bad_request("Must include department name.")
+    if "institute" not in data:
+        return bad_request("Must include institute name.")
 
-    if FlicketDepartment.query.filter_by(department=data["department"]).first():
-        return bad_request("Department already created.")
+    if FlicketInstitute.query.filter_by(institute=data["institute"]).first():
+        return bad_request("Institute already created.")
 
-    department = FlicketDepartment(data["department"])
-    db.session.add(department)
+    institute = FlicketInstitute(data["institute"])
+    db.session.add(institute)
     db.session.commit()
 
-    response = jsonify(department.to_dict())
+    response = jsonify(institute.to_dict())
     response.status_code = 201
-    response.headers["Location"] = url_for("bp_api.get_department", id=department.id)
+    response.headers["Location"] = url_for("bp_api.get_institute", id=institute.id)
 
     return response

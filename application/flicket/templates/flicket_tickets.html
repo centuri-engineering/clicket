@@ -5,8 +5,8 @@
     <script src="{{ url_for('flicket_bp.static', filename='js/uri.js') }}"></script>
 
     {% include('flicket_apijson_users.html') %}
-    {% include('flicket_apijson_categories.html') %}
-    {% include('flicket_apijson_departments.html') %}
+    {% include('flicket_apijson_domains.html') %}
+    {% include('flicket_apijson_institutes.html') %}
     {% include('flicket_apijson_statuses.html') %}
 
 
@@ -17,7 +17,7 @@
                 <h1>{{ title }}</h1>
                 <p>
                     {{ _('Download results as a csv file') }} <a
-                        href="{{ url_for('flicket_bp.tickets_csv', status=status, department=department, category=category, content=content, user_id=user_id) }}"
+                        href="{{ url_for('flicket_bp.tickets_csv', status=status, institute=institute, domain=domain, content=content, user_id=user_id) }}"
                         title="csv file">
                     <i class="fas fa-file-csv"></i>
                 </a>.
@@ -34,10 +34,10 @@
                   name="search_ticket">
                 {{ form.hidden_tag() }}
                 <div class="col-md col-6 text-center">
-                    {{ form.department(class="form-control form-control-sm flicket-tickets-content p-0", id="department") }}
+                    {{ form.institute(class="form-control form-control-sm flicket-tickets-content p-0", id="institute") }}
                 </div>
                 <div class="col-md col-6 text-center">
-                    {{ form.category(class="form-control form-control-sm flicket-tickets-content p-0", id="category") }}
+                    {{ form.domain(class="form-control form-control-sm flicket-tickets-content p-0", id="domain") }}
                 </div>
                 <div class="col-md col-6 text-center">
                     {{ form.status(class="form-control form-control-sm flicket-tickets-content p-0", id="status") }}
@@ -125,15 +125,15 @@
                             <i class="fas fa-sort-numeric-up"></i>
                             {{ _('Date') }}
                         </a>
-                        <a class="dropdown-item small{% if sort == 'department_category' %} active{% endif %}"
-                           href="{{ url_for(base_url, sort='department_category', **request.args) }}">
+                        <a class="dropdown-item small{% if sort == 'institute_domain' %} active{% endif %}"
+                           href="{{ url_for(base_url, sort='institute_domain', **request.args) }}">
                             <i class="fas fa-sort-alpha-down"></i>
-                            {{ _('Department / Category') }}
+                            {{ _('Institute / Domain') }}
                         </a>
-                        <a class="dropdown-item small{% if sort == 'department_category_desc' %} active{% endif %}"
-                           href="{{ url_for(base_url, sort='department_category_desc', **request.args) }}">
+                        <a class="dropdown-item small{% if sort == 'institute_domain_desc' %} active{% endif %}"
+                           href="{{ url_for(base_url, sort='institute_domain_desc', **request.args) }}">
                             <i class="fas fa-sort-alpha-up"></i>
-                            {{ _('Department / Category') }}
+                            {{ _('Institute / Domain') }}
                         </a>
                         <a class="dropdown-item small{% if sort == 'status' %} active{% endif %}"
                            href="{{ url_for(base_url, sort='status', **request.args) }}">
@@ -239,10 +239,10 @@
                             </div>
                             <div class="col-md-3 col-6">
                                 <div class="flicket-tickets-title">
-                                    department / category
+                                    institute / domain
                                 </div>
                                 <div class="flicket-tickets-content">
-                                    {{ t.category.department.department }} / {{ t.category.category }}
+                                    {{ t.domain.institute.institute }} / {{ t.domain.domain }}
                                 </div>
                             </div>
                             <div class="col-md-2 col-6">

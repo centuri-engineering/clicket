@@ -13,7 +13,7 @@ API
 .. automodule:: flicket_api.views.posts
     :members:
 
-.. automodule:: flicket_api.views.departments
+.. automodule:: flicket_api.views.institutes
     :members:
 
 .. automodule:: flicket_api.views.priorities

@@ -45,7 +45,7 @@ class FlicketMail:
 
     def create_ticket(self, ticket):
         """"""
-        # todo: send email to department heads
+        # todo: send email to institute heads
         pass
 
     def reply_ticket(self, ticket=None, reply=None, user=None):
@@ -98,23 +98,23 @@ class FlicketMail:
 
         self.send_email(title, self.sender, recipients, html_body)
 
-    def department_category_ticket(self, ticket):
+    def institute_domain_ticket(self, ticket):
         """
-        Change ticket department or category email notification
+        Change ticket institute or domain email notification
 
         :param ticket: ticket object
         :return:
         """
 
         recipients = ticket.get_subscriber_emails()
-        title = "Ticket #{} - {} has changed department and/or category.".format(
+        title = "Ticket #{} - {} has changed institute and/or domain.".format(
             ticket.id_zfill, ticket.title
         )
         ticket_url = app.config["base_url"] + url_for(
             "flicket_bp.ticket_view", ticket_id=ticket.id
         )
         html_body = render_template(
-            "email_ticket_department_category.html",
+            "email_ticket_institute_domain.html",
             ticket=ticket,
             number=ticket.id_zfill,
             ticket_url=ticket_url,

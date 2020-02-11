@@ -70,9 +70,9 @@ class ConfigForm(FlaskForm):
 
     csv_dump_limit = IntegerField(lazy_gettext("csv_dump_limit"), validators=[])
 
-    change_category = BooleanField(lazy_gettext("change_category"), validators=[])
-    change_category_only_admin_or_super_user = BooleanField(
-        lazy_gettext("change_category_only_admin_or_super_user"), validators=[]
+    change_domain = BooleanField(lazy_gettext("change_domain"), validators=[])
+    change_domain_only_admin_or_super_user = BooleanField(
+        lazy_gettext("change_domain_only_admin_or_super_user"), validators=[]
     )
 
     submit = SubmitField(

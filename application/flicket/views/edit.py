@@ -61,7 +61,7 @@ def edit_ticket(ticket_id):
             user=g.user,
             content=form.content.data,
             priority=form.priority.data,
-            category=form.category.data,
+            domain=form.domain.data,
             files=request.files.getlist("file"),
             hours=form.hours.data,
             form_uploads=form.uploads.data,
@@ -74,7 +74,7 @@ def edit_ticket(ticket_id):
     form.content.data = ticket.content
     form.priority.data = ticket.ticket_priority_id
     form.title.data = ticket.title
-    form.category.data = ticket.category_id
+    form.domain.data = ticket.domain_id
 
     title = gettext("Edit Ticket")
 

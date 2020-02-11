@@ -171,11 +171,11 @@ def ticket_view(ticket_id, page=1):
 
     title = gettext("View Ticket")
 
-    # display or not category change link
-    change_category = app.config["change_category"]
-    if change_category and app.config["change_category_only_admin_or_super_user"]:
+    # display or not domain change link
+    change_domain = app.config["change_domain"]
+    if change_domain and app.config["change_domain_only_admin_or_super_user"]:
         if not g.user.is_admin and not g.user.is_super_user:
-            change_category = False
+            change_domain = False
 
     return render_template(
         "flicket_view.html",
@@ -184,6 +184,6 @@ def ticket_view(ticket_id, page=1):
         form=form,
         subscribers_form=subscribers_form,
         replies=replies,
-        change_category=change_category,
+        change_domain=change_domain,
         page=page,
     )

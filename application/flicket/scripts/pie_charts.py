@@ -7,18 +7,18 @@ import json
 
 import plotly
 
-from application.flicket.models.flicket_models import FlicketCategory
-from application.flicket.models.flicket_models import FlicketDepartment
+from application.flicket.models.flicket_models import FlicketDomain
+from application.flicket.models.flicket_models import FlicketInstitute
 from application.flicket.models.flicket_models import FlicketStatus
 from application.flicket.models.flicket_models import FlicketTicket
 
 
-def count_department_tickets(department, status):
+def count_institute_tickets(institute, status):
     query = (
-        FlicketTicket.query.join(FlicketCategory)
+        FlicketTicket.query.join(FlicketDomain)
         .join(FlicketStatus)
-        .join(FlicketDepartment)
-        .filter(FlicketDepartment.department == department)
+        .join(FlicketInstitute)
+        .filter(FlicketInstitute.institute == institute)
         .filter(FlicketStatus.status == status)
     )
 
@@ -32,18 +32,18 @@ def create_pie_chart_dict():
     """
 
     statii = FlicketStatus.query
-    departments = FlicketDepartment.query
+    institutes = FlicketInstitute.query
 
     graphs = []
 
-    for department in departments:
+    for institute in institutes:
 
-        graph_title = department.department
+        graph_title = institute.institute
         graph_labels = []
         graph_values = []
         for status in statii:
             graph_labels.append(status.status)
-            graph_values.append(count_department_tickets(graph_title, status.status))
+            graph_values.append(count_institute_tickets(graph_title, status.status))
 
         # append graphs if have values.
         if any(graph_values):

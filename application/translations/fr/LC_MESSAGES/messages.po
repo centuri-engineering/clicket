@@ -24,11 +24,11 @@ msgid "Can't find user."
 msgstr "Impossible de trouver l'utilisateur"
 
 #: application/flicket/forms/flicket_forms.py:74
-msgid "Department already exists."
+msgid "Institute already exists."
 msgstr "Le département existe déjà."
 
 #: application/flicket/forms/flicket_forms.py:90
-msgid "Category already exists."
+msgid "Domain already exists."
 msgstr "La catégorie existe déjà."
 
 #: application/flicket/forms/flicket_forms.py:112
@@ -91,11 +91,11 @@ msgid "subscribe user"
 msgstr ""
 
 #: application/flicket/forms/flicket_forms.py:189
-msgid "add department"
+msgid "add institute"
 msgstr "Ajouter un département"
 
 #: application/flicket/forms/flicket_forms.py:198
-msgid "add category"
+msgid "add domain"
 msgstr "Ajouter une catégorie"
 
 #: application/flicket/templates/403.html:5
@@ -191,19 +191,19 @@ msgstr ""
 msgid "a simple ticket system"
 msgstr "Demandez, simplement"
 
-#: application/flicket/templates/flicket_categories.html:36
+#: application/flicket/templates/flicket_domains.html:36
 msgid "Existing Categories"
 msgstr "Catégories existantes"
 
-#: application/flicket/templates/flicket_categories.html:41
-#: application/flicket/templates/flicket_category_edit.html:17
+#: application/flicket/templates/flicket_domains.html:41
+#: application/flicket/templates/flicket_domain_edit.html:17
 #: application/flicket/templates/flicket_include_ticket.html:58
 #: application/flicket/templates/flicket_tickets.html:149
 #: application/flicket/templates/flicket_view.html:36
-msgid "Category"
+msgid "Domain"
 msgstr "Catégorie"
 
-#: application/flicket/templates/flicket_categories.html:48
+#: application/flicket/templates/flicket_domains.html:48
 msgid "edit"
 msgstr "Modifier"
 
@@ -214,14 +214,14 @@ msgstr "Modifier"
 msgid "Password"
 msgstr "Mot de passe"
 
-#: application/flicket/templates/flicket_department_edit.html:16
+#: application/flicket/templates/flicket_institute_edit.html:16
 #: application/flicket/templates/flicket_view.html:32
-msgid "Department"
+msgid "Institute"
 msgstr "Département"
 
-#: application/flicket/templates/flicket_departments.html:6
+#: application/flicket/templates/flicket_institutes.html:6
 msgid ""
-"If you require new departments and / or categories added / deleted, "
+"If you require new institutes and / or domains added / deleted, "
 "please raise a ticket."
 msgstr ""
 "Si vous avez besoin d'ajouter ou de supprimer des départements / des "
@@ -309,8 +309,8 @@ msgstr "Il y a actuellement"
 
 #: application/flicket/templates/flicket_index.html:18
 #: application/flicket/templates/flicket_navbar.html:20
-#: application/flicket/views/departments.py:34
-msgid "Departments"
+#: application/flicket/views/institutes.py:34
+msgid "Institutes"
 msgstr "Département"
 
 #: application/flicket/templates/flicket_navbar.html:17
@@ -475,17 +475,17 @@ msgstr "Se rappeler"
 msgid "Email Address"
 msgstr ""
 
-#: application/flicket/views/categories.py:30
+#: application/flicket/views/domains.py:30
 #, python-format
-msgid "New category %(value)s added."
+msgid "New domain %(value)s added."
 msgstr "Nouvelle catégorie %(value)s ajoutée."
 
-#: application/flicket/views/categories.py:33
+#: application/flicket/views/domains.py:33
 msgid "Categories"
 msgstr "Catégorie"
 
-#: application/flicket/views/categories.py:59
-msgid "Edit Category"
+#: application/flicket/views/domains.py:59
+msgid "Edit Domain"
 msgstr "Modifier Catégorie"
 
 #: application/flicket/views/delete.py:29
@@ -506,38 +506,38 @@ msgid "Delete Post"
 msgstr ""
 
 #: application/flicket/views/delete.py:114
-msgid "You are not authorised to delete categories."
+msgid "You are not authorised to delete domains."
 msgstr "Vous n'êtes pas autorisé à supprimer des catégories."
 
 #: application/flicket/views/delete.py:146
-msgid "Delete Category"
+msgid "Delete Domain"
 msgstr ""
 
 #: application/flicket/views/delete.py:162
-msgid "You are not authorised to delete departments."
+msgid "You are not authorised to delete institutes."
 msgstr "Vous n'êtes pas autorisé à supprimer les départements."
 
 #: application/flicket/views/delete.py:189
 #, python-format
 msgid ""
-"You are trying to delete department <span class=\"label label-"
+"You are trying to delete institute <span class=\"label label-"
 "default\">%(value)s</span>."
 msgstr ""
 "Vous essayez de supprimer le département <span class=\"label label-"
 "default\">%(value)s</span>."
 
 #: application/flicket/views/delete.py:193
-msgid "Delete Department"
+msgid "Delete Institute"
 msgstr ""
 
-#: application/flicket/views/departments.py:29
+#: application/flicket/views/institutes.py:29
 #, python-format
-msgid "New department \"%(value)s\" added."
+msgid "New institute \"%(value)s\" added."
 msgstr "Nouveau département \"%(value)s\" ajouté."
 
-#: application/flicket/views/departments.py:54
+#: application/flicket/views/institutes.py:54
 #, python-format
-msgid "Department \"%(value)s\" edited."
+msgid "Institute \"%(value)s\" edited."
 msgstr "Départment \"%(value)s\" modifié."
 
 #: application/flicket/views/edit.py:35
@@ -846,7 +846,7 @@ msgid ""
 msgstr ""
 
 #~ msgid ""
-#~ "Category is linked to posts. Category"
+#~ "Domain is linked to posts. Domain"
 #~ " can not be deleted unless all "
 #~ "posts / topics are removed / "
 #~ "relinked."
@@ -858,9 +858,9 @@ msgstr ""
 #~ "catégorie."
 
 #~ msgid ""
-#~ "Department has categories linked to it."
-#~ " Department can not be deleted unless"
-#~ " all categories are first removed."
+#~ "Institute has domains linked to it."
+#~ " Institute can not be deleted unless"
+#~ " all domains are first removed."
 #~ msgstr ""
 #~ "Le département est rattaché à une "
 #~ "catégorie. Il ne peut être supprimé "
@@ -874,13 +874,13 @@ msgstr ""
 #~ msgid "Flicket - Delete Post"
 #~ msgstr "Supprimer le Post"
 
-#~ msgid "Flicket - Delete Category"
+#~ msgid "Flicket - Delete Domain"
 #~ msgstr "Supprimer la catégorie"
 
-#~ msgid "Flicket - Delete Department"
+#~ msgid "Flicket - Delete Institute"
 #~ msgstr "Supprimer Département"
 
-#~ msgid "Flicket - Departments"
+#~ msgid "Flicket - Institutes"
 #~ msgstr "Départements"
 
 #~ msgid "Flicket - Edit Ticket"

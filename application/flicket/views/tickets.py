@@ -36,8 +36,8 @@ def tickets_view(page, is_my_view=False):
 
     # get request arguments from the url
     status = request.args.get("status")
-    department = request.args.get("department")
-    category = request.args.get("category")
+    institute = request.args.get("institute")
+    domain = request.args.get("domain")
     content = request.args.get("content")
     user_id = request.args.get("user_id")
 
@@ -70,8 +70,8 @@ def tickets_view(page, is_my_view=False):
 
     ticket_query, form = FlicketTicket.query_tickets(
         form,
-        department=department,
-        category=category,
+        institute=institute,
+        domain=domain,
         status=status,
         user_id=user_id,
         content=content,
@@ -99,8 +99,8 @@ def tickets_view(page, is_my_view=False):
             page=page,
             number_results=number_results,
             status=status,
-            department=department,
-            category=category,
+            institute=institute,
+            domain=domain,
             user_id=user_id,
             sort=sort,
             base_url="flicket_bp.tickets",
@@ -132,14 +132,14 @@ def tickets(page=1):
 def tickets_csv():
     # get request arguments from the url
     status = request.args.get("status")
-    department = request.args.get("department")
-    category = request.args.get("category")
+    institute = request.args.get("institute")
+    domain = request.args.get("domain")
     content = request.args.get("content")
     user_id = request.args.get("user_id")
 
     ticket_query, form = FlicketTicket.query_tickets(
-        department=department,
-        category=category,
+        institute=institute,
+        domain=domain,
         status=status,
         user_id=user_id,
         content=content,
@@ -149,7 +149,7 @@ def tickets_csv():
     date_stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     file_name = date_stamp + "ticketdump.csv"
 
-    csv_contents = "Ticket_ID,Priority,Title,Submitted By,Date,Replies,Category,Status,Assigned,URL\n"
+    csv_contents = "Ticket_ID,Priority,Title,Submitted By,Date,Replies,Domain,Status,Assigned,URL\n"
     for ticket in ticket_query:
 
         if hasattr(ticket.assigned, "name"):
@@ -164,8 +164,8 @@ def tickets_csv():
             ticket.user.name,
             ticket.date_added.strftime("%Y-%m-%d"),
             ticket.num_replies,
-            clean_csv_data(ticket.category.department.department),
-            clean_csv_data(ticket.category.category),
+            clean_csv_data(ticket.domain.institute.institute),
+            clean_csv_data(ticket.domain.domain),
             ticket.current_status.status,
             _name,
             app.config["base_url"],

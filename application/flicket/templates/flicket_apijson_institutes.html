@@ -2,7 +2,7 @@
 
     $(document).ready(function () {
         $.ajax({
-            url: '/flicket-api/departments/',
+            url: '/flicket-api/institutes/',
             datatype: 'json',
             headers: {
                 'Authorization': 'Bearer {{ g.user.token }}'
@@ -11,30 +11,30 @@
 
                 // use uri.js to pass the page uri
                 var result = URI.parse(document.URL);
-                // get value of department in uri
+                // get value of institute in uri
                 result = result.query;
-                result = URI.parseQuery(result).department;
+                result = URI.parseQuery(result).institute;
 
-                // populate the department selection inputs
-                var department = document.getElementById('department');
-                $(department).empty();
-                $(department).append($('<option></option>').text('--departments--').val('0'));
+                // populate the institute selection inputs
+                var institute = document.getElementById('institute');
+                $(institute).empty();
+                $(institute).append($('<option></option>').text('--institutes--').val('0'));
                 for (var i = 0; i < data._meta.total_items; i++) {
                     var dep_id = data.items[i].id;
-                    var dep_name = data.items[i].department;
-                    $(department).append($('<option></option>').text(dep_name).val(dep_id));
+                    var dep_name = data.items[i].institute;
+                    $(institute).append($('<option></option>').text(dep_name).val(dep_id));
                 }
 
                 // set the preselected value
                 if (result) {
-                    // find id of department
+                    // find id of institute
                     for (var item in data.items) {
-                        var d = data.items[item].department;
+                        var d = data.items[item].institute;
                         if (d === result) {
-                            var department_id = data.items[item].id
+                            var institute_id = data.items[item].id
                         }
                     }
-                    $(department).val(department_id)
+                    $(institute).val(institute_id)
                 }
 
             }
