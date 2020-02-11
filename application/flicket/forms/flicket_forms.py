@@ -114,6 +114,9 @@ class CreateTicketForm(FlaskForm):
         ]
 
         self.domain.choices = [(c.id, c.domain) for c in FlicketDomain.query.all()]
+        self.institute.choices = [
+            (c.id, c.institute) for c in FlicketInstitute.query.all()
+        ]
 
     """ Log in form. """
     title = StringField(
@@ -156,6 +159,9 @@ class CreateTicketForm(FlaskForm):
     )
     domain = SelectField(
         lazy_gettext("domain"), validators=[DataRequired()], coerce=int
+    )
+    institute = SelectField(
+        lazy_gettext("institute"), validators=[DataRequired()], coerce=int
     )
     file = FileField(lazy_gettext("Upload Documents"), render_kw={"multiple": True})
     hours = DecimalField(lazy_gettext("hours"), default=0)

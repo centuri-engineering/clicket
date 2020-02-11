@@ -26,8 +26,8 @@
                             <div class="col">
                                 <div class="flicket-tickets-title">{{ _('Institute') }}</div>
                                 <div class="flicket-tickets-content">
-                                    {{ ticket.domain.institute.institute }}
-                                    {%- if change_domain %}
+                                    {{ ticket.institute.institute }}
+                                    {%- if change_institute %}
                                         <a href="{{ url_for('flicket_bp.ticket_institute, ticket_id = ticket.id) }}"
                                            title="{{ _('Institute') }}">
                                             <i class="fas fa-edit"></i>
@@ -41,7 +41,7 @@
                                     {{ ticket.domain.domain }}
                                     {%- if change_domain %}
                                         <a href="{{ url_for('flicket_bp.ticket_domain', ticket_id = ticket.id) }}"
-                                           title="{{ _('institute') }}">
+                                           title="{{ _('domain) }}">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     {%- endif %}

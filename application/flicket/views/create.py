@@ -31,6 +31,7 @@ def ticket_create():
             requester=form.requester.data,
             requester_role=form.requester_role.data,
             domain=form.domain.data,
+            institute=form.institute.data,
             priority=form.priority.data,
             hours=form.hours.data,
             files=request.files.getlist("file"),

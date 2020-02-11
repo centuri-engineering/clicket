@@ -1,7 +1,7 @@
 """migrations before source code control
 
 Revision ID: fe0f77ef3f46
-Revises: 
+Revises:
 Create Date: 2019-09-19 16:45:11.414861
 
 """
@@ -41,12 +41,6 @@ def upgrade():
         sa.Column("auth_domain", sa.String(length=64), nullable=True),
         sa.Column("use_auth_domain", sa.BOOLEAN(), nullable=True),
         sa.Column("csv_dump_limit", sa.Integer(), nullable=True),
-        sa.PrimaryKeyConstraint("id"),
-    )
-    op.create_table(
-        "flicket_institute",
-        sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("institute", sa.String(length=30), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
@@ -96,10 +90,15 @@ def upgrade():
         "flicket_domain",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("domain", sa.String(length=30), nullable=True),
-        sa.Column("institute_id", sa.Integer(), nullable=True),
-        sa.ForeignKeyConstraint(["institute_id"], ["flicket_institute.id"],),
         sa.PrimaryKeyConstraint("id"),
     )
+    op.create_table(
+        "flicket_institute",
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("institute", sa.String(length=30), nullable=True),
+        sa.PrimaryKeyConstraint("id"),
+    )
+
     op.create_table(
         "flicket_groups",
         sa.Column("user_id", sa.Integer(), nullable=True),
@@ -118,10 +117,12 @@ def upgrade():
         sa.Column("modified_id", sa.Integer(), nullable=True),
         sa.Column("status_id", sa.Integer(), nullable=True),
         sa.Column("domain_id", sa.Integer(), nullable=True),
+        sa.Column("institute_id", sa.Integer(), nullable=True),
         sa.Column("assigned_id", sa.Integer(), nullable=True),
         sa.Column("ticket_priority_id", sa.Integer(), nullable=True),
         sa.ForeignKeyConstraint(["assigned_id"], ["flicket_users.id"],),
         sa.ForeignKeyConstraint(["domain_id"], ["flicket_domain.id"],),
+        sa.ForeignKeyConstraint(["institute_id"], ["flicket_institute.id"],),
         sa.ForeignKeyConstraint(["modified_id"], ["flicket_users.id"],),
         sa.ForeignKeyConstraint(["started_id"], ["flicket_users.id"],),
         sa.ForeignKeyConstraint(["status_id"], ["flicket_status.id"],),

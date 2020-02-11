@@ -15,7 +15,7 @@ from application.flicket_api.scripts.paginated_api import PaginatedAPIMixin
 field_size = {
     "title_min_length": 3,
     "title_max_length": 128,
-    "content_min_length": 5,
+    "content_min_length": 0,
     "content_max_length": 5000,
     "status_min_length": 3,
     "status_max_length": 20,
@@ -205,6 +205,9 @@ class FlicketTicket(PaginatedAPIMixin, Base):
 
     domain_id = db.Column(db.Integer, db.ForeignKey(FlicketDomain.id))
     domain = db.relationship(FlicketDomain)
+
+    institute_id = db.Column(db.Integer, db.ForeignKey(FlicketInstitute.id))
+    institute = db.relationship(FlicketInstitute)
 
     assigned_id = db.Column(db.Integer, db.ForeignKey(FlicketUser.id))
     assigned = db.relationship(FlicketUser, foreign_keys="FlicketTicket.assigned_id")
