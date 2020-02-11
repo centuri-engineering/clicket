@@ -129,9 +129,6 @@ from .flicket.views import users
 from .flicket.views import view_ticket
 
 # noinspection PyPep8
-from .flicket.views import institute_domain
-
-# noinspection PyPep8
 from .flicket_api.views import actions
 
 # noinspection PyPep8
@@ -166,7 +163,6 @@ from .flicket_api.views import uploads
 
 # noinspection PyPep8
 from .flicket_api.views import users
-from .flicket_api.views import institute_domains
 
 # noinspection PyPep8
 from .flicket_errors import handlers

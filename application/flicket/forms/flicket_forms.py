@@ -26,7 +26,6 @@ from application.flicket.models.flicket_models import (
     FlicketRequesterRole,
     FlicketStatus,
     FlicketTicket,
-    FlicketInstituteDomain,
     field_size,
 )
 from application.flicket.models.flicket_user import FlicketUser, user_field_size
@@ -96,35 +95,9 @@ def does_domain_exist(form, field):
     :param field:
     :return True / False:
     """
-    result = (
-        FlicketDomain.query.filter_by(domain=form.domain.data)
-        .filter_by(institute_id=form.institute_id.data)
-        .count()
-    )
+    result = FlicketDomain.query.filter_by(domain=form.domain.data).count()
     if result > 0:
         field.errors.append(gettext("Domain already exists."))
-        return False
-
-    return True
-
-
-def does_unique_institute_domain_exist(form, field):
-    """
-    InstituteDomain is CONCAT of '{FlicketInstitute.institute} / {FlicketDomain.domain}'
-    :param form:
-    :param field:
-    :return True / False:
-    """
-    result = FlicketInstituteDomain.query.filter_by(
-        institute_domain=form.institute_domain.data
-    ).count()
-    if result == 0:
-        field.errors.append(gettext("Domain does not exist."))
-        return False
-    if result > 1:
-        field.errors.append(
-            gettext("Ambiguous institute / domain, contact administrator to fix it!")
-        )
         return False
 
     return True
@@ -140,14 +113,7 @@ class CreateTicketForm(FlaskForm):
             (p.id, p.requester_role) for p in FlicketRequesterRole.query.all()
         ]
 
-        self.domain.choices = [
-            (c.id, "{} - {}".format(c.institute.institute, c.domain))
-            for c in FlicketDomain.query.join(FlicketInstitute)
-            .order_by(FlicketInstitute.institute)
-            .order_by(FlicketDomain.domain)
-            .all()
-            if c.institute
-        ]
+        self.domain.choices = [(c.id, c.domain) for c in FlicketDomain.query.all()]
 
     """ Log in form. """
     title = StringField(
@@ -329,31 +295,10 @@ class DomainForm(FlaskForm):
         validators=[
             DataRequired(),
             Length(
-                min=field_size["domain_min_length"],
-                max=field_size["domain_max_length"],
+                min=field_size["domain_min_length"], max=field_size["domain_max_length"]
             ),
             does_domain_exist,
         ],
     )
     institute_id = HiddenField("institute_id")
     submit = SubmitField(lazy_gettext("add domain"), render_kw=form_class_button)
-
-
-class SearchInstituteDomainForm(FlaskForm):
-    """ Search institute / domain. """
-
-    institute_domain = StringField(
-        lazy_gettext("Institute / Domain"),
-        validators=[DataRequired(), does_unique_institute_domain_exist],
-    )
-    submit = SubmitField(
-        lazy_gettext("search institute / domain"), render_kw=form_class_button
-    )
-
-
-class ChangeInstituteDomainForm(SearchInstituteDomainForm):
-    """ Change institute / domain. """
-
-    submit = SubmitField(
-        lazy_gettext("change institute / domain"), render_kw=form_class_button
-    )

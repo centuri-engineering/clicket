@@ -125,16 +125,6 @@
                             <i class="fas fa-sort-numeric-up"></i>
                             {{ _('Date') }}
                         </a>
-                        <a class="dropdown-item small{% if sort == 'institute_domain' %} active{% endif %}"
-                           href="{{ url_for(base_url, sort='institute_domain', **request.args) }}">
-                            <i class="fas fa-sort-alpha-down"></i>
-                            {{ _('Institute / Domain') }}
-                        </a>
-                        <a class="dropdown-item small{% if sort == 'institute_domain_desc' %} active{% endif %}"
-                           href="{{ url_for(base_url, sort='institute_domain_desc', **request.args) }}">
-                            <i class="fas fa-sort-alpha-up"></i>
-                            {{ _('Institute / Domain') }}
-                        </a>
                         <a class="dropdown-item small{% if sort == 'status' %} active{% endif %}"
                            href="{{ url_for(base_url, sort='status', **request.args) }}">
                             <i class="fas fa-sort-numeric-down"></i>

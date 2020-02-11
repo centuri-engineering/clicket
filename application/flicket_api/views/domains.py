@@ -33,11 +33,9 @@
 
             {
                 "domain": "Dataset",
-                "institute": "Design",
                 "id": 1,
                 "links": {
                     "domains": "http://127.0.0.1:5000/flicket-api/domains/",
-                    "institute": "http://127.0.0.1:5000/flicket-api/institute/1",
                     "self": "http://127.0.0.1:5000/flicket-api/domain/1"
                 }
             }
@@ -81,41 +79,33 @@
                 "items": [
                     {
                         "domain": "Approved Suppliers",
-                        "institute": "Commercial",
                         "id": 14,
                         "links": {
                             "domains": "http://127.0.0.1:5000/flicket-api/domains/",
-                            "institute": "http://127.0.0.1:5000/flicket-api/institute/6",
                             "self": "http://127.0.0.1:5000/flicket-api/domain/14"
                         }
                     },
                     {
                         "domain": "Dataset",
-                        "institute": "Design",
                         "id": 1,
                         "links": {
                             "domains": "http://127.0.0.1:5000/flicket-api/domains/",
-                            "institute": "http://127.0.0.1:5000/flicket-api/institute/1",
                             "self": "http://127.0.0.1:5000/flicket-api/domain/1"
                         }
                     },
                     {
                         "domain": "ECR",
-                        "institute": "Design",
                         "id": 3,
                         "links": {
                             "domains": "http://127.0.0.1:5000/flicket-api/domains/",
-                            "institute": "http://127.0.0.1:5000/flicket-api/institute/1",
                             "self": "http://127.0.0.1:5000/flicket-api/domain/3"
                         }
                     },
                     {
                         "domain": "Holidays",
-                        "institute": "Human Resources",
                         "id": 12,
                         "links": {
                             "domains": "http://127.0.0.1:5000/flicket-api/domains/",
-                            "institute": "http://127.0.0.1:5000/flicket-api/institute/5",
                             "self": "http://127.0.0.1:5000/flicket-api/domain/12"
                         }
                     }
@@ -129,7 +119,7 @@ from flask import jsonify, request, url_for
 from .sphinx_helper import api_url
 from . import bp_api
 from application import app, db
-from application.flicket.models.flicket_models import FlicketDomain, FlicketInstitute
+from application.flicket.models.flicket_models import FlicketDomain
 from application.flicket_api.views.auth import token_auth
 from application.flicket_api.views.errors import bad_request
 
@@ -143,15 +133,7 @@ def get_domain(id):
 @bp_api.route(api_url + "domains/", methods=["GET"])
 @token_auth.login_required
 def get_domains():
-    institute_id = request.args.get("institute_id")
-    institute = request.args.get("institute")
     domains = FlicketDomain.query.order_by(FlicketDomain.domain.asc())
-    if institute_id:
-        domains = domains.filter_by(institute_id=institute_id)
-    if institute:
-        domains = domains.filter(
-            FlicketDomain.institute.has(FlicketInstitute.institute == institute)
-        )
     page = request.args.get("page", 1, type=int)
     per_page = min(
         request.args.get("per_page", app.config["posts_per_page"], type=int), 100
@@ -167,21 +149,13 @@ def get_domains():
 def create_domain():
     data = request.get_json() or {}
 
-    if "domain" not in data or "institute_id" not in data:
-        return bad_request("Must include domain name and institute_id")
+    if "domain" not in data:
+        return bad_request("Must include domain name")
 
-    if not isinstance(data["institute_id"], int):
-        return bad_request("institute_id must be an integer.")
+    if FlicketDomain.query.filter_by(domain=data["domain"]).first():
+        return bad_request("Domain  already exists.")
 
-    if (
-        FlicketDomain.query.filter_by(domain=data["domain"])
-        .filter_by(institute_id=data["institute_id"])
-        .first()
-    ):
-        return bad_request("Domain within institute already exists.")
-
-    institute = FlicketInstitute.query.filter_by(id=data["institute_id"]).first()
-    domain = FlicketDomain(data["domain"], institute)
+    domain = FlicketDomain(data["domain"])
     db.session.add(domain)
     db.session.commit()
 

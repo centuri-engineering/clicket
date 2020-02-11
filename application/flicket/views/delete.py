@@ -115,8 +115,7 @@ def delete_post(post_id):
 
 # delete domain
 @flicket_bp.route(
-    app.config["FLICKET"] + "delete/domain/<int:domain_id>/",
-    methods=["GET", "POST"],
+    app.config["FLICKET"] + "delete/domain/<int:domain_id>/", methods=["GET", "POST"]
 )
 @login_required
 def delete_domain(domain_id=False):
@@ -125,10 +124,9 @@ def delete_domain(domain_id=False):
         # check user is authorised to delete domains. Only admin or super_user can do this.
         if not any([g.user.is_admin, g.user.is_super_user]):
             flash(
-                gettext("You are not authorised to delete domains."),
-                category="warning",
+                gettext("You are not authorised to delete domains."), category="warning"
             )
-            return redirect("flicket_bp.institutes")
+            return redirect("flicket_bp.domains")
 
         form = ConfirmPassword()
 
@@ -146,7 +144,7 @@ def delete_domain(domain_id=False):
                 ),
                 category="danger",
             )
-            return redirect(url_for("flicket_bp.institutes"))
+            return redirect(url_for("flicket_bp.domains"))
 
         if form.validate_on_submit():
             # delete domain from database
@@ -156,13 +154,10 @@ def delete_domain(domain_id=False):
             # commit changes
             db.session.commit()
             flash("Domain deleted", category="success")
-            return redirect(url_for("flicket_bp.institutes"))
+            return redirect(url_for("flicket_bp.domains"))
 
-        notification = (
-            'You are trying to delete domain <span class="label label-default">{}</span> that belongs '
-            'to institute <span class="label label-default">{}</span>.'.format(
-                domain.domain, domain.institute.institute
-            )
+        notification = 'You are trying to delete domain <span class="label label-default">{}</span> .'.format(
+            domain.domain
         )
 
         title = gettext("Delete Domain")
@@ -192,7 +187,7 @@ def delete_institute(institute_id=False):
         form = ConfirmPassword()
 
         #
-        institutes = FlicketDomain.query.filter_by(institute_id=institute_id)
+        institutes = FlicketTicket.query.filter_by(institute_id=institute_id)
         institute = FlicketInstitute.query.filter_by(id=institute_id).first()
 
         # we can't delete any institutes associated with domains.
@@ -200,7 +195,7 @@ def delete_institute(institute_id=False):
             flash(
                 gettext(
                     (
-                        "Institute has domains linked to it. Institute can not be deleted unless all domains are "
+                        "Institute has tickets linked to it. Institute can not be deleted unless all linked tickets are "
                         "first removed."
                     )
                 ),

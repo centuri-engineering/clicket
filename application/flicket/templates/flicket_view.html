@@ -28,8 +28,8 @@
                                 <div class="flicket-tickets-content">
                                     {{ ticket.domain.institute.institute }}
                                     {%- if change_domain %}
-                                        <a href="{{ url_for('flicket_bp.ticket_institute_domain', ticket_id = ticket.id) }}"
-                                           title="{{ _('domain') }}">
+                                        <a href="{{ url_for('flicket_bp.ticket_institute, ticket_id = ticket.id) }}"
+                                           title="{{ _('Institute') }}">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     {%- endif %}
@@ -40,7 +40,7 @@
                                 <div class="flicket-tickets-content">
                                     {{ ticket.domain.domain }}
                                     {%- if change_domain %}
-                                        <a href="{{ url_for('flicket_bp.ticket_institute_domain', ticket_id = ticket.id) }}"
+                                        <a href="{{ url_for('flicket_bp.ticket_domain', ticket_id = ticket.id) }}"
                                            title="{{ _('institute') }}">
                                             <i class="fas fa-edit"></i>
                                         </a>

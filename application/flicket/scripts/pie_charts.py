@@ -17,7 +17,6 @@ def count_institute_tickets(institute, status):
     query = (
         FlicketTicket.query.join(FlicketDomain)
         .join(FlicketStatus)
-        .join(FlicketInstitute)
         .filter(FlicketInstitute.institute == institute)
         .filter(FlicketStatus.status == status)
     )

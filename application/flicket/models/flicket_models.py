@@ -22,7 +22,7 @@ field_size = {
     "institute_min_length": 3,
     "institute_max_length": 30,
     "domain_min_length": 3,
-    "domain_max_length": 30,
+    "domain_max_length": 128,
     "filename_min_length": 3,
     "filename_max_length": 128,
     "priority_min_length": 3,
@@ -63,7 +63,6 @@ class FlicketInstitute(PaginatedAPIMixin, Base):
 
     id = db.Column(db.Integer, primary_key=True)
     institute = db.Column(db.String(field_size["institute_max_length"]))
-    domains = db.relationship("FlicketDomain", back_populates="institute")
 
     def __init__(self, institute):
         """
@@ -83,17 +82,14 @@ class FlicketInstitute(PaginatedAPIMixin, Base):
             "links": {
                 "self": app.config["base_url"]
                 + url_for("bp_api.get_institute", id=self.id),
-                "institutes": app.config["base_url"]
-                + url_for("bp_api.get_institutes"),
+                "institutes": app.config["base_url"] + url_for("bp_api.get_institutes"),
             },
         }
 
         return data
 
     def __repr__(self):
-        return "<FlicketInstitute: id={}, institute={}>".format(
-            self.id, self.institute
-        )
+        return "<FlicketInstitute: id={}, institute={}>".format(self.id, self.institute)
 
 
 class FlicketDomain(PaginatedAPIMixin, Base):
@@ -102,32 +98,25 @@ class FlicketDomain(PaginatedAPIMixin, Base):
     id = db.Column(db.Integer, primary_key=True)
     domain = db.Column(db.String(field_size["domain_max_length"]))
 
-    institute_id = db.Column(db.Integer, db.ForeignKey(FlicketInstitute.id))
-    institute = db.relationship(FlicketInstitute, back_populates="domains")
-
-    def __init__(self, domain, institute):
+    def __init__(self, domain):
         """
 
         :param domain:
         """
         self.domain = domain
-        self.institute = institute
 
     def to_dict(self):
         """
-        Returns a dictionary object about the domain and its institute
+        Returns a dictionary object about the domain
         :return:
         """
         data = {
             "id": self.id,
             "domain": self.domain,
-            "institute": self.institute.institute,
             "links": {
                 "self": app.config["base_url"]
                 + url_for("bp_api.get_domain", id=self.id),
                 "domains": app.config["base_url"] + url_for("bp_api.get_domains"),
-                "institute": app.config["base_url"]
-                + url_for("bp_api.get_institute", id=self.institute_id),
             },
         }
 
@@ -262,10 +251,6 @@ class FlicketTicket(PaginatedAPIMixin, Base):
     def id_zfill(self):
         return str(self.id).zfill(5)
 
-    @property
-    def institute_domain(self):
-        return f"{self.domain.institute.institute} / {self.domain.domain}"
-
     def is_subscribed(self, user):
         for s in self.subscribers:
             if s.user == user:
@@ -313,9 +298,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 .institute
             )
         if form.domain.data:
-            domain = (
-                FlicketDomain.query.filter_by(id=form.domain.data).first().domain
-            )
+            domain = FlicketDomain.query.filter_by(id=form.domain.data).first().domain
         if form.status.data:
             status = FlicketStatus.query.filter_by(id=form.status.data).first().status
 
@@ -410,8 +393,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                     institute=value
                 ).first()
                 ticket_query = ticket_query.filter(
-                    FlicketTicket.domain.has(
-                        FlicketDomain.institute == institute_filter
+                    FlicketTicket.institute.has(
+                        FlicketInstitute.institute == institute_filter
                     )
                 )
                 if form:
@@ -502,26 +485,6 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 ticket_query.outerjoin(FlicketTicket.posts)
                 .group_by(FlicketTicket.id)
                 .order_by(replies_count.desc(), FlicketTicket.id)
-            )
-        elif sort == "institute_domain":
-            ticket_query = (
-                ticket_query.join(FlicketDomain, FlicketTicket.domain)
-                .join(FlicketInstitute, FlicketDomain.institute)
-                .order_by(
-                    FlicketInstitute.institute,
-                    FlicketDomain.domain,
-                    FlicketTicket.id,
-                )
-            )
-        elif sort == "institute_domain_desc":
-            ticket_query = (
-                ticket_query.join(FlicketDomain, FlicketTicket.domain)
-                .join(FlicketInstitute, FlicketDomain.institute)
-                .order_by(
-                    FlicketInstitute.institute.desc(),
-                    FlicketDomain.domain.desc(),
-                    FlicketTicket.id,
-                )
             )
         elif sort == "status":
             ticket_query = ticket_query.order_by(
@@ -963,12 +926,6 @@ class FlicketAction(PaginatedAPIMixin, Base):
                 f' by <a href="mailto:{self.user.email}">{self.user.name}</a> | {_date}'
             )
 
-        if self.action == "institute_domain":
-            return (
-                f'Ticket domain has been changed to "{self.data["institute_domain"]}"'
-                f' by <a href="mailto:{self.user.email}">{self.user.name}</a> | {_date}'
-            )
-
     def to_dict(self):
         """
 
@@ -998,60 +955,4 @@ class FlicketAction(PaginatedAPIMixin, Base):
         return (
             f"<Class FlicketAction: ticket_id={self.ticket_id}, post_id={self.ticket_id}, action={self.action!r}, "
             f"data={self.data}, user_id={self.user_id}, recipient_id={self.recipient_id}, date={self.date}>"
-        )
-
-
-# Virtual Model Flicket InstituteDomain
-# xdml: as not sure how to best implement it, I created "Virtual Model" or how to call it
-# that is similar to SQL VIEW, it is simple SELECT FROM flicket_domain JOIN flicket_institute
-# query, setting primary_key, so Flask SqlAlchemy ORM can be used as on regular SQL table
-class FlicketInstituteDomain(PaginatedAPIMixin, Base):
-    __table__ = (
-        select(
-            [
-                func.concat(
-                    FlicketInstitute.institute, " / ", FlicketDomain.domain
-                ).label("institute_domain"),
-                FlicketDomain.id.label("domain_id"),
-                FlicketDomain.domain.label("domain"),
-                FlicketInstitute.id.label("institute_id"),
-                FlicketInstitute.institute.label("institute"),
-            ]
-        )
-        .select_from(
-            join(
-                FlicketDomain,
-                FlicketInstitute,
-                FlicketDomain.institute_id == FlicketInstitute.id,
-            )
-        )
-        .alias()
-    )
-    __mapper_args__ = {"primary_key": [FlicketDomain.id]}
-
-    def to_dict(self):
-        data = {
-            "institute_domain": self.institute_domain,
-            "domain_id": self.domain_id,
-            "domain": self.domain,
-            "institute_id": self.institute_id,
-            "institute": self.institute,
-            "links": {
-                "self": app.config["base_url"]
-                + url_for("bp_api.get_institute_domain", id=self.domain_id),
-                "institute_domains": app.config["base_url"]
-                + url_for("bp_api.get_institute_domains"),
-                "institute": app.config["base_url"]
-                + url_for("bp_api.get_institute", id=self.institute_id),
-                "domain": app.config["base_url"]
-                + url_for("bp_api.get_domain", id=self.domain_id),
-            },
-        }
-
-        return data
-
-    def __repr__(self):
-        return (
-            f"<FlicketInstituteDomain: institute_domain='{self.institute_domain}',"
-            f" domain_id={self.domain_id}>"
         )
