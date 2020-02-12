@@ -40,7 +40,7 @@
                 }
             }
 
-    Get Categories
+    Get Domains
     ~~~~~~~~~~~~~~
 
     .. http:get:: /flicket-api/domains/

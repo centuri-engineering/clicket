@@ -78,6 +78,9 @@ from .flicket.views import assign
 from .flicket.views import domains
 
 # noinspection PyPep8
+from .flicket.views import domain
+
+# noinspection PyPep8
 from .flicket.views import edit_status
 
 # noinspection PyPep8
@@ -91,6 +94,9 @@ from .flicket.views import delete
 
 # noinspection PyPep8
 from .flicket.views import institutes
+
+# noinspection PyPep8
+from .flicket.views import institute
 
 # noinspection PyPep8
 from .flicket.views import edit

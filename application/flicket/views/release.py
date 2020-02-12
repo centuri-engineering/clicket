@@ -36,7 +36,7 @@ def release(ticket_id=False):
             return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket_id))
 
         # set status to open
-        status = FlicketStatus.query.filter_by(status="Open").first()
+        status = FlicketStatus.query.filter_by(status="New").first()
         ticket.current_status = status
         user = ticket.assigned
         ticket.assigned = None

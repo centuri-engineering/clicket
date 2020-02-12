@@ -56,7 +56,7 @@ class FlicketTicketExt:
         :return:
         """
 
-        ticket_status = FlicketStatus.query.filter_by(status="Open").first()
+        ticket_status = FlicketStatus.query.filter_by(status="New").first()
         ticket_priority = FlicketPriority.query.filter_by(id=int(priority)).first()
         ticket_institute = FlicketInstitute.query.filter_by(id=int(institute)).first()
         ticket_domain = FlicketDomain.query.filter_by(id=int(domain)).first()

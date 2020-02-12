@@ -38,7 +38,7 @@
                     "self": "http://127.0.0.1:5000/flicket-api/status/1",
                     "statuses": "http://127.0.0.1:5000/flicket-api/statuses/"
                 },
-                "status": "Open"
+                "status": "New"
             }
 
 
@@ -85,7 +85,7 @@
                             "self": "http://127.0.0.1:5000/flicket-api/status/1",
                             "statuses": "http://127.0.0.1:5000/flicket-api/statuses/"
                         },
-                        "status": "Open"
+                        "status": "New"
                     },
                     {
                         "id": 2,

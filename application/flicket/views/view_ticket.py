@@ -108,7 +108,7 @@ def ticket_view(ticket_id, page=1):
         upload_attachments.populate_db(new_reply)
 
         # change ticket status to open if closed.
-        if ticket.current_status.status.lower() == "closed":
+        if ticket.current_status.status in ("Finished", "Canceled"):
             ticket_open = FlicketStatus.query.filter_by(status="Open").first()
             ticket.current_status = ticket_open
 
@@ -139,7 +139,7 @@ def ticket_view(ticket_id, page=1):
         if form.submit_close.data:
             return redirect(
                 url_for(
-                    "flicket_bp.change_status", ticket_id=ticket.id, status="Closed"
+                    "flicket_bp.change_status", ticket_id=ticket.id, status="Finished"
                 )
             )
 

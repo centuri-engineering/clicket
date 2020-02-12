@@ -13,7 +13,7 @@ from application.flicket.models.flicket_models import FlicketAction
 
 def add_action(ticket, action, data=None, recipient=None):
     """
-    :param ticket: ticket object 
+    :param ticket: ticket object
     :param action: string
     :param data: dictionary
     :param recipient: user object
@@ -38,7 +38,7 @@ def add_action(ticket, action, data=None, recipient=None):
 
 def is_ticket_closed(status):
     # check to see if topic is closed. ticket can't be edited once it's closed.
-    if status == "Closed":
+    if status in ("Finished", "Canceled"):
         flash("Users can not edit closed tickets.", category="danger")
         return True
 

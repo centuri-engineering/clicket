@@ -29,7 +29,7 @@ def ticket_assign(ticket_id=False):
     form = AssignUserForm()
     ticket = FlicketTicket.query.filter_by(id=ticket_id).one()
 
-    if ticket.current_status.status == "Closed":
+    if ticket.current_status.status in ("Finished", "Canceled"):
         flash(gettext("Can't assign a closed ticket."))
         return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket_id))
 

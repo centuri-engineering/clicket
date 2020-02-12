@@ -369,7 +369,9 @@ class FlicketTicket(PaginatedAPIMixin, Base):
 
         if kwargs["status"] is None:
             ticket_query = ticket_query.filter(
-                FlicketTicket.current_status.has(FlicketStatus.status != "Closed")
+                FlicketTicket.current_status.has(
+                    FlicketStatus.status not in ("Finished", "Canceled")
+                )
             )
 
         for key, value in kwargs.items():

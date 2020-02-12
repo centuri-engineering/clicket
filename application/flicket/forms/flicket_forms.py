@@ -205,7 +205,9 @@ class ReplyForm(FlaskForm):
         form = super(ReplyForm, self).__init__(*args, **kwargs)
         self.status.choices = [
             (s.id, s.status)
-            for s in FlicketStatus.query.filter(FlicketStatus.status != "Closed")
+            for s in FlicketStatus.query.filter(
+                FlicketStatus.status not in ("Finished", "Canceled")
+            )
         ]
         self.priority.choices = [
             (p.id, p.priority) for p in FlicketPriority.query.all()

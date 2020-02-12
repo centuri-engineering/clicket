@@ -8,6 +8,7 @@ from flask_babel import gettext
 from flask_login import login_required
 
 from application import app, db
+from application.flicket.forms.flicket_forms import DomainForm
 from application.flicket.models.flicket_models import FlicketTicket
 from application.flicket.models.flicket_models import FlicketDomain
 from application.flicket.scripts.flicket_functions import add_action
@@ -27,17 +28,15 @@ def ticket_domain(ticket_id=False):
         if not g.user.is_admin and not g.user.is_super_user:
             abort(404)
 
-    form = ChangeDepartmentDomainForm()
+    form = DomainForm()
     ticket = FlicketTicket.query.get_or_404(ticket_id)
 
-    if ticket.current_status.status == "Closed":
+    if ticket.current_status.status in ("Finished", "Canceled"):
         flash(gettext("Can't change the domain on a closed ticket."))
         return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket_id))
 
     if form.validate_on_submit():
-        domain = FlicketDepartmentCategory.query.filter_by(
-            domain=form.domain.data
-        ).one()
+        domain = FlicketDomain.query.filter_by(domain=form.domain.data).one()
 
         if ticket.domain_id == domain.domain_id:
             flash(
@@ -48,8 +47,8 @@ def ticket_domain(ticket_id=False):
             )
             return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket.id))
 
-        # change category
-        ticket.category_id = domain.category_id
+        # change domain
+        ticket.domain_id = domain.domain_id
 
         # add action record
         add_action(
