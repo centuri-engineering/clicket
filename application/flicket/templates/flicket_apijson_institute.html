@@ -1,0 +1,28 @@
+<script type="text/javascript">
+    $(function () {
+        $('#autocomplete-institute').autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: '/flicket-api/institute/',
+                    datatype: 'json',
+                    headers: {
+                        'Authorization' : 'Bearer {{ g.user.token }}'
+                    },
+                    data: {
+                        institute: request.term
+                    },
+                    success: function (data) {
+                        console.log(data.items);
+                        response($.map(data.items, function (item) {
+                            return {
+                                label: item.institute,
+                                value: item.institute
+                            }
+                        }));
+                    }
+                })
+            },
+            minLength: 3
+        });
+    });
+</script>

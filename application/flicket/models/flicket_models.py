@@ -537,6 +537,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "content",
             "requester",
             "domain_id",
+            "institute_id",
             "ticket_priority_id",
             "requester_role_id",
         ]:
@@ -566,6 +567,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "id": self.id,
             "assigned_id": self.assigned_id,
             "domain_id": self.domain_id,
+            "institute_id": self.institute_id,
             "content": self.content,
             "requester": self.requester,
             "date_added": self.date_added,
@@ -589,6 +591,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 "modified_by": modified_by,
                 "domain": app.config["base_url"]
                 + url_for("bp_api.get_domain", id=self.domain_id),
+                "institute": app.config["base_url"]
+                + url_for("bp_api.get_institute", id=self.institute_id),
                 "status": app.config["base_url"]
                 + url_for("bp_api.get_status", id=self.status_id),
                 "subscribers": app.config["base_url"]
@@ -608,6 +612,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             f'title="{self.title}", '
             f"created_by={self.user}, "
             f"domain={self.domain}"
+            f"institute={self.institute}"
             f"status={self.current_status}"
             f"assigned={self.assigned}>"
         )

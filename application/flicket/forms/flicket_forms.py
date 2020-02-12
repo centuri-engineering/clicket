@@ -153,7 +153,6 @@ class CreateTicketForm(FlaskForm):
             ),
         ],
     )
-
     priority = SelectField(
         lazy_gettext("priority"), validators=[DataRequired()], coerce=int
     )
@@ -211,6 +210,14 @@ class ReplyForm(FlaskForm):
         self.priority.choices = [
             (p.id, p.priority) for p in FlicketPriority.query.all()
         ]
+        self.requester_role.choices = [
+            (p.id, p.requester_role) for p in FlicketRequesterRole.query.all()
+        ]
+
+        self.domain.choices = [(c.id, c.domain) for c in FlicketDomain.query.all()]
+        self.institute.choices = [
+            (c.id, c.institute) for c in FlicketInstitute.query.all()
+        ]
 
     content = PageDownField(
         lazy_gettext("Reply"),
@@ -226,8 +233,17 @@ class ReplyForm(FlaskForm):
     status = SelectField(
         lazy_gettext("Status"), validators=[DataRequired()], coerce=int
     )
+    domain = SelectField(
+        lazy_gettext("Domain"), validators=[DataRequired()], coerce=int
+    )
+    institute = SelectField(
+        lazy_gettext("Institute"), validators=[DataRequired()], coerce=int
+    )
     priority = SelectField(
         lazy_gettext("Priority"), validators=[DataRequired()], coerce=int
+    )
+    requester_role = SelectField(
+        lazy_gettext("Requester role"), validators=[DataRequired()], coerce=int
     )
     hours = DecimalField(lazy_gettext("hours"), default=0)
     submit = SubmitField(lazy_gettext("reply"), render_kw=form_class_button)
