@@ -13,6 +13,8 @@ from application.flicket.models.flicket_models import (
     FlicketStatus,
     FlicketPriority,
     FlicketRequesterRole,
+    FlicketRequestType,
+    FlicketProcedureStage,
     FlicketInstitute,
     FlicketDomain,
 )
@@ -76,6 +78,22 @@ institutes = [
 # institutes and domains defaults for flicket
 depart_domains = [{"institute": dep, "domain": specialities} for dep in institutes]
 
+request_types = [
+    " Consulting",
+    " Short project",
+    " Long project",
+    " Maintenance",
+]
+
+
+procedure_stages = [
+    " N/A",
+    " First Contact",
+    " Submited",
+    " Validated",
+    " Declined",
+]
+
 
 class RunSetUP(Command):
     def run(self):
@@ -91,6 +109,8 @@ class RunSetUP(Command):
         self.create_default_ticket_status()
         self.create_default_priority_levels()
         self.create_default_requester_role_levels()
+        self.create_default_request_type_levels()
+        self.create_default_procedure_stage_levels()
         self.create_default_depts()
         # commit changes to the database
         db.session.commit()
@@ -274,6 +294,34 @@ class RunSetUP(Command):
 
                 if not silent:
                     print("Added requester role level {}".format(p))
+
+    @staticmethod
+    def create_default_request_type_levels(silent=False):
+        """ set up default request_type levels """
+
+        for level in request_types:
+            request_type = FlicketRequestType.query.filter_by(request_type=p).first()
+            if not request_type:
+                add_request_type = FlicketRequestType(request_type=p)
+                db.session.add(add_request_type)
+
+                if not silent:
+                    print("Added request type level {}".format(p))
+
+    @staticmethod
+    def create_default_procedure_stage_levels(silent=False):
+        """ set up default procedure_stage levels """
+
+        for level in procedure_stages:
+            procedure_stage = FlicketProcedureStage.query.filter_by(
+                procedure_stage=p
+            ).first()
+            if not procedure_stage:
+                add_procedure_stage = FlicketProcedureStage(procedure_stage=p)
+                db.session.add(add_procedure_stage)
+
+                if not silent:
+                    print("Added procedure stage level {}".format(p))
 
     @staticmethod
     def create_default_depts(silent=False):

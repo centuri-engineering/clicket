@@ -13,6 +13,8 @@ from application.flicket.models.flicket_models import (
     FlicketStatus,
     FlicketPriority,
     FlicketRequesterRole,
+    FlicketRequestType,
+    FlicketProcedureStage,
     FlicketDomain,
     FlicketSubscription,
     FlicketHistory,
@@ -36,6 +38,8 @@ class FlicketTicketExt:
         requester=None,
         priority=None,
         requester_role=None,
+        request_type=None,
+        procedure_stage=None,
         domain=None,
         files=None,
         days=0,
@@ -60,6 +64,12 @@ class FlicketTicketExt:
             id=int(requester_role)
         ).first()
 
+        request_type = FlicketRequestType.query.filter_by(id=int(request_type)).first()
+
+        procedure_stage = FlicketProcedureStage.query.filter_by(
+            id=int(procedure_stage)
+        ).first()
+
         upload_attachments = UploadAttachment(files)
         if upload_attachments.are_attachments():
             upload_attachments.upload_files()
@@ -74,6 +84,8 @@ class FlicketTicketExt:
             requester=requester,
             ticket_priority=ticket_priority,
             requester_role=requester_role,
+            request_type=request_type,
+            procedure_stage=procedure_stage,
             domain=ticket_domain,
             days=days,
         )
@@ -101,6 +113,8 @@ class FlicketTicketExt:
         requester=None,
         priority=None,
         requester_role=None,
+        request_type=None,
+        procedure_stage=None,
         domain=None,
         files=None,
         form_uploads=None,
@@ -164,6 +178,12 @@ class FlicketTicketExt:
         requester_role = FlicketRequesterRole.query.filter_by(
             id=int(requester_role)
         ).first()
+        request_type = FlicketRequestType.query.filter_by(id=int(request_type)).first()
+
+        procedure_stage = FlicketProcedureStage.query.filter_by(
+            id=int(procedure_stage)
+        ).first()
+
         ticket_domain = FlicketDomain.query.filter_by(id=int(domain)).first()
 
         ticket.content = content
@@ -173,6 +193,8 @@ class FlicketTicketExt:
         ticket.date_modified = datetime.datetime.now()
         ticket.ticket_priority = ticket_priority
         ticket.requester_role = requester_role
+        ticket.request_type = request_type
+        ticket.procedure_stage = procedure_stage
         ticket.domain = ticket_domain
         ticket.days = days
 

@@ -173,6 +173,12 @@ from .flicket_api.views import institute_domains
 # noinspection PyPep8
 from .flicket_api.views import requester_roles
 
+# noinspection PyPep8
+from .flicket_api.views import request_types
+
+# noinspection PyPep8
+from .flicket_api.views import procedure_stages
+
 
 # noinspection PyPep8
 from .flicket_errors import handlers

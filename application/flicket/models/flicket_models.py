@@ -191,6 +191,66 @@ class FlicketRequesterRole(PaginatedAPIMixin, Base):
         )
 
 
+class FlicketRequestType(PaginatedAPIMixin, Base):
+    __tablename__ = "flicket_request_types"
+
+    id = db.Column(db.Integer, primary_key=True)
+    request_type = db.Column(db.String(field_size["priority_max_length"]))
+
+    def to_dict(self):
+        """
+        Returns a dictionary object about the domain and its institute
+        :return:
+        """
+        data = {
+            "id": self.id,
+            "role": self.request_type,
+            "links": {
+                "self": app.config["base_url"]
+                + url_for("bp_api.get_request_type", id=self.id),
+                "request_types": app.config["base_url"]
+                + url_for("bp_api.get_request_types"),
+            },
+        }
+
+        return data
+
+    def __repr__(self):
+        return "<FlicketRequestType: id={}, request_type={}>".format(
+            self.id, self.request_type
+        )
+
+
+class FlicketProcedureStage(PaginatedAPIMixin, Base):
+    __tablename__ = "flicket_procedure_stages"
+
+    id = db.Column(db.Integer, primary_key=True)
+    procedure_stage = db.Column(db.String(field_size["priority_max_length"]))
+
+    def to_dict(self):
+        """
+        Returns a dictionary object about the domain and its institute
+        :return:
+        """
+        data = {
+            "id": self.id,
+            "role": self.procedure_stage,
+            "links": {
+                "self": app.config["base_url"]
+                + url_for("bp_api.get_procedure_stage", id=self.id),
+                "procedure_stages": app.config["base_url"]
+                + url_for("bp_api.get_procedure_stages"),
+            },
+        }
+
+        return data
+
+    def __repr__(self):
+        return "<FlicketProcedureStage: id={}, procedure_stage={}>".format(
+            self.id, self.procedure_stage
+        )
+
+
 class FlicketTicket(PaginatedAPIMixin, Base):
     __tablename__ = "flicket_topic"
 
@@ -222,6 +282,12 @@ class FlicketTicket(PaginatedAPIMixin, Base):
 
     requester_role_id = db.Column(db.Integer, db.ForeignKey(FlicketRequesterRole.id))
     requester_role = db.relationship(FlicketRequesterRole)
+
+    request_type_id = db.Column(db.Integer, db.ForeignKey(FlicketRequestType.id))
+    request_type = db.relationship(FlicketRequestType)
+
+    procedure_stage_id = db.Column(db.Integer, db.ForeignKey(FlicketProcedureStage.id))
+    procedure_stage = db.relationship(FlicketProcedureStage)
 
     posts = db.relationship("FlicketPost", back_populates="ticket")
 
@@ -298,6 +364,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         status = ""
         user_id = ""
         requester_role = ""
+        request_type = ""
+        procedure_stage = ""
 
         user = FlicketUser.query.filter_by(username=form.username.data).first()
         if user:
@@ -320,6 +388,19 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 .first()
                 .requester_role
             )
+        if form.request_type.data:
+            request_type = (
+                FlicketRequesterRole.query.filter_by(id=form.request_type.data)
+                .first()
+                .request_type
+            )
+
+        if form.procedure_stage.data:
+            procedure_stage = (
+                FlicketRequesterRole.query.filter_by(id=form.procedure_stage.data)
+                .first()
+                .procedure_stage
+            )
 
         redirect_url = url_for(
             url,
@@ -329,6 +410,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             status=status,
             user_id=user_id,
             requester_role=requester_role,
+            request_type=request_type,
+            procedure_stage=procedure_stage,
         )
 
         return redirect_url
@@ -411,6 +494,30 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                         .first()
                         .id
                     )
+            if key == "request_type" and value:
+                ticket_query = ticket_query.filter(
+                    FlicketTicket.request_type.has(
+                        FlicketRequestType.request_type == value
+                    )
+                )
+                if form:
+                    form.request_type.data = (
+                        FlicketRequestType.query.filter_by(request_type=value)
+                        .first()
+                        .id
+                    )
+            if key == "procedure_stage" and value:
+                ticket_query = ticket_query.filter(
+                    FlicketTicket.procedure_stage.has(
+                        FlicketProcedureStage.procedure_stage == value
+                    )
+                )
+                if form:
+                    form.procedure_stage.data = (
+                        FlicketProcedureStage.query.filter_by(procedure_stage=value)
+                        .first()
+                        .id
+                    )
 
             if key == "domain" and value:
                 ticket_query = ticket_query.filter(
@@ -470,20 +577,20 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             ticket_query = ticket_query.order_by(
                 FlicketTicket.ticket_priority_id.desc(), FlicketTicket.id
             )
-        if sort == "requester_role":
+        elif sort == "requester_role":
             ticket_query = ticket_query.order_by(
                 FlicketTicket.requester_role_id, FlicketTicket.id
             )
-        elif sort == "requester_role_desc":
+        elif sort == "request_type":
             ticket_query = ticket_query.order_by(
-                FlicketTicket.requester_role_id.desc(), FlicketTicket.id
+                FlicketTicket.request_type_id, FlicketTicket.id
+            )
+        elif sort == "procedure_stage":
+            ticket_query = ticket_query.order_by(
+                FlicketTicket.procedure_stage_id, FlicketTicket.id
             )
         elif sort == "title":
             ticket_query = ticket_query.order_by(FlicketTicket.title, FlicketTicket.id)
-        elif sort == "title_desc":
-            ticket_query = ticket_query.order_by(
-                FlicketTicket.title.desc(), FlicketTicket.id
-            )
         elif sort == "ticketid":
             ticket_query = ticket_query.order_by(FlicketTicket.id)
         elif sort == "ticketid_desc":
@@ -492,31 +599,9 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             ticket_query = ticket_query.join(FlicketUser, FlicketTicket.user).order_by(
                 FlicketUser.name, FlicketTicket.id
             )
-        elif sort == "addedby_desc":
-            ticket_query = ticket_query.join(FlicketUser, FlicketTicket.user).order_by(
-                FlicketUser.name.desc(), FlicketTicket.id
-            )
         elif sort == "addedon":
             ticket_query = ticket_query.order_by(
                 FlicketTicket.date_added, FlicketTicket.id
-            )
-        elif sort == "addedon_desc":
-            ticket_query = ticket_query.order_by(
-                FlicketTicket.date_added.desc(), FlicketTicket.id
-            )
-        elif sort == "replies":
-            replies_count = func.count(FlicketPost.id).label("replies_count")
-            ticket_query = (
-                ticket_query.outerjoin(FlicketTicket.posts)
-                .group_by(FlicketTicket.id)
-                .order_by(replies_count, FlicketTicket.id)
-            )
-        elif sort == "replies_desc":
-            replies_count = func.count(FlicketPost.id).label("replies_count")
-            ticket_query = (
-                ticket_query.outerjoin(FlicketTicket.posts)
-                .group_by(FlicketTicket.id)
-                .order_by(replies_count.desc(), FlicketTicket.id)
             )
         elif sort == "institute_domain":
             ticket_query = (
@@ -524,16 +609,6 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 .join(FlicketInstitute, FlicketDomain.institute)
                 .order_by(
                     FlicketInstitute.institute, FlicketDomain.domain, FlicketTicket.id,
-                )
-            )
-        elif sort == "institute_domain_desc":
-            ticket_query = (
-                ticket_query.join(FlicketDomain, FlicketTicket.domain)
-                .join(FlicketInstitute, FlicketDomain.institute)
-                .order_by(
-                    FlicketInstitute.institute.desc(),
-                    FlicketDomain.domain.desc(),
-                    FlicketTicket.id,
                 )
             )
         elif sort == "status":
@@ -548,10 +623,6 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             ticket_query = ticket_query.outerjoin(
                 FlicketUser, FlicketTicket.assigned
             ).order_by(FlicketUser.name, FlicketTicket.id)
-        elif sort == "assigned_desc":
-            ticket_query = ticket_query.outerjoin(
-                FlicketUser, FlicketTicket.assigned
-            ).order_by(FlicketUser.name.desc(), FlicketTicket.id)
         elif sort == "time":
             total_days = (FlicketTicket.days + func.sum(FlicketPost.days)).label(
                 "total_days"
@@ -586,6 +657,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "domain_id",
             "ticket_priority_id",
             "requester_role_id",
+            "request_type_id",
+            "procedure_stage_id",
         ]:
             if field in data:
                 setattr(self, field, data[field])
@@ -623,6 +696,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "title": self.title,
             "ticket_priority_id": self.ticket_priority_id,
             "requester_role_id": self.requester_role_id,
+            "request_type_id": self.request_type_id,
+            "procedure_stage_id": self.procedure_stage_id,
             "links": {
                 "self": app.config["base_url"]
                 + url_for("bp_api.get_ticket", id=self.id),
@@ -631,6 +706,10 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 + url_for("bp_api.get_priority", id=self.ticket_priority_id),
                 "requester_role": app.config["base_url"]
                 + url_for("bp_api.get_requester_role", id=self.requester_role_id),
+                "request_type": app.config["base_url"]
+                + url_for("bp_api.get_request_type", id=self.request_type_id),
+                "procedure_stage": app.config["base_url"]
+                + url_for("bp_api.get_procedure_stage", id=self.procedure_stage_id),
                 "started_ny": app.config["base_url"]
                 + url_for("bp_api.get_user", id=self.started_id),
                 "modified_by": modified_by,

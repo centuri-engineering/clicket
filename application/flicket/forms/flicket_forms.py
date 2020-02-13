@@ -24,6 +24,8 @@ from application.flicket.models.flicket_models import (
     FlicketInstitute,
     FlicketPriority,
     FlicketRequesterRole,
+    FlicketRequestType,
+    FlicketProcedureStage,
     FlicketStatus,
     FlicketTicket,
     FlicketInstituteDomain,
@@ -139,6 +141,15 @@ class CreateTicketForm(FlaskForm):
         self.requester_role.choices = [
             (p.id, p.requester_role) for p in FlicketRequesterRole.query.all()
         ]
+        self.request_type.choices = [
+            (s.id, s.request_type) for s in FlicketRequestType.query.all()
+        ]
+        self.request_type.choices.insert(0, (0, "request type"))
+
+        self.procedure_stage.choices = [
+            (s.id, s.procedure_stage) for s in FlicketProcedureStage.query.all()
+        ]
+        self.procedure_stage.choices.insert(0, (0, "procedure stage"))
 
         self.domain.choices = [
             (c.id, "{} - {}".format(c.institute.institute, c.domain))
@@ -172,6 +183,12 @@ class CreateTicketForm(FlaskForm):
     )
     requester_role = SelectField(
         lazy_gettext("requester role"), validators=[DataRequired()], coerce=int
+    )
+    request_type = SelectField(
+        lazy_gettext("request type"), validators=[DataRequired()], coerce=int
+    )
+    procedure_stage = SelectField(
+        lazy_gettext("procedure stage"), validators=[DataRequired()], coerce=int
     )
 
     content = PageDownField(

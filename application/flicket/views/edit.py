@@ -13,14 +13,18 @@ from flask_login import login_required
 from . import flicket_bp
 from application import app, db
 from application.flicket.forms.flicket_forms import EditTicketForm, EditReplyForm
-from application.flicket.models.flicket_models import FlicketHistory
-from application.flicket.models.flicket_models import FlicketPost
-from application.flicket.models.flicket_models import FlicketStatus
-from application.flicket.models.flicket_models import FlicketPriority
-from application.flicket.models.flicket_models import FlicketRequesterRole
+from application.flicket.models.flicket_models import (
+    FlicketHistory,
+    FlicketPost,
+    FlicketStatus,
+    FlicketPriority,
+    FlicketRequesterRole,
+    FlicketProcedureStage,
+    FlicketRequestType,
+    FlicketTicket,
+    FlicketUploads,
+)
 
-from application.flicket.models.flicket_models import FlicketTicket
-from application.flicket.models.flicket_models import FlicketUploads
 from application.flicket.models.flicket_models_ext import FlicketTicketExt
 from application.flicket.scripts.flicket_functions import add_action
 from application.flicket.scripts.flicket_functions import is_ticket_closed
@@ -64,6 +68,8 @@ def edit_ticket(ticket_id):
             content=form.content.data,
             priority=form.priority.data,
             requester_role=form.requester_role.data,
+            request_type=form.request_type.data,
+            procedure_stage=form.procedure_stage.data,
             domain=form.domain.data,
             files=request.files.getlist("file"),
             days=form.days.data,
@@ -77,6 +83,8 @@ def edit_ticket(ticket_id):
     form.content.data = ticket.content
     form.priority.data = ticket.ticket_priority_id
     form.requester_role.data = ticket.requester_role_id
+    form.request_type.data = ticket.request_type_id
+    form.procedure_stage.data = ticket.procedure_stage_id
     form.title.data = ticket.title
     form.domain.data = ticket.domain_id
 
@@ -181,6 +189,28 @@ def edit_post(post_id):
                     "requester_role": requester_role.requester_role,
                 },
             )
+        if post.ticket.request_type_id != form.request_type.data:
+            request_type = FlicketRequestType.query.get(form.request_type.data)
+            post.ticket.request_type = request_type
+            add_action(
+                post.ticket,
+                "request_type",
+                data={
+                    "request_type_id": request_type.id,
+                    "request_type": request_type.request_type,
+                },
+            )
+        if post.ticket.procedure_stage_id != form.procedure_stage.data:
+            procedure_stage = FlicketProcedureStage.query.get(form.procedure_stage.data)
+            post.ticket.procedure_stage = procedure_stage
+            add_action(
+                post.ticket,
+                "procedure_stage",
+                data={
+                    "procedure_stage_id": procedure_stage.id,
+                    "procedure_stage": procedure_stage.procedure_stage,
+                },
+            )
 
         files = request.files.getlist("file")
         upload_attachments = UploadAttachment(files)
@@ -200,5 +230,7 @@ def edit_post(post_id):
     form.status.data = post.ticket.status_id
     form.priority.data = post.ticket.ticket_priority_id
     form.requester_role.data = post.ticket.requester_role_id
+    form.request_type.data = post.ticket.request_type_id
+    form.procedure_stage.data = post.ticket.procedure_stage_id
 
     return render_template("flicket_editpost.html", title="Edit Post", form=form)
