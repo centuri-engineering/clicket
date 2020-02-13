@@ -203,12 +203,7 @@ class ReplyForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         form = super(ReplyForm, self).__init__(*args, **kwargs)
-        self.status.choices = [
-            (s.id, s.status)
-            for s in FlicketStatus.query.filter(
-                FlicketStatus.status not in ("Finished", "Canceled")
-            )
-        ]
+        self.status.choices = [(s.id, s.status) for s in FlicketStatus.query.all()]
         self.priority.choices = [
             (p.id, p.priority) for p in FlicketPriority.query.all()
         ]
@@ -324,5 +319,4 @@ class DomainForm(FlaskForm):
             does_domain_exist,
         ],
     )
-    institute_id = HiddenField("institute_id")
     submit = SubmitField(lazy_gettext("add domain"), render_kw=form_class_button)

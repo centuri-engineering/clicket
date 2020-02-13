@@ -71,7 +71,7 @@
             {% if ticket %}
                 {% if g.user.is_admin or (ticket.user == g.user) or (ticket.assigned_id == g.user.id) %}
                     <!-- reply and close if admin or ticket owner -->
-                    {% if ticket.current_status.status != 'Closed' %}
+                    {% if ticket.current_status.status not in ('Finished', 'Canceled') %}
                         <div class="row mt-2">
                             <div class="col text-right">
                                 {{ form.submit_close(class="btn btn-warning btn-sm") }}

@@ -19,31 +19,31 @@ block content %} <!-- {{ self._TemplateReference__context.name }} -->
                     {{ ticket.title }}
                   </div>
                 </div>
+
+
                 <div class="row m-0">
                   <div class="col">
-                    <div class="flicket-tickets-title">Institute</div>
+                    <div class="flicket-tickets-title">{{ _('Institute') }}</div>
                     <div class="flicket-tickets-content">
                       {{ ticket.institute.institute }}
+                      {%- if change_institute %}
+                      <a href="{{ url_for('flicket_bp.ticket_institute', ticket_id = ticket.id) }}"
+                                           title="{{ _('Insitute') }}">
+                                            <i class="fas fa-edit"></i>
+                      </a>
+                      {%- endif %}
                     </div>
                   </div>
                   <div class="col">
                     <div class="flicket-tickets-title">{{
                     _('Priority') }}</div>
-                    <div class="flicket-tickets-content {%- if
-                                ticket.current_status.status ==
-                                'Closed' -%} {{ ' '
-                                }}flicket-status-closed {%- endif -%}
-                                {%- if ticket.ticket_priority.priority
-                                == 'high' -%} {{ ' '
-                                }}flicket-status-high {%- elif
-                                ticket.ticket_priority.priority ==
-                                'medium' -%} {{ ' '
-                                }}flicket-status-medium {%- elif
-                                ticket.ticket_priority.priority ==
-                                'low' -%} {{ ' ' }}flicket-status-low
-                                {%- endif %}">{{
-                                ticket.ticket_priority.priority
-                                }}</div>
+                    <div class="flicket-tickets-content
+                      {%- if ticket.current_status.status in ('Canceled', 'Finished') -%}
+                      {{ ' '}} flicket-status-closed {%- endif -%}
+                      {%- if ticket.ticket_priority.priority == 'high' -%} {{ ' '}}flicket-status-high
+                      {%- elif ticket.ticket_priority.priority == 'medium' -%} {{ ' '}}flicket-status-medium
+                      {%- elif  ticket.ticket_priority.priority == 'low' -%} {{ ' ' }}flicket-status-low
+                      {%- endif %}"> {{ ticket.ticket_priority.priority }}</div>
                   </div>
                   <div class="col">
                     <div class="flicket-tickets-title">{{
