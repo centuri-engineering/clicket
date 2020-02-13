@@ -297,6 +297,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         domain = ""
         status = ""
         user_id = ""
+        requester_role = ""
 
         user = FlicketUser.query.filter_by(username=form.username.data).first()
         if user:
@@ -313,6 +314,12 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             domain = FlicketDomain.query.filter_by(id=form.domain.data).first().domain
         if form.status.data:
             status = FlicketStatus.query.filter_by(id=form.status.data).first().status
+        if form.requester_role.data:
+            requester_role = (
+                FlicketRequesterRole.query.filter_by(id=form.requester_role.data)
+                .first()
+                .requester_role
+            )
 
         redirect_url = url_for(
             url,
@@ -321,6 +328,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             domain=domain,
             status=status,
             user_id=user_id,
+            requester_role=requester_role,
         )
 
         return redirect_url
@@ -464,11 +472,11 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             )
         if sort == "requester_role":
             ticket_query = ticket_query.order_by(
-                FlicketTicket.ticket_requester_role_id, FlicketTicket.id
+                FlicketTicket.requester_role_id, FlicketTicket.id
             )
         elif sort == "requester_role_desc":
             ticket_query = ticket_query.order_by(
-                FlicketTicket.ticket_requester_role_id.desc(), FlicketTicket.id
+                FlicketTicket.requester_role_id.desc(), FlicketTicket.id
             )
         elif sort == "title":
             ticket_query = ticket_query.order_by(FlicketTicket.title, FlicketTicket.id)
@@ -947,12 +955,6 @@ class FlicketAction(PaginatedAPIMixin, Base):
         if self.action == "priority":
             return (
                 f'Ticket priority has been changed to "{self.data["priority"]}"'
-                f' by <a href="mailto:{self.user.email}">{self.user.name}</a> | {_date}'
-            )
-
-        if self.action == "requester_role":
-            return (
-                f'Ticket requester role has been changed to "{self.data["requester_role"]}"'
                 f' by <a href="mailto:{self.user.email}">{self.user.name}</a> | {_date}'
             )
 

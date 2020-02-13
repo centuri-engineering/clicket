@@ -156,6 +156,16 @@
                             <i class="fas fa-sort-numeric-up"></i>
                             {{ _('Status') }}
                         </a>
+                        <a class="dropdown-item small{% if sort == 'requester_role' %} active{% endif %}"
+                           href="{{ url_for(base_url, sort='requester_role', **request.args) }}">
+                            <i class="fas fa-sort-numeric-down"></i>
+                            {{ _('Requester_Role') }}
+                        </a>
+                        <a class="dropdown-item small{% if sort == 'requester_role_desc' %} active{% endif %}"
+                           href="{{ url_for(base_url, sort='requester_role_desc', **request.args) }}">
+                            <i class="fas fa-sort-numeric-up"></i>
+                            {{ _('Requester_Role') }}
+                        </a>
                         <a class="dropdown-item small{% if sort == 'assigned' %} active{% endif %}"
                            href="{{ url_for(base_url, sort='assigned', **request.args) }}">
                             <i class="fas fa-sort-alpha-down"></i>

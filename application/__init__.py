@@ -166,7 +166,13 @@ from .flicket_api.views import uploads
 
 # noinspection PyPep8
 from .flicket_api.views import users
+
+# noinspection PyPep8
 from .flicket_api.views import institute_domains
+
+# noinspection PyPep8
+from .flicket_api.views import requester_roles
+
 
 # noinspection PyPep8
 from .flicket_errors import handlers

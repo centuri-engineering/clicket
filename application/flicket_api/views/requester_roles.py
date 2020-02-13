@@ -139,6 +139,7 @@ def get_requester_roles():
         request.args.get("per_page", app.config["posts_per_page"], type=int), 100
     )
     data = FlicketRequesterRole.to_collection_dict(
-        FlicketRequesterRole.query, page, per_page, "bp_api.get_institutes"
+        FlicketRequesterRole.query, page, per_page, "bp_api.get_requester_roles"
     )
+
     return jsonify(data)

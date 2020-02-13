@@ -10,8 +10,10 @@
             success: function (data) {
                 // use uri.js to pass the page uri
                 var result = URI.parseQuery(document.URL);
-                // get value of status in uri
-                result = result.requester_role;
+
+                // get value of requester in uri
+                result = result.query;
+                result = URI.parseQuery(result).requester_role;
 
                 // populate the status selection inputs
                 var requester_role = document.getElementById('requester_role');
