@@ -8,6 +8,7 @@
     {% include('flicket_apijson_domains.html') %}
     {% include('flicket_apijson_institutes.html') %}
     {% include('flicket_apijson_statuses.html') %}
+    {% include('flicket_apijson_requester_roles.html') %}
 
 
     <div class="container">
@@ -17,7 +18,14 @@
                 <h1>{{ title }}</h1>
                 <p>
                     {{ _('Download results as a csv file') }} <a
-                        href="{{ url_for('flicket_bp.tickets_csv', status=status, institute=institute, domain=domain, content=content, user_id=user_id) }}"
+                        href="{{ url_for('flicket_bp.tickets_csv',
+                                         status=status,
+                                         institute=institute,
+                                         domain=domain,
+                                         content=content,
+                                         requester=requester,
+                                         requester_role=requester_role,
+                                         user_id=user_id) }}"
                         title="csv file">
                     <i class="fas fa-file-csv"></i>
                 </a>.
@@ -41,6 +49,9 @@
                 </div>
                 <div class="col-md col-6 text-center">
                     {{ form.status(class="form-control form-control-sm flicket-tickets-content p-0", id="status") }}
+                </div>
+                <div class="col-md col-6 text-center">
+                    {{ form.requester_role(class="form-control form-control-sm flicket-tickets-content p-0", id="requester_role") }}
                 </div>
                 <div class="col-md col-6 text-center">
                     {{ form.username(class="form-control form-control-sm flicket-tickets-content", placeholder="username", id="autocomplete-username",
@@ -243,6 +254,14 @@
                                 </div>
                                 <div class="flicket-tickets-content">
                                     {{ t.domain.institute.institute }} / {{ t.domain.domain }}
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <div class="flicket-tickets-title">
+                                    requester role
+                                </div>
+                                <div class="flicket-tickets-content">
+                                    {{ t.requester_role.requester_role }}
                                 </div>
                             </div>
                             <div class="col-md-2 col-6">

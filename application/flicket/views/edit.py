@@ -17,6 +17,8 @@ from application.flicket.models.flicket_models import FlicketHistory
 from application.flicket.models.flicket_models import FlicketPost
 from application.flicket.models.flicket_models import FlicketStatus
 from application.flicket.models.flicket_models import FlicketPriority
+from application.flicket.models.flicket_models import FlicketRequesterRole
+
 from application.flicket.models.flicket_models import FlicketTicket
 from application.flicket.models.flicket_models import FlicketUploads
 from application.flicket.models.flicket_models_ext import FlicketTicketExt
@@ -61,6 +63,7 @@ def edit_ticket(ticket_id):
             user=g.user,
             content=form.content.data,
             priority=form.priority.data,
+            requester_role=form.requester_role.data,
             domain=form.domain.data,
             files=request.files.getlist("file"),
             days=form.days.data,
@@ -73,6 +76,7 @@ def edit_ticket(ticket_id):
 
     form.content.data = ticket.content
     form.priority.data = ticket.ticket_priority_id
+    form.requester_role.data = ticket.requester_role_id
     form.title.data = ticket.title
     form.domain.data = ticket.domain_id
 
@@ -166,6 +170,18 @@ def edit_post(post_id):
                 data={"priority_id": priority.id, "priority": priority.priority},
             )
 
+        if post.ticket.requester_role_id != form.requester_role.data:
+            requester_role = FlicketRequesterRole.query.get(form.requester_role.data)
+            post.ticket.requester_role = requester_role
+            add_action(
+                post.ticket,
+                "requester_role",
+                data={
+                    "requester_role_id": requester_role.id,
+                    "requester_role": requester_role.requester_role,
+                },
+            )
+
         files = request.files.getlist("file")
         upload_attachments = UploadAttachment(files)
         if upload_attachments.are_attachments():
@@ -183,5 +199,6 @@ def edit_post(post_id):
     form.days.data = post.days
     form.status.data = post.ticket.status_id
     form.priority.data = post.ticket.ticket_priority_id
+    form.requester_role.data = post.ticket.requester_role_id
 
     return render_template("flicket_editpost.html", title="Edit Post", form=form)

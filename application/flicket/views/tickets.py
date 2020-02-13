@@ -40,6 +40,7 @@ def tickets_view(page, is_my_view=False):
     domain = request.args.get("domain")
     content = request.args.get("content")
     user_id = request.args.get("user_id")
+    requester_role = request.args.get("requester_role")
 
     if form.validate_on_submit():
         redirect_url = FlicketTicket.form_redirect(form, url="flicket_bp.tickets")
@@ -75,6 +76,7 @@ def tickets_view(page, is_my_view=False):
         status=status,
         user_id=user_id,
         content=content,
+        requester_role=requester_role,
     )
     if is_my_view:
         ticket_query = FlicketTicket.my_tickets(ticket_query)
@@ -101,6 +103,7 @@ def tickets_view(page, is_my_view=False):
             status=status,
             institute=institute,
             domain=domain,
+            requester_role=requester_role,
             user_id=user_id,
             sort=sort,
             base_url="flicket_bp.tickets",

@@ -83,17 +83,14 @@ class FlicketInstitute(PaginatedAPIMixin, Base):
             "links": {
                 "self": app.config["base_url"]
                 + url_for("bp_api.get_institute", id=self.id),
-                "institutes": app.config["base_url"]
-                + url_for("bp_api.get_institutes"),
+                "institutes": app.config["base_url"] + url_for("bp_api.get_institutes"),
             },
         }
 
         return data
 
     def __repr__(self):
-        return "<FlicketInstitute: id={}, institute={}>".format(
-            self.id, self.institute
-        )
+        return "<FlicketInstitute: id={}, institute={}>".format(self.id, self.institute)
 
 
 class FlicketDomain(PaginatedAPIMixin, Base):
@@ -313,9 +310,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 .institute
             )
         if form.domain.data:
-            domain = (
-                FlicketDomain.query.filter_by(id=form.domain.data).first().domain
-            )
+            domain = FlicketDomain.query.filter_by(id=form.domain.data).first().domain
         if form.status.data:
             status = FlicketStatus.query.filter_by(id=form.status.data).first().status
 
@@ -395,6 +390,18 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 if form:
                     form.status.data = (
                         FlicketStatus.query.filter_by(status=value).first().id
+                    )
+            if key == "requester_role" and value:
+                ticket_query = ticket_query.filter(
+                    FlicketTicket.requester_role.has(
+                        FlicketRequesterRole.requester_role == value
+                    )
+                )
+                if form:
+                    form.requester_role.data = (
+                        FlicketRequesterRole.query.filter_by(requester_role=value)
+                        .first()
+                        .id
                     )
 
             if key == "domain" and value:
@@ -508,9 +515,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 ticket_query.join(FlicketDomain, FlicketTicket.domain)
                 .join(FlicketInstitute, FlicketDomain.institute)
                 .order_by(
-                    FlicketInstitute.institute,
-                    FlicketDomain.domain,
-                    FlicketTicket.id,
+                    FlicketInstitute.institute, FlicketDomain.domain, FlicketTicket.id,
                 )
             )
         elif sort == "institute_domain_desc":

@@ -11,6 +11,7 @@ from .flicket_forms import does_user_exist
 from application.flicket.models.flicket_models import FlicketInstitute
 from application.flicket.models.flicket_models import FlicketDomain
 from application.flicket.models.flicket_models import FlicketStatus
+from application.flicket.models.flicket_models import FlicketRequesterRole
 
 
 class SearchTicketForm(FlaskForm):
@@ -29,14 +30,17 @@ class SearchTicketForm(FlaskForm):
 
         self.domain.choices = [
             (c.id, c.domain)
-            for c in FlicketDomain.query.order_by(
-                FlicketDomain.domain.asc()
-            ).all()
+            for c in FlicketDomain.query.order_by(FlicketDomain.domain.asc()).all()
         ]
         self.domain.choices.insert(0, (0, "domain"))
 
         self.status.choices = [(s.id, s.status) for s in FlicketStatus.query.all()]
         self.status.choices.insert(0, (0, "status"))
+
+        self.requester_role.choices = [
+            (s.id, s.requester_role) for s in FlicketRequesterRole.query.all()
+        ]
+        self.requester_role.choices.insert(0, (0, "requester role"))
 
     """ Search form. """
     institute = SelectField(lazy_gettext("institute"), coerce=int, validators=[])
@@ -44,6 +48,7 @@ class SearchTicketForm(FlaskForm):
     status = SelectField(lazy_gettext("status"), coerce=int)
     username = StringField(lazy_gettext("username"), validators=[does_user_exist])
     content = StringField(lazy_gettext("content"), validators=[])
+    requester_role = SelectField(lazy_gettext("requester role"), coerce=int)
 
     def __repr__(self):
         return "<SearchTicketForm>"
