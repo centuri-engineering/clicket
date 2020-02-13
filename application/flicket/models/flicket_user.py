@@ -180,7 +180,11 @@ class FlicketUser(PaginatedAPIMixin, UserMixin, Base):
         :return: None if token is expired otherwise returns self.
         """
         user = FlicketUser.query.filter_by(token=token).first()
-        if user is None or user.token_expiration < datetime.utcnow():
+        if (
+            user is None
+            or user.token_expiration is None
+            or user.token_expiration < datetime.utcnow()
+        ):
             return None
         return user
 

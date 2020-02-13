@@ -63,7 +63,7 @@ def edit_ticket(ticket_id):
             priority=form.priority.data,
             domain=form.domain.data,
             files=request.files.getlist("file"),
-            hours=form.hours.data,
+            days=form.days.data,
             form_uploads=form.uploads.data,
         )
 
@@ -146,7 +146,7 @@ def edit_post(post_id):
         post.content = form.content.data
         post.modified = g.user
         post.date_modified = datetime.datetime.now()
-        post.hours = form.hours.data
+        post.days = form.days.data
 
         if post.ticket.status_id != form.status.data:
             status = FlicketStatus.query.get(form.status.data)
@@ -180,7 +180,7 @@ def edit_post(post_id):
         return redirect(url_for("flicket_bp.ticket_view", ticket_id=post.ticket_id))
 
     form.content.data = post.content
-    form.hours.data = post.hours
+    form.days.data = post.days
     form.status.data = post.ticket.status_id
     form.priority.data = post.ticket.ticket_priority_id
 

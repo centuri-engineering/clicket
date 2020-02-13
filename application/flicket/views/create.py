@@ -32,7 +32,7 @@ def ticket_create():
             requester_role=form.requester_role.data,
             domain=form.domain.data,
             priority=form.priority.data,
-            hours=form.hours.data,
+            days=form.days.data,
             files=request.files.getlist("file"),
         )
 

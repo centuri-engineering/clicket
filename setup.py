@@ -50,6 +50,7 @@ specialities = [
     "Database Management",
     "Image data processing",
     "Optics and biophotonics",
+    "Mechatronics",
     "Software Development",
 ]
 
@@ -73,9 +74,7 @@ institutes = [
 ]
 
 # institutes and domains defaults for flicket
-depart_domains = [
-    {"institute": dep, "domain": specialities} for dep in institutes
-]
+depart_domains = [{"institute": dep, "domain": specialities} for dep in institutes]
 
 
 class RunSetUP(Command):
@@ -103,6 +102,7 @@ class RunSetUP(Command):
             'Please enter site base url including port. For example this would be "http://192.168.1.1:8000".'
         )
         base_url = input("Base url> ")
+        base_url = base_url or "127.0.0.1:5001"
 
         count = FlicketConfig.query.count()
         if count > 0:
@@ -137,10 +137,13 @@ class RunSetUP(Command):
         match = False
 
         email = input("Enter admin email: ")
+        email = email or "admin@example.com"
 
         while match is False:
             password1 = getpass("Enter password: ")
+            password1 = "admin" or passwoard1
             password2 = getpass("Re-enter password: ")
+            password2 = "admin" or passwoard2
 
             if password1 != password2:
                 print("Passwords do not match, please try again.\n\n")
@@ -230,7 +233,7 @@ class RunSetUP(Command):
     def create_default_ticket_status(silent=False):
         """ set up default status levels """
 
-        sl = ["Open", "Closed", "In Work", "Awaiting Information"]
+        sl = ["Open", "Closed", "In Work", "Awaiting Publication", "Pending"]
         for s in sl:
             status = FlicketStatus.query.filter_by(status=s).first()
 
@@ -290,15 +293,11 @@ class RunSetUP(Command):
                     print("institute {} added.".format(institute))
 
                 for c in domains:
-                    query = FlicketDomain.query.filter_by(domain=c).first()
-                    if not query:
-                        add_domain = FlicketDomain(
-                            domain=c, institute=add_institute
-                        )
-                        db.session.add(add_domain)
+                    add_domain = FlicketDomain(domain=c, institute=add_institute)
+                    db.session.add(add_domain)
 
-                        if silent is False:
-                            print("domain {} added.".format(c))
+                    if silent is False:
+                        print("domain {} added.".format(c))
 
     @staticmethod
     def set_email_config(silent=False):

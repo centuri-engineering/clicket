@@ -71,8 +71,8 @@
             {{ form.domain(class="form-control form-control-sm m-0") }}
         </div>
         <div class="col-1 align-self-end">
-            <label class="m-0 flicket-tickets-title">{{ form.hours.label.text }}</label>
-            {{ form.hours(class="form-control form-control-sm m-0") }}
+            <label class="m-0 flicket-tickets-title">{{ form.days.label.text }}</label>
+            {{ form.days(class="form-control form-control-sm m-0") }}
         </div>
         <div class="col-auto text-right align-self-end">
             {{ form.submit(class="btn btn-primary btn-sm") }}
@@ -104,9 +104,9 @@
         </div>
     {% endif %}
 
-    {% if form.hours.errors %}
+    {% if form.days.errors %}
         <div class="alert alert-warning small">
-            {% for error in form.hours.errors %}
+            {% for error in form.days.errors %}
                 {{ error }}
             {% endfor %}
         </div>

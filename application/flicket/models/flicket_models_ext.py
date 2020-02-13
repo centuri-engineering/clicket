@@ -38,7 +38,7 @@ class FlicketTicketExt:
         requester_role=None,
         domain=None,
         files=None,
-        hours=0,
+        days=0,
     ):
         """
         :param title:
@@ -49,7 +49,7 @@ class FlicketTicketExt:
         :param requester_role:
         :param domain:
         :param files:
-        :param hours:
+        :param days:
         :return:
         """
 
@@ -75,7 +75,7 @@ class FlicketTicketExt:
             ticket_priority=ticket_priority,
             requester_role=requester_role,
             domain=ticket_domain,
-            hours=hours,
+            days=days,
         )
 
         db.session.add(new_ticket)
@@ -104,7 +104,7 @@ class FlicketTicketExt:
         domain=None,
         files=None,
         form_uploads=None,
-        hours=None,
+        days=None,
     ):
         """
 
@@ -116,7 +116,7 @@ class FlicketTicketExt:
         :param domain:
         :param files:
         :param form_uploads:
-        :param hours:
+        :param days:
         :return:
         """
         # before we make any changes store the original post content in the history table if it has changed.
@@ -174,7 +174,7 @@ class FlicketTicketExt:
         ticket.ticket_priority = ticket_priority
         ticket.requester_role = requester_role
         ticket.domain = ticket_domain
-        ticket.hours = hours
+        ticket.days = days
 
         files = files
         upload_attachments = UploadAttachment(files)

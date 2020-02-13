@@ -228,7 +228,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
 
     posts = db.relationship("FlicketPost", back_populates="ticket")
 
-    hours = db.Column(db.Numeric(10, 2), server_default="0")
+    days = db.Column(db.Numeric(10, 2), server_default="0")
 
     # find all the images associated with the topic
     uploads = db.relationship(
@@ -331,20 +331,20 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         return redirect_url
 
     @property
-    def total_hours(self):
+    def total_days(self):
         """
-        Sums all hours related to ticket (posts + ticket itself).
+        Sums all days related to ticket (posts + ticket itself).
         :return:
         """
 
-        hours = (
-            db.session.query(func.sum(FlicketPost.hours))
+        days = (
+            db.session.query(func.sum(FlicketPost.days))
             .filter_by(ticket_id=self.id)
             .scalar()
             or 0
         )
 
-        return hours + self.hours
+        return days + self.days
 
     def get_subscriber_emails(self):
         """
@@ -540,22 +540,22 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 FlicketUser, FlicketTicket.assigned
             ).order_by(FlicketUser.name.desc(), FlicketTicket.id)
         elif sort == "time":
-            total_hours = (FlicketTicket.hours + func.sum(FlicketPost.hours)).label(
-                "total_hours"
+            total_days = (FlicketTicket.days + func.sum(FlicketPost.days)).label(
+                "total_days"
             )
             ticket_query = (
                 ticket_query.outerjoin(FlicketTicket.posts)
                 .group_by(FlicketTicket.id)
-                .order_by(total_hours, FlicketTicket.id)
+                .order_by(total_days, FlicketTicket.id)
             )
         elif sort == "time_desc":
-            total_hours = (FlicketTicket.hours + func.sum(FlicketPost.hours)).label(
-                "total_hours"
+            total_days = (FlicketTicket.days + func.sum(FlicketPost.days)).label(
+                "total_days"
             )
             ticket_query = (
                 ticket_query.outerjoin(FlicketTicket.posts)
                 .group_by(FlicketTicket.id)
-                .order_by(total_hours.desc(), FlicketTicket.id)
+                .order_by(total_days.desc(), FlicketTicket.id)
             )
 
         return ticket_query
@@ -666,7 +666,7 @@ class FlicketPost(PaginatedAPIMixin, Base):
     modified_id = db.Column(db.Integer, db.ForeignKey(FlicketUser.id))
     modified = db.relationship(FlicketUser, foreign_keys="FlicketPost.modified_id")
 
-    hours = db.Column(db.Numeric(10, 2), server_default="0")
+    days = db.Column(db.Numeric(10, 2), server_default="0")
 
     # finds all the images associated with the post
     uploads = db.relationship(
