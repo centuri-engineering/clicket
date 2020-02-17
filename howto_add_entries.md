@@ -1,6 +1,11 @@
 
 # How to add entries to the database
 
+## Free form entry (no DB entry)
+
+
+
+
 ## Multiple choice type entry
 
 Here we assume the entry is called "request_type". It has a set of descrete values:

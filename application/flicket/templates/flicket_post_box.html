@@ -8,10 +8,6 @@
     {{ form.hidden_tag() }}
 
     <div class="col mb-2">
-        {{ _('Ticket content supports markdown syntax. Please refer to the') }}
-        <a href="{{ url_for('flicket_bp.markdown_primer') }}" target="_blank">
-            {{ _('markdown_primer') }}
-        </a>.
     </div>
 
     <div class="row">
@@ -38,6 +34,10 @@
         <div class="col">
             <label class="control-label mb-0">{{ _('Requester') }}</label>
             {{ form.requester(class="form-control") }}
+        </div>
+        <div class="col">
+            <label class="control-label mb-0">{{ _('Referee') }}</label>
+            {{ form.referee(class="form-control") }}
         </div>
         <div class="col">
             <label class="control-label mb-0">{{ _('Requester Status') }}</label>

@@ -67,6 +67,7 @@ def edit_ticket(ticket_id):
             user=g.user,
             content=form.content.data,
             requester=form.requester.data,
+            referee=form.referee.data,
             priority=form.priority.data,
             requester_role=form.requester_role.data,
             request_type=form.request_type.data,
@@ -84,6 +85,7 @@ def edit_ticket(ticket_id):
 
     form.content.data = ticket.content
     form.requester.data = ticket.requester
+    form.referee.data = ticket.referee
     form.priority.data = ticket.ticket_priority_id
     form.requester_role.data = ticket.requester_role_id
     form.request_type.data = ticket.request_type_id
@@ -161,6 +163,7 @@ def edit_post(post_id):
 
         post.content = form.content.data
         post.requester = form.requester.data
+        post.referee = form.referee.data
         post.modified = g.user
         post.date_modified = datetime.datetime.now()
         post.days = form.days.data
@@ -232,6 +235,7 @@ def edit_post(post_id):
 
     form.content.data = post.content
     form.requester.data = post.requester
+    form.referee.data = post.referee
     form.days.data = post.days
     form.status.data = post.ticket.status_id
     form.priority.data = post.ticket.ticket_priority_id

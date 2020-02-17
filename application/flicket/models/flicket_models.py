@@ -249,6 +249,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(field_size["title_max_length"]), index=True)
     requester = db.Column(db.String(field_size["title_max_length"]), index=True)
+    referee = db.Column(db.String(field_size["title_max_length"]), index=True)
     content = db.Column(db.String(field_size["content_max_length"]))
 
     started_id = db.Column(db.Integer, db.ForeignKey(FlicketUser.id))
@@ -402,6 +403,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         redirect_url = url_for(
             url,
             content=form.content.data,
+            referee=form.referee.data,
+            requester=form.requester.data,
             institute=institute,
             domain=domain,
             status=status,
@@ -540,6 +543,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 user = FlicketUser.query.filter_by(id=value).first()
                 if form:
                     form.username.data = user.username
+
             if key == "content" and value:
                 # search the titles
                 if form:
@@ -551,6 +555,16 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                     FlicketPost.content.ilike("%" + value + "%")
                 )
                 ticket_query = ticket_query.filter(f1 | f2 | f3)
+
+            if key == "requester" and value:
+
+                query_filter = FlicketTicket.requester.ilike("%" + value + "%")
+                ticket_query = ticket_query.filter(query_filter)
+
+            if key == "referee" and value:
+
+                query_filter = FlicketTicket.referee.ilike("%" + value + "%")
+                ticket_query = ticket_query.filter(query_filter)
 
         return ticket_query, form
 
@@ -657,6 +671,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "title",
             "content",
             "requester",
+            "referee",
             "domain_id",
             "institute_id",
             "ticket_priority_id",
@@ -693,6 +708,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "institute_id": self.institute_id,
             "content": self.content,
             "requester": self.requester,
+            "referee": self.referee,
             "date_added": self.date_added,
             "date_modified": self.date_modified,
             "modified_id": self.modified_id,

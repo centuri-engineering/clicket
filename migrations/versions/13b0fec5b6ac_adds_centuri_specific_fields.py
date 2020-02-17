@@ -22,6 +22,10 @@ def upgrade():
     op.add_column(
         "flicket_topic", sa.Column("requester", sa.String(length=128), nullable=True)
     )
+    ## Requester
+    op.add_column(
+        "flicket_topic", sa.Column("referee", sa.String(length=128), nullable=True)
+    )
     op.create_table(
         "flicket_requester_roles",
         sa.Column("id", sa.Integer(), nullable=False),

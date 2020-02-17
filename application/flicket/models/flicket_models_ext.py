@@ -37,6 +37,7 @@ class FlicketTicketExt:
         user=None,
         content=None,
         requester=None,
+        referee=None,
         priority=None,
         requester_role=None,
         request_type=None,
@@ -86,6 +87,7 @@ class FlicketTicketExt:
             content=content,
             institute=ticket_institute,
             requester=requester,
+            referee=referee,
             ticket_priority=ticket_priority,
             requester_role=requester_role,
             request_type=request_type,
@@ -115,6 +117,7 @@ class FlicketTicketExt:
         user=None,
         content=None,
         requester=None,
+        referee=None,
         priority=None,
         requester_role=None,
         request_type=None,
@@ -194,6 +197,7 @@ class FlicketTicketExt:
 
         ticket.content = content
         ticket.requester = requester
+        ticket.referee = referee
         ticket.title = title
         ticket.modified = user
         ticket.date_modified = datetime.datetime.now()

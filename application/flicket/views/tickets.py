@@ -39,6 +39,8 @@ def tickets_view(page, is_my_view=False):
     institute = request.args.get("institute")
     domain = request.args.get("domain")
     content = request.args.get("content")
+    requester = request.args.get("requester")
+    referee = request.args.get("referee")
     user_id = request.args.get("user_id")
     requester_role = request.args.get("requester_role")
     request_type = request.args.get("request_type")
@@ -78,6 +80,8 @@ def tickets_view(page, is_my_view=False):
         status=status,
         user_id=user_id,
         content=content,
+        requester=requester,
+        referee=referee,
         requester_role=requester_role,
         request_type=request_type,
         procedure_stage=procedure_stage,
@@ -95,6 +99,10 @@ def tickets_view(page, is_my_view=False):
 
     if content:
         form.content.data = content
+    if requester:
+        form.requester.data = requester
+    if referee:
+        form.referee.data = referee
 
     response = make_response(
         render_template(
@@ -144,6 +152,8 @@ def tickets_csv():
     institute = request.args.get("institute")
     domain = request.args.get("domain")
     content = request.args.get("content")
+    requester = request.args.get("requester")
+    referee = request.args.get("referee")
     user_id = request.args.get("user_id")
 
     ticket_query, form = FlicketTicket.query_tickets(
@@ -152,6 +162,8 @@ def tickets_csv():
         status=status,
         user_id=user_id,
         content=content,
+        requester=requester,
+        referee=referee,
     )
     ticket_query = ticket_query.limit(app.config["csv_dump_limit"])
 
