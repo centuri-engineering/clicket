@@ -1,0 +1,43 @@
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $.ajax({
+            url: '/flicket-api/procedure_stages/',
+            datatype: 'json',
+            headers: {
+                'Authorization': 'Bearer {{ g.user.token }}'
+            },
+            success: function (data) {
+                // use uri.js to pass the page uri
+                var result = URI.parseQuery(document.URL);
+
+                // get value of requester in uri
+                result = result.query;
+                result = URI.parseQuery(result).procedure_stage;
+
+                // populate the status selection inputs
+                var procedure_stage = document.getElementById('procedure_stage');
+                $(procedure_stage).empty();
+                $(procedure_stage).append($('<option></option>').text('--request type--').val('0'));
+                // Load the new options
+                for (var i = 0; i < data._meta.total_items; i++) {
+                    var procedure_stage_id = data.items[i].id;
+                    var procedure_stage_name = data.items[i].procedure_stage;
+                    $(procedure_stage).append($('<option></option>').text(procedure_stage_name).val(procedure_stage_id));
+                }
+
+                // set the preselected value
+                if (result) {
+                    // find id of procedure_stage
+                    for (var item in data.items) {
+                        var s = data.items[item].procedure_stage;
+                        if (s === result) {
+                            var procedure_stage_id = data.items[item].id
+                        }
+                    }
+                    $(procedure_stage).val(procedure_stage_id)
+                }
+            }
+        });
+    })
+</script>

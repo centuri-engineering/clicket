@@ -135,6 +135,7 @@ from .flicket.views import users
 from .flicket.views import view_ticket
 
 # noinspection PyPep8
+
 from .flicket_api.views import actions
 
 # noinspection PyPep8
@@ -169,6 +170,16 @@ from .flicket_api.views import uploads
 
 # noinspection PyPep8
 from .flicket_api.views import users
+
+# noinspection PyPep8
+from .flicket_api.views import requester_roles
+
+# noinspection PyPep8
+from .flicket_api.views import request_types
+
+# noinspection PyPep8
+from .flicket_api.views import procedure_stages
+
 
 # noinspection PyPep8
 from .flicket_errors import handlers

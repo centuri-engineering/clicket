@@ -8,9 +8,14 @@ from flask_wtf import FlaskForm
 from wtforms import SelectField, StringField
 
 from .flicket_forms import does_user_exist
-from application.flicket.models.flicket_models import FlicketInstitute
-from application.flicket.models.flicket_models import FlicketDomain
-from application.flicket.models.flicket_models import FlicketStatus
+from application.flicket.models.flicket_models import (
+    FlicketInstitute,
+    FlicketDomain,
+    FlicketStatus,
+    FlicketRequesterRole,
+    FlicketRequestType,
+    FlicketProcedureStage,
+)
 
 
 class SearchTicketForm(FlaskForm):
@@ -29,14 +34,27 @@ class SearchTicketForm(FlaskForm):
 
         self.domain.choices = [
             (c.id, c.domain)
-            for c in FlicketDomain.query.order_by(
-                FlicketDomain.domain.asc()
-            ).all()
+            for c in FlicketDomain.query.order_by(FlicketDomain.domain.asc()).all()
         ]
         self.domain.choices.insert(0, (0, "domain"))
 
         self.status.choices = [(s.id, s.status) for s in FlicketStatus.query.all()]
         self.status.choices.insert(0, (0, "status"))
+
+        self.requester_role.choices = [
+            (s.id, s.requester_role) for s in FlicketRequesterRole.query.all()
+        ]
+        self.requester_role.choices.insert(0, (0, "requester role"))
+
+        self.request_type.choices = [
+            (s.id, s.request_type) for s in FlicketRequestType.query.all()
+        ]
+        self.request_type.choices.insert(0, (0, "request type"))
+
+        self.procedure_stage.choices = [
+            (s.id, s.procedure_stage) for s in FlicketProcedureStage.query.all()
+        ]
+        self.procedure_stage.choices.insert(0, (0, "procedure stage"))
 
     """ Search form. """
     institute = SelectField(lazy_gettext("institute"), coerce=int, validators=[])
@@ -44,6 +62,9 @@ class SearchTicketForm(FlaskForm):
     status = SelectField(lazy_gettext("status"), coerce=int)
     username = StringField(lazy_gettext("username"), validators=[does_user_exist])
     content = StringField(lazy_gettext("content"), validators=[])
+    requester_role = SelectField(lazy_gettext("requester role"), coerce=int)
+    request_type = SelectField(lazy_gettext("request type"), coerce=int)
+    procedure_stage = SelectField(lazy_gettext("procedure stage"), coerce=int)
 
     def __repr__(self):
         return "<SearchTicketForm>"

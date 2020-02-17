@@ -1,0 +1,42 @@
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $.ajax({
+            url: '/flicket-api/requester_roles/',
+            datatype: 'json',
+            headers: {
+                'Authorization': 'Bearer {{ g.user.token }}'
+            },
+            success: function (data) {
+                // use uri.js to pass the page uri
+                var result = URI.parseQuery(document.URL);
+
+                // get value of requester in uri
+                result = result.query;
+                result = URI.parseQuery(result).requester_role;
+                // populate the status selection inputs
+                var requester_role = document.getElementById('requester_role');
+                // $(requester_role).empty();
+                // $(requester_role).append($('<option></option>').text('--requester role--').val('0'));
+                // // Load the new options
+                // for (var i = 0; i < data._meta.total_items; i++) {
+                //    var requester_role_id = data.items[i].id;
+                //    var requester_role_name = data.items[i].requester_role;
+                //    $(requester_role).append($('<option></option>').text(requester_role_name).val(requester_role_id));
+                //}
+
+                // set the preselected value
+                // if (result) {
+                //     // find id of requester_role
+                //     for (var item in data.items) {
+                //         var s = data.items[item].requester_role;
+                //         if (s === result) {
+                //             var requester_role_id = data.items[item].id
+                //         }
+                //     }
+                //     $(requester_role).val(requester_role_id)
+                // }
+            }
+        });
+    })
+</script>

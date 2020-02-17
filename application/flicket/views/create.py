@@ -30,10 +30,12 @@ def ticket_create():
             content=form.content.data,
             requester=form.requester.data,
             requester_role=form.requester_role.data,
+            request_type=form.request_type.data,
+            procedure_stage=form.procedure_stage.data,
             domain=form.domain.data,
             institute=form.institute.data,
             priority=form.priority.data,
-            hours=form.hours.data,
+            days=form.days.data,
             files=request.files.getlist("file"),
         )
 

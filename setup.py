@@ -13,6 +13,8 @@ from application.flicket.models.flicket_models import (
     FlicketStatus,
     FlicketPriority,
     FlicketRequesterRole,
+    FlicketRequestType,
+    FlicketProcedureStage,
     FlicketInstitute,
     FlicketDomain,
 )
@@ -47,11 +49,11 @@ flicket_config = {
 # Default domains
 domains = [
     "Bioinformatics",
-    "Database",
-    "Image Data Processing",
-    "Mechatronics",
+    "Database Management",
+    "Image data processing",
     "Optics and biophotonics",
-    "Software development",
+    "Mechatronics",
+    "Software Development",
 ]
 
 institutes = [
@@ -73,19 +75,22 @@ institutes = [
     "LIS",
 ]
 
-request_types = ["Consulting", "Short Project", "Long Project", "Maintenance"]
 
-
-statuses = [
-    "New",
-    "In progress",
-    "Pending",
-    "Awaiting publication",
-    "Finished",
-    "Canceled",
+request_types = [
+    " Consulting",
+    " Short project",
+    " Long project",
+    " Maintenance",
 ]
 
-process_stages = ["First contact", "Submitted", "Validated", "Declined"]
+
+procedure_stages = [
+    " N/A",
+    " First Contact",
+    " Submited",
+    " Validated",
+    " Declined",
+]
 
 
 class RunSetUP(Command):
@@ -102,6 +107,8 @@ class RunSetUP(Command):
         self.create_default_ticket_status()
         self.create_default_priority_levels()
         self.create_default_requester_role_levels()
+        self.create_default_request_type_levels()
+        self.create_default_procedure_stage_levels()
         self.create_default_depts()
         # commit changes to the database
         db.session.commit()
@@ -113,6 +120,7 @@ class RunSetUP(Command):
             'Please enter site base url including port. For example this would be "http://192.168.1.1:8000".'
         )
         base_url = input("Base url> ")
+        base_url = base_url or "127.0.0.1:5001"
 
         count = FlicketConfig.query.count()
         if count > 0:
@@ -147,10 +155,13 @@ class RunSetUP(Command):
         match = False
 
         email = input("Enter admin email: ")
+        email = email or "admin@example.com"
 
         while match is False:
             password1 = getpass("Enter password: ")
+            password1 = "admin" or passwoard1
             password2 = getpass("Re-enter password: ")
+            password2 = "admin" or passwoard2
 
             if password1 != password2:
                 print("Passwords do not match, please try again.\n\n")
@@ -240,7 +251,8 @@ class RunSetUP(Command):
     def create_default_ticket_status(silent=False):
         """ set up default status levels """
 
-        for s in statuses:
+        sl = ["Open", "Closed", "In Work", "Awaiting Publication", "Pending"]
+        for s in sl:
             status = FlicketStatus.query.filter_by(status=s).first()
 
             if not status:
@@ -280,6 +292,36 @@ class RunSetUP(Command):
 
                 if not silent:
                     print("Added requester role level {}".format(p))
+
+    @staticmethod
+    def create_default_request_type_levels(silent=False):
+        """ set up default request_type levels """
+
+        for level in request_types:
+            request_type = FlicketRequestType.query.filter_by(
+                request_type=level
+            ).first()
+            if not request_type:
+                add_request_type = FlicketRequestType(request_type=level)
+                db.session.add(add_request_type)
+
+                if not silent:
+                    print("Added request type level {}".format(level))
+
+    @staticmethod
+    def create_default_procedure_stage_levels(silent=False):
+        """ set up default procedure_stage levels """
+
+        for level in procedure_stages:
+            procedure_stage = FlicketProcedureStage.query.filter_by(
+                procedure_stage=level
+            ).first()
+            if not procedure_stage:
+                add_procedure_stage = FlicketProcedureStage(procedure_stage=level)
+                db.session.add(add_procedure_stage)
+
+                if not silent:
+                    print("Added procedure stage level {}".format(level))
 
     @staticmethod
     def create_default_depts(silent=False):

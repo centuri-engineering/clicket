@@ -24,6 +24,8 @@ from application.flicket.models.flicket_models import (
     FlicketInstitute,
     FlicketPriority,
     FlicketRequesterRole,
+    FlicketRequestType,
+    FlicketProcedureStage,
     FlicketStatus,
     FlicketTicket,
     field_size,
@@ -95,7 +97,11 @@ def does_domain_exist(form, field):
     :param field:
     :return True / False:
     """
-    result = FlicketDomain.query.filter_by(domain=form.domain.data).count()
+    result = (
+        FlicketDomain.query.filter_by(domain=form.domain.data)
+        .filter_by(institute_id=form.institute_id.data)
+        .count()
+    )
     if result > 0:
         field.errors.append(gettext("Domain already exists."))
         return False
@@ -112,10 +118,23 @@ class CreateTicketForm(FlaskForm):
         self.requester_role.choices = [
             (p.id, p.requester_role) for p in FlicketRequesterRole.query.all()
         ]
+        self.request_type.choices = [
+            (s.id, s.request_type) for s in FlicketRequestType.query.all()
+        ]
+        self.request_type.choices.insert(0, (0, "request type"))
 
-        self.domain.choices = [(c.id, c.domain) for c in FlicketDomain.query.all()]
-        self.institute.choices = [
-            (c.id, c.institute) for c in FlicketInstitute.query.all()
+        self.procedure_stage.choices = [
+            (s.id, s.procedure_stage) for s in FlicketProcedureStage.query.all()
+        ]
+        self.procedure_stage.choices.insert(0, (0, "procedure stage"))
+
+        self.domain.choices = [
+            (c.id, "{} - {}".format(c.institute.institute, c.domain))
+            for c in FlicketDomain.query.join(FlicketInstitute)
+            .order_by(FlicketInstitute.institute)
+            .order_by(FlicketDomain.domain)
+            .all()
+            if c.institute
         ]
 
     """ Log in form. """
@@ -142,6 +161,12 @@ class CreateTicketForm(FlaskForm):
     requester_role = SelectField(
         lazy_gettext("requester role"), validators=[DataRequired()], coerce=int
     )
+    request_type = SelectField(
+        lazy_gettext("request type"), validators=[DataRequired()], coerce=int
+    )
+    procedure_stage = SelectField(
+        lazy_gettext("procedure stage"), validators=[DataRequired()], coerce=int
+    )
 
     content = PageDownField(
         lazy_gettext("content"),
@@ -153,17 +178,15 @@ class CreateTicketForm(FlaskForm):
             ),
         ],
     )
+
     priority = SelectField(
         lazy_gettext("priority"), validators=[DataRequired()], coerce=int
     )
     domain = SelectField(
         lazy_gettext("domain"), validators=[DataRequired()], coerce=int
     )
-    institute = SelectField(
-        lazy_gettext("institute"), validators=[DataRequired()], coerce=int
-    )
     file = FileField(lazy_gettext("Upload Documents"), render_kw={"multiple": True})
-    hours = DecimalField(lazy_gettext("hours"), default=0)
+    days = DecimalField(lazy_gettext("days"), default=0)
     submit = SubmitField(
         lazy_gettext("Submit"), render_kw=form_class_button, validators=[DataRequired()]
     )
@@ -203,17 +226,12 @@ class ReplyForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         form = super(ReplyForm, self).__init__(*args, **kwargs)
-        self.status.choices = [(s.id, s.status) for s in FlicketStatus.query.all()]
+        self.status.choices = [
+            (s.id, s.status)
+            for s in FlicketStatus.query.filter(FlicketStatus.status != "Closed")
+        ]
         self.priority.choices = [
             (p.id, p.priority) for p in FlicketPriority.query.all()
-        ]
-        self.requester_role.choices = [
-            (p.id, p.requester_role) for p in FlicketRequesterRole.query.all()
-        ]
-
-        self.domain.choices = [(c.id, c.domain) for c in FlicketDomain.query.all()]
-        self.institute.choices = [
-            (c.id, c.institute) for c in FlicketInstitute.query.all()
         ]
 
     content = PageDownField(
@@ -239,10 +257,7 @@ class ReplyForm(FlaskForm):
     priority = SelectField(
         lazy_gettext("Priority"), validators=[DataRequired()], coerce=int
     )
-    requester_role = SelectField(
-        lazy_gettext("Requester role"), validators=[DataRequired()], coerce=int
-    )
-    hours = DecimalField(lazy_gettext("hours"), default=0)
+    days = DecimalField(lazy_gettext("days"), default=0)
     submit = SubmitField(lazy_gettext("reply"), render_kw=form_class_button)
     submit_close = SubmitField(
         lazy_gettext("reply and close"), render_kw=form_danger_button
@@ -314,9 +329,12 @@ class DomainForm(FlaskForm):
         validators=[
             DataRequired(),
             Length(
-                min=field_size["domain_min_length"], max=field_size["domain_max_length"]
+                min=field_size["domain_min_length"],
+                max=field_size["domain_max_length"],
             ),
             does_domain_exist,
         ],
     )
+
     submit = SubmitField(lazy_gettext("add domain"), render_kw=form_class_button)
+

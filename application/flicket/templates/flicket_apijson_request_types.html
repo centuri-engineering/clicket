@@ -1,0 +1,43 @@
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $.ajax({
+            url: '/flicket-api/request_types/',
+            datatype: 'json',
+            headers: {
+                'Authorization': 'Bearer {{ g.user.token }}'
+            },
+            success: function (data) {
+                // use uri.js to pass the page uri
+                var result = URI.parseQuery(document.URL);
+
+                // get value of requester in uri
+                result = result.query;
+                result = URI.parseQuery(result).request_type;
+
+                // populate the status selection inputs
+                var request_type = document.getElementById('request_type');
+                $(request_type).empty();
+                $(request_type).append($('<option></option>').text('--request type--').val('0'));
+                // Load the new options
+                for (var i = 0; i < data._meta.total_items; i++) {
+                    var request_type_id = data.items[i].id;
+                    var request_type_name = data.items[i].request_type;
+                    $(request_type).append($('<option></option>').text(request_type_name).val(request_type_id));
+                }
+
+                // set the preselected value
+                if (result) {
+                    // find id of request_type
+                    for (var item in data.items) {
+                        var s = data.items[item].request_type;
+                        if (s === result) {
+                            var request_type_id = data.items[item].id
+                        }
+                    }
+                    $(request_type).val(request_type_id)
+                }
+            }
+        });
+    })
+</script>

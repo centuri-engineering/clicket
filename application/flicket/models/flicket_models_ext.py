@@ -13,6 +13,8 @@ from application.flicket.models.flicket_models import (
     FlicketStatus,
     FlicketPriority,
     FlicketRequesterRole,
+    FlicketRequestType,
+    FlicketProcedureStage,
     FlicketDomain,
     FlicketInstitute,
     FlicketSubscription,
@@ -37,10 +39,12 @@ class FlicketTicketExt:
         requester=None,
         priority=None,
         requester_role=None,
+        request_type=None,
+        procedure_stage=None,
         domain=None,
         institute=None,
         files=None,
-        hours=0,
+        days=0,
     ):
         """
         :param title:
@@ -50,18 +54,23 @@ class FlicketTicketExt:
         :param requester:
         :param requester_role:
         :param domain:
-        :param institute:
         :param files:
-        :param hours:
+        :param days:
         :return:
         """
 
-        ticket_status = FlicketStatus.query.filter_by(status="New").first()
+        ticket_status = FlicketStatus.query.filter_by(status="Open").first()
         ticket_priority = FlicketPriority.query.filter_by(id=int(priority)).first()
         ticket_institute = FlicketInstitute.query.filter_by(id=int(institute)).first()
         ticket_domain = FlicketDomain.query.filter_by(id=int(domain)).first()
         requester_role = FlicketRequesterRole.query.filter_by(
             id=int(requester_role)
+        ).first()
+
+        request_type = FlicketRequestType.query.filter_by(id=int(request_type)).first()
+
+        procedure_stage = FlicketProcedureStage.query.filter_by(
+            id=int(procedure_stage)
         ).first()
 
         upload_attachments = UploadAttachment(files)
@@ -78,9 +87,10 @@ class FlicketTicketExt:
             requester=requester,
             ticket_priority=ticket_priority,
             requester_role=requester_role,
+            request_type=request_type,
+            procedure_stage=procedure_stage,
             domain=ticket_domain,
-            institute=ticket_institute,
-            hours=hours,
+            days=days,
         )
 
         db.session.add(new_ticket)
@@ -106,11 +116,12 @@ class FlicketTicketExt:
         requester=None,
         priority=None,
         requester_role=None,
+        request_type=None,
+        procedure_stage=None,
         domain=None,
-        institute=None,
         files=None,
         form_uploads=None,
-        hours=None,
+        days=None,
     ):
         """
 
@@ -120,10 +131,9 @@ class FlicketTicketExt:
         :param content:
         :param priority:
         :param domain:
-        :param institute:
         :param files:
         :param form_uploads:
-        :param hours:
+        :param days:
         :return:
         """
         # before we make any changes store the original post content in the history table if it has changed.
@@ -164,14 +174,21 @@ class FlicketTicketExt:
                 if os.path.isfile(the_file):
                     # delete the file from the folder
                     os.remove(the_file)
+
                 db.session.delete(query)
 
         ticket_priority = FlicketPriority.query.filter_by(id=int(priority)).first()
         requester_role = FlicketRequesterRole.query.filter_by(
             id=int(requester_role)
         ).first()
+        request_type = FlicketRequestType.query.filter_by(id=int(request_type)).first()
+
+        procedure_stage = FlicketProcedureStage.query.filter_by(
+            id=int(procedure_stage)
+        ).first()
+
         ticket_domain = FlicketDomain.query.filter_by(id=int(domain)).first()
-        ticket_institute = FlicketDomain.query.filter_by(id=int(institute)).first()
+        ticket_institute = FlicketInstitute.query.filter_by(id=int(institute)).first()
 
         ticket.content = content
         ticket.requester = requester
@@ -180,9 +197,10 @@ class FlicketTicketExt:
         ticket.date_modified = datetime.datetime.now()
         ticket.ticket_priority = ticket_priority
         ticket.requester_role = requester_role
+        ticket.request_type = request_type
+        ticket.procedure_stage = procedure_stage
         ticket.domain = ticket_domain
-        ticket.institute = ticket_institute
-        ticket.hours = hours
+        ticket.days = days
 
         files = files
         upload_attachments = UploadAttachment(files)
