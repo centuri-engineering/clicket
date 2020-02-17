@@ -10,67 +10,66 @@
     <div class="col mb-2">
     </div>
 
+    <div class="row mt-2 align-self-end">
+      <div class="col align-self-end">
+        <label class="control-label mb-0">{{ _('Domain') }}</label>
+        {{ form.domain(class="form-control form-control-sm m-0") }}
+      </div>
+      <div class="col align-self-end">
+        <label class="control-label mb-0">{{ _('Institute') }}</label>
+        {{ form.institute(class="form-control form-control-sm m-0") }}
+      </div>
+      <div class="col">
+        <label class="control-label mb-0">{{ _('Procedure Stage') }}</label>
+        {{ form.procedure_stage(class="form-control form-control-sm m-0") }}
+      </div>
+    </div>
+
     <div class="row">
-        <div class="col">
-            <label class="control-label mb-0">{{ _('Ticket Title') }}</label>
-            {{ form.title(class="form-control") }}
-        </div>
+      <div class="col">
+        <label class="control-label mb-0">{{ _('Ticket Title') }}</label>
+        {{ form.title(class="form-control") }}
+      </div>
     </div>
     {% if form.title.errors %}
-        <div class="alert alert-warning small">
-            {% for error in form.title.errors %}
-                {{ error }}
-            {% endfor %}
-        </div>
+    <div class="alert alert-warning small">
+      {% for error in form.title.errors %}
+      {{ error }}
+      {% endfor %}
+    </div>
     {% endif %}
 
     <div class="row mt-2">
-        <div class="col">
-            <label class="control-label mb-0">{{ _('Content') }}</label>
-            {{ form.content(class="form-control") }}
-        </div>
+      <div class="col">
+        <label class="control-label mb-0">{{ _('Content') }}</label>
+        {{ form.content(class="form-control") }}
+      </div>
     </div>
     <div class="row mt-2">
-        <div class="col">
-            <label class="control-label mb-0">{{ _('Requester') }}</label>
-            {{ form.requester(class="form-control") }}
-        </div>
-        <div class="col">
-            <label class="control-label mb-0">{{ _('Referee') }}</label>
-            {{ form.referee(class="form-control") }}
-        </div>
-        <div class="col">
-            <label class="control-label mb-0">{{ _('Requester Status') }}</label>
-            {{ form.requester_role(class="form-control form-control-sm m-0") }}
-        </div>
+      <div class="col">
+        <label class="control-label mb-0">{{ _('Requester') }}</label>
+        {{ form.requester(class="form-control") }}
+      </div>
+      <div class="col">
+        <label class="control-label mb-0">{{ _('Referee') }}</label>
+        {{ form.referee(class="form-control") }}
+      </div>
+      <div class="col">
+        <label class="control-label mb-0">{{ _('Requester Status') }}</label>
+        {{ form.requester_role(class="form-control form-control-sm m-0") }}
+      </div>
 
-        <div class="col">
-            <label class="control-label mb-0">{{ _('Procedure Stage') }}</label>
-            {{ form.procedure_stage(class="form-control form-control-sm m-0") }}
-        </div>
-        <div class="col">
-            <label class="control-label mb-0">{{ _('Request Type') }}</label>
-            {{ form.request_type(class="form-control form-control-sm m-0") }}
-        </div>
+      <div class="col">
+        <label class="control-label mb-0">{{ _('Request Type') }}</label>
+        {{ form.request_type(class="form-control form-control-sm m-0") }}
+      </div>
     </div>
-
     <div class="row mt-2 align-self-end">
-        <div class="col-auto align-self-end">
-            {{ form.file(class="form-control-file m-0 d-inline ") }}
-        </div>
         <div class="col-2 align-self-end">
             <label class="m-0 flicket-tickets-title">{{ _('Priority Level') }}</label>
             {{ form.priority(class="form-control form-control-sm m-0") }}
         </div>
-        <div class="col align-self-end">
-            <label class="m-0 flicket-tickets-title">{{ _('Domain') }}</label>
-            {{ form.domain(class="form-control form-control-sm m-0") }}
-        </div>
-        <div class="col align-self-end">
-            <label class="m-0 flicket-tickets-title">{{ _('Institute') }}</label>
-            {{ form.institute(class="form-control form-control-sm m-0") }}
-        </div>
-        <div class="col-1 align-self-end">
+        <div class="col-2 align-self-end">
             <label class="m-0 flicket-tickets-title">{{ form.days.label.text }}</label>
             {{ form.days(class="form-control form-control-sm m-0") }}
         </div>
@@ -79,41 +78,76 @@
         </div>
     </div>
 
+
     {% if form.content.errors %}
-        <div class="alert alert-warning small">
-            {% for error in form.content.errors %}
-                {{ error }}
-            {% endfor %}
-        </div>
+    <div class="alert alert-warning small">
+      {% for error in form.content.errors %}
+      {{ error }}
+      {% endfor %}
+    </div>
     {% endif %}
 
+    {% if form.requester.errors %}
+    <div class="alert alert-warning small">
+      {% for error in form.requester.errors %}
+      {{ error }}
+      {% endfor %}
+    </div>
+    {% endif %}
+
+
+    {% if form.referee.errors %}
+    <div class="alert alert-warning small">
+      {% for error in form.referee.errors %}
+      {{ error }}
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if form.requester_role.errors %}
+    <div class="alert alert-warning small">
+      {% for error in form.requester_role.errors %}
+      {{ error }}
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if form.request_type.errors %}
+    <div class="alert alert-warning small">
+      {% for error in form.request_type.errors %}
+      {{ error }}
+      {% endfor %}
+    </div>
+    {% endif %}
+
+
     {% if form.priority.errors %}
-        <div class="alert alert-warning small">
-            {% for error in form.priority.errors %}
-                {{ error }}
-            {% endfor %}
-        </div>
+    <div class="alert alert-warning small">
+      {% for error in form.priority.errors %}
+      {{ error }}
+      {% endfor %}
+    </div>
     {% endif %}
 
 
     {% if form.domain.errors %}
-        <div class="alert alert-warning small">
-            {% for error in form.domain.errors %}
-                {{ error }}
-            {% endfor %}
-        </div>
+    <div class="alert alert-warning small">
+      {% for error in form.domain.errors %}
+      {{ error }}
+      {% endfor %}
+    </div>
     {% endif %}
 
     {% if form.days.errors %}
-        <div class="alert alert-warning small">
-            {% for error in form.days.errors %}
-                {{ error }}
-            {% endfor %}
-        </div>
+    <div class="alert alert-warning small">
+      {% for error in form.days.errors %}
+      {{ error }}
+      {% endfor %}
+    </div>
     {% endif %}
 
     {% if form.uploads %}
-        {{ form.uploads }}
+    {{ form.uploads }}
     {% endif %}
 
 </form>

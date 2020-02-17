@@ -121,12 +121,10 @@ class CreateTicketForm(FlaskForm):
         self.request_type.choices = [
             (s.id, s.request_type) for s in FlicketRequestType.query.all()
         ]
-        self.request_type.choices.insert(0, (0, "request type"))
 
         self.procedure_stage.choices = [
             (s.id, s.procedure_stage) for s in FlicketProcedureStage.query.all()
         ]
-        self.procedure_stage.choices.insert(0, (0, "procedure stage"))
 
         self.domain.choices = [(c.id, c.domain) for c in FlicketDomain.query.all()]
         self.institute.choices = [
