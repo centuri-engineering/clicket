@@ -82,17 +82,14 @@ class FlicketInstitute(PaginatedAPIMixin, Base):
             "links": {
                 "self": app.config["base_url"]
                 + url_for("bp_api.get_institute", id=self.id),
-                "institutes": app.config["base_url"]
-                + url_for("bp_api.get_institutes"),
+                "institutes": app.config["base_url"] + url_for("bp_api.get_institutes"),
             },
         }
 
         return data
 
     def __repr__(self):
-        return "<FlicketInstitute: id={}, institute={}>".format(
-            self.id, self.institute
-        )
+        return "<FlicketInstitute: id={}, institute={}>".format(self.id, self.institute)
 
 
 class FlicketDomain(PaginatedAPIMixin, Base):
@@ -164,7 +161,7 @@ class FlicketRequesterRole(PaginatedAPIMixin, Base):
 
     def to_dict(self):
         """
-        Returns a dictionary object about the domain and its institute
+        Returns a dictionary object about the requester role
         :return:
         """
         data = {
@@ -224,7 +221,7 @@ class FlicketProcedureStage(PaginatedAPIMixin, Base):
 
     def to_dict(self):
         """
-        Returns a dictionary object about the domain and its institute
+        Returns a dictionary object about the procedure stage
         :return:
         """
         data = {
@@ -373,8 +370,12 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 .institute
             )
         if form.domain.data:
-            domain = (
-                FlicketDomain.query.filter_by(id=form.domain.data).first().domain
+            domain = FlicketDomain.query.filter_by(id=form.domain.data).first().domain
+        if form.institute.data:
+            institute = (
+                FlicketInstitute.query.filter_by(id=form.institute.data)
+                .first()
+                .institute
             )
         if form.status.data:
             status = FlicketStatus.query.filter_by(id=form.status.data).first().status
@@ -514,7 +515,14 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                         .first()
                         .id
                     )
-
+            if key == "institute" and value:
+                ticket_query = ticket_query.filter(
+                    FlicketTicket.institute.has(FlicketInstitute.institute == value)
+                )
+                if form:
+                    form.institute.data = (
+                        FlicketInstitute.query.filter_by(institute=value).first().id
+                    )
             if key == "domain" and value:
                 ticket_query = ticket_query.filter(
                     FlicketTicket.domain.has(FlicketDomain.domain == value)
@@ -523,17 +531,6 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                     form.domain.data = (
                         FlicketDomain.query.filter_by(domain=value).first().id
                     )
-            if key == "institute" and value:
-                institute_filter = FlicketInstitute.query.filter_by(
-                    institute=value
-                ).first()
-                ticket_query = ticket_query.filter(
-                    FlicketTicket.domain.has(
-                        FlicketDomain.institute == institute_filter
-                    )
-                )
-                if form:
-                    form.institute.data = institute_filter.id
             if key == "user_id" and value:
                 # ticket_query = ticket_query.filter_by(assigned_id=int(value))
                 ticket_query = ticket_query.filter(
@@ -661,6 +658,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "content",
             "requester",
             "domain_id",
+            "institute_id",
             "ticket_priority_id",
             "requester_role_id",
             "request_type_id",
@@ -692,6 +690,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "id": self.id,
             "assigned_id": self.assigned_id,
             "domain_id": self.domain_id,
+            "institute_id": self.institute_id,
             "content": self.content,
             "requester": self.requester,
             "date_added": self.date_added,
@@ -721,6 +720,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 "modified_by": modified_by,
                 "domain": app.config["base_url"]
                 + url_for("bp_api.get_domain", id=self.domain_id),
+                "institute": app.config["base_url"]
+                + url_for("bp_api.get_institute", id=self.institute_id),
                 "status": app.config["base_url"]
                 + url_for("bp_api.get_status", id=self.status_id),
                 "subscribers": app.config["base_url"]
@@ -740,6 +741,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             f'title="{self.title}", '
             f"created_by={self.user}, "
             f"domain={self.domain}"
+            f"institute={self.institute}"
             f"status={self.current_status}"
             f"assigned={self.assigned}>"
         )
@@ -1084,4 +1086,4 @@ class FlicketAction(PaginatedAPIMixin, Base):
         return (
             f"<Class FlicketAction: ticket_id={self.ticket_id}, post_id={self.ticket_id}, action={self.action!r}, "
             f"data={self.data}, user_id={self.user_id}, recipient_id={self.recipient_id}, date={self.date}>"
-         )
+        )

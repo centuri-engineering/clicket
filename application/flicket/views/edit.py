@@ -66,11 +66,13 @@ def edit_ticket(ticket_id):
             title=form.title.data,
             user=g.user,
             content=form.content.data,
+            requester=form.requester.data,
             priority=form.priority.data,
             requester_role=form.requester_role.data,
             request_type=form.request_type.data,
             procedure_stage=form.procedure_stage.data,
             domain=form.domain.data,
+            institute=form.institute.data,
             files=request.files.getlist("file"),
             days=form.days.data,
             form_uploads=form.uploads.data,
@@ -81,12 +83,14 @@ def edit_ticket(ticket_id):
         return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket_id))
 
     form.content.data = ticket.content
+    form.requester.data = ticket.requester
     form.priority.data = ticket.ticket_priority_id
     form.requester_role.data = ticket.requester_role_id
     form.request_type.data = ticket.request_type_id
     form.procedure_stage.data = ticket.procedure_stage_id
     form.title.data = ticket.title
     form.domain.data = ticket.domain_id
+    form.institute.data = ticket.institute_id
 
     title = gettext("Edit Ticket")
 
@@ -156,6 +160,7 @@ def edit_post(post_id):
                 db.session.delete(query)
 
         post.content = form.content.data
+        post.requester = form.requester.data
         post.modified = g.user
         post.date_modified = datetime.datetime.now()
         post.days = form.days.data
@@ -226,6 +231,7 @@ def edit_post(post_id):
         return redirect(url_for("flicket_bp.ticket_view", ticket_id=post.ticket_id))
 
     form.content.data = post.content
+    form.requester.data = post.requester
     form.days.data = post.days
     form.status.data = post.ticket.status_id
     form.priority.data = post.ticket.ticket_priority_id

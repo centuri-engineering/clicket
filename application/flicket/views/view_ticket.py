@@ -61,6 +61,7 @@ def ticket_view(ticket_id, page=1):
 
     # add subscribed user
     if subscribers_form.validate_on_submit():
+
         user = FlicketUser.query.filter_by(
             username=subscribers_form.username.data
         ).first()
@@ -101,7 +102,6 @@ def ticket_view(ticket_id, page=1):
                 "priority",
                 data={"priority_id": priority.id, "priority": priority.priority},
             )
-
         db.session.add(new_reply)
 
         # add files to database.

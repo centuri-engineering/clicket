@@ -84,6 +84,7 @@ class FlicketTicketExt:
             user=user,
             current_status=ticket_status,
             content=content,
+            institute=ticket_institute,
             requester=requester,
             ticket_priority=ticket_priority,
             requester_role=requester_role,
@@ -119,6 +120,7 @@ class FlicketTicketExt:
         request_type=None,
         procedure_stage=None,
         domain=None,
+        institute=None,
         files=None,
         form_uploads=None,
         days=None,
@@ -200,6 +202,7 @@ class FlicketTicketExt:
         ticket.request_type = request_type
         ticket.procedure_stage = procedure_stage
         ticket.domain = ticket_domain
+        ticket.institute = ticket_institute
         ticket.days = days
 
         files = files

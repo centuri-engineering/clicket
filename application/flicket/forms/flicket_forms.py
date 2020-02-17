@@ -128,13 +128,9 @@ class CreateTicketForm(FlaskForm):
         ]
         self.procedure_stage.choices.insert(0, (0, "procedure stage"))
 
-        self.domain.choices = [
-            (c.id, "{} - {}".format(c.institute.institute, c.domain))
-            for c in FlicketDomain.query.join(FlicketInstitute)
-            .order_by(FlicketInstitute.institute)
-            .order_by(FlicketDomain.domain)
-            .all()
-            if c.institute
+        self.domain.choices = [(c.id, c.domain) for c in FlicketDomain.query.all()]
+        self.institute.choices = [
+            (c.id, c.institute) for c in FlicketInstitute.query.all()
         ]
 
     """ Log in form. """
@@ -184,6 +180,9 @@ class CreateTicketForm(FlaskForm):
     )
     domain = SelectField(
         lazy_gettext("domain"), validators=[DataRequired()], coerce=int
+    )
+    institute = SelectField(
+        lazy_gettext("institute"), validators=[DataRequired()], coerce=int
     )
     file = FileField(lazy_gettext("Upload Documents"), render_kw={"multiple": True})
     days = DecimalField(lazy_gettext("days"), default=0)
@@ -247,12 +246,6 @@ class ReplyForm(FlaskForm):
     file = FileField(lazy_gettext("Add Files"), render_kw={"multiple": True})
     status = SelectField(
         lazy_gettext("Status"), validators=[DataRequired()], coerce=int
-    )
-    domain = SelectField(
-        lazy_gettext("Domain"), validators=[DataRequired()], coerce=int
-    )
-    institute = SelectField(
-        lazy_gettext("Institute"), validators=[DataRequired()], coerce=int
     )
     priority = SelectField(
         lazy_gettext("Priority"), validators=[DataRequired()], coerce=int
@@ -337,4 +330,3 @@ class DomainForm(FlaskForm):
     )
 
     submit = SubmitField(lazy_gettext("add domain"), render_kw=form_class_button)
-
