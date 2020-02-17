@@ -44,14 +44,15 @@
             {{ form.requester_role(class="form-control form-control-sm m-0") }}
         </div>
         <div class="col">
-            <label class="control-label mb-0">{{ _('Request Type) }}</label>
-            {{ form.request_type(class="form-control form-control-sm m-0") }}
-        </div>
-        <div class="col">
             <label class="control-label mb-0">{{ _('Procedure Stage') }}</label>
             {{ form.procedure_stage(class="form-control form-control-sm m-0") }}
         </div>
+        <div class="col">
+            <label class="control-label mb-0">{{ _('Request Type') }}</label>
+            {{ form.request_type(class="form-control form-control-sm m-0") }}
+        </div>
     </div>
+
     <div class="row mt-2 align-self-end">
         <div class="col-auto align-self-end">
             {{ form.file(class="form-control-file m-0 d-inline ") }}

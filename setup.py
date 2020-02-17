@@ -300,13 +300,15 @@ class RunSetUP(Command):
         """ set up default request_type levels """
 
         for level in request_types:
-            request_type = FlicketRequestType.query.filter_by(request_type=p).first()
+            request_type = FlicketRequestType.query.filter_by(
+                request_type=level
+            ).first()
             if not request_type:
-                add_request_type = FlicketRequestType(request_type=p)
+                add_request_type = FlicketRequestType(request_type=level)
                 db.session.add(add_request_type)
 
                 if not silent:
-                    print("Added request type level {}".format(p))
+                    print("Added request type level {}".format(level))
 
     @staticmethod
     def create_default_procedure_stage_levels(silent=False):
@@ -314,14 +316,14 @@ class RunSetUP(Command):
 
         for level in procedure_stages:
             procedure_stage = FlicketProcedureStage.query.filter_by(
-                procedure_stage=p
+                procedure_stage=level
             ).first()
             if not procedure_stage:
-                add_procedure_stage = FlicketProcedureStage(procedure_stage=p)
+                add_procedure_stage = FlicketProcedureStage(procedure_stage=level)
                 db.session.add(add_procedure_stage)
 
                 if not silent:
-                    print("Added procedure stage level {}".format(p))
+                    print("Added procedure stage level {}".format(level))
 
     @staticmethod
     def create_default_depts(silent=False):

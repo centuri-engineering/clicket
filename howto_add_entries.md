@@ -163,13 +163,13 @@ request_types = [
         """ set up default request_type levels """
 
         for level in request_types:
-            request_type = FlicketRequestType.query.filter_by(request_type=p).first()
+            request_type = FlicketRequestType.query.filter_by(request_type=level).first()
             if not request_type:
-                add_request_type = FlicketRequestType(request_type=p)
+                add_request_type = FlicketRequestType(request_type=level)
                 db.session.add(add_request_type)
 
                 if not silent:
-                    print("Added request type level {}".format(p))
+                    print("Added request type level {}".format(level))
 ```
 
 And call it in the `run` method.

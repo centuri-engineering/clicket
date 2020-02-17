@@ -25,7 +25,7 @@ def upgrade():
     op.create_table(
         "flicket_requester_roles",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("requester_role", sa.String(length=12), nullable=True),
+        sa.Column("requester_role", sa.String(length=128), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )
     op.add_column(
@@ -45,7 +45,7 @@ def upgrade():
     op.create_table(
         "flicket_request_types",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("request_type", sa.String(length=12), nullable=True),
+        sa.Column("request_type", sa.String(length=128), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )
     op.add_column(
@@ -65,7 +65,7 @@ def upgrade():
     op.create_table(
         "flicket_procedure_stages",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("procedure_stage", sa.String(length=12), nullable=True),
+        sa.Column("procedure_stage", sa.String(length=128), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )
     op.add_column(
