@@ -1,0 +1,24 @@
+version: '3.7'
+
+services:
+  web:
+    build: .
+    command: python -m manage.py db upgrade
+    volumes:
+      - .:/usr/src/app/
+    ports:
+      - 5001:5001
+    env_file:
+      - ./.env.dev
+  db:
+    image: postgres:11
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=flicket
+      - POSTGRES_PASSWORD=Flicket888
+      - POSTGRES_DB=flicket
+    ports:
+      - 5432:5432
+volumes:
+  postgres_data:
