@@ -1,5 +1,5 @@
 #! usr/bin/python3
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 
 
 import json
@@ -30,7 +30,7 @@ class BaseConfiguration(object):
     db_url = config_data["db_url"]
     db_port = config_data["db_port"]
     db_name = config_data["db_name"]
-    db_type = "mysql+pymysql"
+    db_type = "postgresql+psycopg2"
 
     SQLALCHEMY_DATABASE_URI = "{}://{}:{}@{}:{}/{}".format(
         db_type, db_username, db_password, db_url, db_port, db_name

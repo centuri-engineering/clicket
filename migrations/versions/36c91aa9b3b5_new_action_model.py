@@ -22,8 +22,8 @@ def upgrade():
     # check if it is possible to migrate
     r = conn.execute(
         "SELECT COUNT(id) FROM flicket_ticket_action WHERE (assigned IS NOT NULL) "
-        "+ (claimed IS NOT NULL) + (released IS NOT NULL) + (closed IS NOT NULL) "
-        "+ (opened IS NOT NULL) + (status IS NOT NULL) + (priority IS NOT NULL) != 1"
+        "AND (claimed IS NOT NULL) AND (released IS NOT NULL) AND (closed IS NOT NULL) "
+        "AND (opened IS NOT NULL) AND (status IS NOT NULL) AND (priority IS NOT NULL)"
     )
     assert r.first()[0] == 0, "Automatic migration not possible, do it manually!"
     import json

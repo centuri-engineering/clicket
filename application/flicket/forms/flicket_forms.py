@@ -155,11 +155,7 @@ class CreateTicketForm(FlaskForm):
     referee = StringField(
         lazy_gettext("referee"),
         description=lazy_gettext("contact of the requesters' referee"),
-        validators=[
-            Length(
-                min=field_size["title_min_length"], max=field_size["title_max_length"]
-            ),
-        ],
+        validators=[],
     )
     requester_role = SelectField(
         lazy_gettext("requester role"), validators=[DataRequired()], coerce=int
