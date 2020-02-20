@@ -29,7 +29,7 @@ def ticket_assign(ticket_id=False):
     form = AssignUserForm()
     ticket = FlicketTicket.query.filter_by(id=ticket_id).one()
 
-    if ticket.current_status.status in ("Finished", "Canceled"):
+    if ticket.current_status.status == "Closed":
         flash(gettext("Can't assign a closed ticket."))
         return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket_id))
 
@@ -41,11 +41,9 @@ def ticket_assign(ticket_id=False):
             flash(gettext("User is already assigned to ticket."))
             return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket.id))
 
-        # set status to in work
-        status = FlicketStatus.query.filter_by(status="In Work").first()
         # assign ticket
         ticket.assigned = user
-        ticket.current_status = status
+        ticket.current_status = "Open"
 
         if not user.total_assigned:
             user.total_assigned = 1

@@ -18,7 +18,7 @@
                 // populate the status selection inputs
                 var procedure_stage = document.getElementById('procedure_stage');
                 $(procedure_stage).empty();
-                $(procedure_stage).append($('<option></option>').text('--request type--').val('0'));
+                $(procedure_stage).append($('<option></option>').text('--request stage--').val('0'));
                 // Load the new options
                 for (var i = 0; i < data._meta.total_items; i++) {
                     var procedure_stage_id = data.items[i].id;

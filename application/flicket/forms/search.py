@@ -13,7 +13,7 @@ from application.flicket.models.flicket_models import (
     FlicketDomain,
     FlicketStatus,
     FlicketRequesterRole,
-    FlicketRequestType,
+    FlicketRequestStage,
     FlicketProcedureStage,
 )
 
@@ -46,10 +46,10 @@ class SearchTicketForm(FlaskForm):
         ]
         self.requester_role.choices.insert(0, (0, "requester role"))
 
-        self.request_type.choices = [
-            (s.id, s.request_type) for s in FlicketRequestType.query.all()
+        self.request_stage.choices = [
+            (s.id, s.request_stage) for s in FlicketRequestStage.query.all()
         ]
-        self.request_type.choices.insert(0, (0, "request type"))
+        self.request_stage.choices.insert(0, (0, "request stage"))
 
         self.procedure_stage.choices = [
             (s.id, s.procedure_stage) for s in FlicketProcedureStage.query.all()
@@ -63,7 +63,7 @@ class SearchTicketForm(FlaskForm):
     username = StringField(lazy_gettext("username"), validators=[does_user_exist])
     content = StringField(lazy_gettext("content"), validators=[])
     requester_role = SelectField(lazy_gettext("requester role"), coerce=int)
-    request_type = SelectField(lazy_gettext("request type"), coerce=int)
+    request_stage = SelectField(lazy_gettext("request stage"), coerce=int)
     procedure_stage = SelectField(lazy_gettext("procedure stage"), coerce=int)
 
     def __repr__(self):

@@ -24,7 +24,7 @@ from application.flicket.models.flicket_models import (
     FlicketInstitute,
     FlicketPriority,
     FlicketRequesterRole,
-    FlicketRequestType,
+    FlicketRequestStage,
     FlicketProcedureStage,
     FlicketStatus,
     FlicketTicket,
@@ -118,10 +118,6 @@ class CreateTicketForm(FlaskForm):
         self.requester_role.choices = [
             (p.id, p.requester_role) for p in FlicketRequesterRole.query.all()
         ]
-        self.request_type.choices = [
-            (s.id, s.request_type) for s in FlicketRequestType.query.all()
-        ]
-
         self.procedure_stage.choices = [
             (s.id, s.procedure_stage) for s in FlicketProcedureStage.query.all()
         ]
@@ -159,9 +155,6 @@ class CreateTicketForm(FlaskForm):
     )
     requester_role = SelectField(
         lazy_gettext("requester role"), validators=[DataRequired()], coerce=int
-    )
-    request_type = SelectField(
-        lazy_gettext("request type"), validators=[DataRequired()], coerce=int
     )
     procedure_stage = SelectField(
         lazy_gettext("procedure stage"), validators=[DataRequired()], coerce=int
@@ -228,30 +221,26 @@ class ReplyForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         form = super(ReplyForm, self).__init__(*args, **kwargs)
-        self.status.choices = [
-            (s.id, s.status)
-            for s in FlicketStatus.query.filter(FlicketStatus.status != "Closed")
-        ]
         self.priority.choices = [
             (p.id, p.priority) for p in FlicketPriority.query.all()
         ]
+        self.request_stage.choices = [
+            (s.id, s.request_stage) for s in FlicketRequestStage.query.all()
+        ]
+        self.procedure_stage.choices = [
+            (s.id, s.procedure_stage) for s in FlicketProcedureStage.query.all()
+        ]
 
-    content = PageDownField(
-        lazy_gettext("Reply"),
-        validators=[
-            DataRequired(),
-            Length(
-                min=field_size["content_min_length"],
-                max=field_size["content_max_length"],
-            ),
-        ],
-    )
+    content = PageDownField(lazy_gettext("Reply"),)
     file = FileField(lazy_gettext("Add Files"), render_kw={"multiple": True})
-    status = SelectField(
-        lazy_gettext("Status"), validators=[DataRequired()], coerce=int
-    )
     priority = SelectField(
         lazy_gettext("Priority"), validators=[DataRequired()], coerce=int
+    )
+    request_stage = SelectField(
+        lazy_gettext("request stage"), validators=[DataRequired()], coerce=int
+    )
+    procedure_stage = SelectField(
+        lazy_gettext("procedure stage"), validators=[DataRequired()], coerce=int
     )
     days = DecimalField(lazy_gettext("days"), default=0)
     submit = SubmitField(lazy_gettext("reply"), render_kw=form_class_button)

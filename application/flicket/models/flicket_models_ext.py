@@ -13,7 +13,7 @@ from application.flicket.models.flicket_models import (
     FlicketStatus,
     FlicketPriority,
     FlicketRequesterRole,
-    FlicketRequestType,
+    FlicketRequestStage,
     FlicketProcedureStage,
     FlicketDomain,
     FlicketInstitute,
@@ -40,7 +40,7 @@ class FlicketTicketExt:
         referee=None,
         priority=None,
         requester_role=None,
-        request_type=None,
+        request_stage=None,
         procedure_stage=None,
         domain=None,
         institute=None,
@@ -68,8 +68,7 @@ class FlicketTicketExt:
             id=int(requester_role)
         ).first()
 
-        request_type = FlicketRequestType.query.filter_by(id=int(request_type)).first()
-
+        request_stage = FlicketRequestStage.query.filter_by(request_stage="New").first()
         procedure_stage = FlicketProcedureStage.query.filter_by(
             id=int(procedure_stage)
         ).first()
@@ -90,7 +89,7 @@ class FlicketTicketExt:
             referee=referee,
             ticket_priority=ticket_priority,
             requester_role=requester_role,
-            request_type=request_type,
+            request_stage=request_stage,
             procedure_stage=procedure_stage,
             domain=ticket_domain,
             days=days,
@@ -120,7 +119,7 @@ class FlicketTicketExt:
         referee=None,
         priority=None,
         requester_role=None,
-        request_type=None,
+        request_stage=None,
         procedure_stage=None,
         domain=None,
         institute=None,
@@ -156,16 +155,6 @@ class FlicketTicketExt:
             )
             db.session.add(history)
 
-        # See GH #1
-        # if ticket.requester != requester:
-        #     history = FlicketHistory(
-        #         original_requester=ticket.requester,
-        #         topic=ticket,
-        #         date_modified=datetime.datetime.now(),
-        #         user_id=history_id,
-        #     )
-        #     db.session.add(history)
-
         # loop through the selected uploads for deletion.
         if len(form_uploads) > 0:
             for i in form_uploads:
@@ -186,7 +175,9 @@ class FlicketTicketExt:
         requester_role = FlicketRequesterRole.query.filter_by(
             id=int(requester_role)
         ).first()
-        request_type = FlicketRequestType.query.filter_by(id=int(request_type)).first()
+        request_stage = FlicketRequestStage.query.filter_by(
+            id=int(request_stage)
+        ).first()
 
         procedure_stage = FlicketProcedureStage.query.filter_by(
             id=int(procedure_stage)
@@ -203,7 +194,7 @@ class FlicketTicketExt:
         ticket.date_modified = datetime.datetime.now()
         ticket.ticket_priority = ticket_priority
         ticket.requester_role = requester_role
-        ticket.request_type = request_type
+        ticket.request_stage = request_stage
         ticket.procedure_stage = procedure_stage
         ticket.domain = ticket_domain
         ticket.institute = ticket_institute

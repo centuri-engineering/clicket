@@ -43,7 +43,7 @@ def tickets_view(page, is_my_view=False):
     referee = request.args.get("referee")
     user_id = request.args.get("user_id")
     requester_role = request.args.get("requester_role")
-    request_type = request.args.get("request_type")
+    request_stage = request.args.get("request_stage")
     procedure_stage = request.args.get("procedure_stage")
 
     if form.validate_on_submit():
@@ -83,7 +83,7 @@ def tickets_view(page, is_my_view=False):
         requester=requester,
         referee=referee,
         requester_role=requester_role,
-        request_type=request_type,
+        request_stage=request_stage,
         procedure_stage=procedure_stage,
     )
     if is_my_view:
@@ -116,7 +116,7 @@ def tickets_view(page, is_my_view=False):
             institute=institute,
             domain=domain,
             requester_role=requester_role,
-            request_type=request_type,
+            request_stage=request_stage,
             procedure_stage=procedure_stage,
             user_id=user_id,
             sort=sort,

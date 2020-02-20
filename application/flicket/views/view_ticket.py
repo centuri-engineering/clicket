@@ -14,6 +14,8 @@ from application import app, db
 from application.flicket.forms.flicket_forms import ReplyForm, SubscribeUser
 from application.flicket.models.flicket_models import FlicketTicket
 from application.flicket.models.flicket_models import FlicketStatus
+from application.flicket.models.flicket_models import FlicketRequestStage
+from application.flicket.models.flicket_models import FlicketProcedureStage
 from application.flicket.models.flicket_models import FlicketPriority
 from application.flicket.models.flicket_models import FlicketPost
 from application.flicket.models.flicket_models import FlicketSubscription
@@ -87,11 +89,28 @@ def ticket_view(ticket_id, page=1):
             days=form.days.data,
         )
 
-        if ticket.status_id != form.status.data:
-            status = FlicketStatus.query.get(form.status.data)
-            ticket.current_status = status
+        if ticket.request_stage_id != form.request_stage.data:
+            request_stage = FlicketRequestStage.query.get(form.request_stage.data)
+            ticket.request_stage = request_stage
             add_action(
-                ticket, "status", data={"status_id": status.id, "status": status.status}
+                ticket,
+                "request_stage",
+                data={
+                    "request_stage_id": request_stage.id,
+                    "request_stage": request_stage.request_stage,
+                },
+            )
+
+        if ticket.procedure_stage_id != form.procedure_stage.data:
+            procedure_stage = FlicketProcedureStage.query.get(form.procedure_stage.data)
+            ticket.procedure_stage = procedure_stage
+            add_action(
+                ticket,
+                "procedure_stage",
+                data={
+                    "procedure_stage_id": procedure_stage.id,
+                    "procedure_stage": procedure_stage.procedure_stage,
+                },
             )
 
         if ticket.ticket_priority_id != form.priority.data:
@@ -108,7 +127,7 @@ def ticket_view(ticket_id, page=1):
         upload_attachments.populate_db(new_reply)
 
         # change ticket status to open if closed.
-        if ticket.current_status.status in ("Finished", "Canceled"):
+        if ticket.current_status.status == "Closed":
             ticket_open = FlicketStatus.query.filter_by(status="Open").first()
             ticket.current_status = ticket_open
 
@@ -139,7 +158,7 @@ def ticket_view(ticket_id, page=1):
         if form.submit_close.data:
             return redirect(
                 url_for(
-                    "flicket_bp.change_status", ticket_id=ticket.id, status="Finished"
+                    "flicket_bp.change_status", ticket_id=ticket.id, status="Closed"
                 )
             )
 
@@ -166,8 +185,9 @@ def ticket_view(ticket_id, page=1):
 
     replies = replies.paginate(page, app.config["posts_per_page"])
 
-    form.status.data = ticket.status_id
     form.priority.data = ticket.ticket_priority_id
+    form.request_stage.data = ticket.request_stage_id
+    form.procedure_stage.data = ticket.procedure_stage_id
 
     title = gettext("View Ticket")
 

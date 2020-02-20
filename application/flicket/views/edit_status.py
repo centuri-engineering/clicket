@@ -43,7 +43,7 @@ def change_status(ticket_id, status):
         return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket_id))
 
     # Check to see if the ticket is already closed.
-    if ticket.current_status.status in ("Finished", "Canceled"):
+    if ticket.current_status.status == "Closed":
         flash(gettext("Ticket is already closed."), category="warning")
         return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket.id))
 

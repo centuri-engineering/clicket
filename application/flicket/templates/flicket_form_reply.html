@@ -39,27 +39,23 @@
                         {{ _('MarkDown Help') }}
                     </a>
                 </div>
-                <div class="col text-right">
-                    <button type="button" class="btn btn-info btn-sm" onclick="hide_element()">
-                        {{ _('Show / Hide Markdown') }}
-                    </button>
-                </div>
             </div>
 
             <!-- optional buttons -->
-            <div class="row mt-1">
-                <div class="col small align-self-end">
-                    {{ form.file(class="form-control-file border-0") }}
+            <div class="row">
+                <div class="col-auto">
+                    <label class="col p-0 m-0 flicket-tickets-title">{{ form.request_stage.name }}</label>
+                    {{ form.request_stage(class="form-control form-control-xs") }}
                 </div>
                 <div class="col-auto">
-                    <label class="col p-0 m-0 flicket-tickets-title">{{ form.status.name }}</label>
-                    {{ form.status(class="form-control form-control-xs") }}
+                    <label class="col p-0 m-0 flicket-tickets-title">{{ form.procedure_stage.name }}</label>
+                    {{ form.procedure_stage(class="form-control form-control-xs") }}
                 </div>
                 <div class="col-auto">
                     <label class="col p-0 m-0 flicket-tickets-title">{{ form.priority.name }}</label>
                     {{ form.priority(class="form-control form-control-xs") }}
                 </div>
-                <div class="col-1">
+                <div class="col-2">
                     <label class="col p-0 m-0 flicket-tickets-title">{{ form.days.label.text }}</label>
                     {{ form.days(class="form-control form-control-xs") }}
                 </div>
@@ -67,11 +63,15 @@
                     {{ form.submit(class="btn btn-primary btn-sm") }}
                 </div>
             </div>
-
+            <div class="row mt-2">
+                <div class="col small align-self-end">
+                    {{ form.file(class="form-control-file border-0") }}
+                </div>
+            </div>
             {% if ticket %}
                 {% if g.user.is_admin or (ticket.user == g.user) or (ticket.assigned_id == g.user.id) %}
                     <!-- reply and close if admin or ticket owner -->
-                    {% if ticket.current_status.status not in ('Finished', 'Canceled') %}
+                    {% if ticket.current_status.status != 'Closed' %}
                         <div class="row mt-2">
                             <div class="col text-right">
                                 {{ form.submit_close(class="btn btn-warning btn-sm") }}

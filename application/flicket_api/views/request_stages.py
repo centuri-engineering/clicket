@@ -16,7 +16,7 @@
 
         .. sourcecode:: http
 
-            GET /flicket-api/request_type/1 HTTP/1.1
+            GET /flicket-api/request_stage/1 HTTP/1.1
             HOST: localhost:5000
             Accept: application/json
             Authorization: Bearer <token>
@@ -35,23 +35,23 @@
             {
                 "id": 1,
                 "links": {
-                    "self": "http://127.0.0.1:5000/flicket-api/request_type/1",
-                    "request_types": "http://127.0.0.1:5000/flicket-api/request_types/"
+                    "self": "http://127.0.0.1:5000/flicket-api/request_stage/1",
+                    "request_stages": "http://127.0.0.1:5000/flicket-api/request_stages/"
                 },
-                "request_type": "Open"
+                "request_stage": "Open"
             }
 
 
-    Get RequestTypes
+    Get RequestStages
     ~~~~~~~~~~~~
 
-    .. http:get:: /flicket-api/request_types/
+    .. http:get:: /flicket-api/request_stages/
 
         **Request**
 
         .. sourcecode:: http
 
-            GET /flicket-api/request_types/ HTTP/1.1
+            GET /flicket-api/request_stages/ HTTP/1.1
             HOST: localhost:5000
             Accept: application/json
             Authorization: Bearer <token>
@@ -82,34 +82,34 @@
                     {
                         "id": 1,
                         "links": {
-                            "self": "http://127.0.0.1:5000/flicket-api/request_type/1",
-                            "request_types": "http://127.0.0.1:5000/flicket-api/request_types/"
+                            "self": "http://127.0.0.1:5000/flicket-api/request_stage/1",
+                            "request_stages": "http://127.0.0.1:5000/flicket-api/request_stages/"
                         },
-                        "request_type": "Open"
+                        "request_stage": "Open"
                     },
                     {
                         "id": 2,
                         "links": {
-                            "self": "http://127.0.0.1:5000/flicket-api/request_type/2",
-                            "request_types": "http://127.0.0.1:5000/flicket-api/request_types/"
+                            "self": "http://127.0.0.1:5000/flicket-api/request_stage/2",
+                            "request_stages": "http://127.0.0.1:5000/flicket-api/request_stages/"
                         },
-                        "request_type": "Closed"
+                        "request_stage": "Closed"
                     },
                     {
                         "id": 3,
                         "links": {
-                            "self": "http://127.0.0.1:5000/flicket-api/request_type/3",
-                            "request_types": "http://127.0.0.1:5000/flicket-api/request_types/"
+                            "self": "http://127.0.0.1:5000/flicket-api/request_stage/3",
+                            "request_stages": "http://127.0.0.1:5000/flicket-api/request_stages/"
                         },
-                        "request_type": "In Work"
+                        "request_stage": "In Work"
                     },
                     {
                         "id": 4,
                         "links": {
-                            "self": "http://127.0.0.1:5000/flicket-api/request_type/4",
-                            "request_types": "http://127.0.0.1:5000/flicket-api/request_types/"
+                            "self": "http://127.0.0.1:5000/flicket-api/request_stage/4",
+                            "request_stages": "http://127.0.0.1:5000/flicket-api/request_stages/"
                         },
-                        "request_type": "Awaiting Information"
+                        "request_stage": "Awaiting Information"
                     }
                 ]
             }
@@ -121,25 +121,25 @@ from flask import jsonify, request
 from .sphinx_helper import api_url
 from . import bp_api
 from application import app
-from application.flicket.models.flicket_models import FlicketRequestType
+from application.flicket.models.flicket_models import FlicketRequestStage
 from application.flicket_api.views.auth import token_auth
 
 
-@bp_api.route(api_url + "request_type/<int:id>", methods=["GET"])
+@bp_api.route(api_url + "request_stage/<int:id>", methods=["GET"])
 @token_auth.login_required
-def get_request_type(id):
-    return jsonify(FlicketRequestType.query.get_or_404(id).to_dict())
+def get_request_stage(id):
+    return jsonify(FlicketRequestStage.query.get_or_404(id).to_dict())
 
 
-@bp_api.route(api_url + "request_types/", methods=["GET"])
+@bp_api.route(api_url + "request_stages/", methods=["GET"])
 @token_auth.login_required
-def get_request_types():
+def get_request_stages():
     page = request.args.get("page", 1, type=int)
     per_page = min(
         request.args.get("per_page", app.config["posts_per_page"], type=int), 100
     )
-    data = FlicketRequestType.to_collection_dict(
-        FlicketRequestType.query, page, per_page, "bp_api.get_request_types"
+    data = FlicketRequestStage.to_collection_dict(
+        FlicketRequestStage.query, page, per_page, "bp_api.get_request_stages"
     )
 
     return jsonify(data)

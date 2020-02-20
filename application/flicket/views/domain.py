@@ -31,7 +31,7 @@ def ticket_domain(ticket_id=False):
     form = DomainForm()
     ticket = FlicketTicket.query.get_or_404(ticket_id)
 
-    if ticket.current_status.status in ("Finished", "Canceled"):
+    if ticket.current_status.status == "Closed":
         flash(gettext("Can't change the domain on a closed ticket."))
         return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket_id))
 

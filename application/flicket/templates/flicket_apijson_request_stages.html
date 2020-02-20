@@ -2,7 +2,7 @@
 
     $(document).ready(function () {
         $.ajax({
-            url: '/flicket-api/request_types/',
+            url: '/flicket-api/request_stages/',
             datatype: 'json',
             headers: {
                 'Authorization': 'Bearer {{ g.user.token }}'
@@ -13,29 +13,29 @@
 
                 // get value of requester in uri
                 result = result.query;
-                result = URI.parseQuery(result).request_type;
+                result = URI.parseQuery(result).request_stage;
 
                 // populate the status selection inputs
-                var request_type = document.getElementById('request_type');
-                $(request_type).empty();
-                $(request_type).append($('<option></option>').text('--request type--').val('0'));
+                var request_stage = document.getElementById('request_stage');
+                $(request_stage).empty();
+                $(request_stage).append($('<option></option>').text('--request stage--').val('0'));
                 // Load the new options
                 for (var i = 0; i < data._meta.total_items; i++) {
-                    var request_type_id = data.items[i].id;
-                    var request_type_name = data.items[i].request_type;
-                    $(request_type).append($('<option></option>').text(request_type_name).val(request_type_id));
+                    var request_stage_id = data.items[i].id;
+                    var request_stage_name = data.items[i].request_stage;
+                    $(request_stage).append($('<option></option>').text(request_stage_name).val(request_stage_id));
                 }
 
                 // set the preselected value
                 if (result) {
-                    // find id of request_type
+                    // find id of request_stage
                     for (var item in data.items) {
-                        var s = data.items[item].request_type;
+                        var s = data.items[item].request_stage;
                         if (s === result) {
-                            var request_type_id = data.items[item].id
+                            var request_stage_id = data.items[item].id
                         }
                     }
-                    $(request_type).val(request_type_id)
+                    $(request_stage).val(request_stage_id)
                 }
             }
         });

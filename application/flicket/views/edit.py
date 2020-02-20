@@ -20,7 +20,7 @@ from application.flicket.models.flicket_models import (
     FlicketPriority,
     FlicketRequesterRole,
     FlicketProcedureStage,
-    FlicketRequestType,
+    FlicketRequestStage,
     FlicketTicket,
     FlicketUploads,
 )
@@ -70,7 +70,7 @@ def edit_ticket(ticket_id):
             referee=form.referee.data,
             priority=form.priority.data,
             requester_role=form.requester_role.data,
-            request_type=form.request_type.data,
+            request_stage=form.request_stage.data,
             procedure_stage=form.procedure_stage.data,
             domain=form.domain.data,
             institute=form.institute.data,
@@ -88,7 +88,7 @@ def edit_ticket(ticket_id):
     form.referee.data = ticket.referee
     form.priority.data = ticket.ticket_priority_id
     form.requester_role.data = ticket.requester_role_id
-    form.request_type.data = ticket.request_type_id
+    form.request_stage.data = ticket.request_stage_id
     form.procedure_stage.data = ticket.procedure_stage_id
     form.title.data = ticket.title
     form.domain.data = ticket.domain_id
@@ -197,15 +197,15 @@ def edit_post(post_id):
                     "requester_role": requester_role.requester_role,
                 },
             )
-        if post.ticket.request_type_id != form.request_type.data:
-            request_type = FlicketRequestType.query.get(form.request_type.data)
-            post.ticket.request_type = request_type
+        if post.ticket.request_stage_id != form.request_stage.data:
+            request_stage = FlicketRequestStage.query.get(form.request_stage.data)
+            post.ticket.request_stage = request_stage
             add_action(
                 post.ticket,
-                "request_type",
+                "request_stage",
                 data={
-                    "request_type_id": request_type.id,
-                    "request_type": request_type.request_type,
+                    "request_stage_id": request_stage.id,
+                    "request_stage": request_stage.request_stage,
                 },
             )
         if post.ticket.procedure_stage_id != form.procedure_stage.data:
@@ -240,7 +240,7 @@ def edit_post(post_id):
     form.status.data = post.ticket.status_id
     form.priority.data = post.ticket.ticket_priority_id
     form.requester_role.data = post.ticket.requester_role_id
-    form.request_type.data = post.ticket.request_type_id
+    form.request_stage.data = post.ticket.request_stage_id
     form.procedure_stage.data = post.ticket.procedure_stage_id
 
     return render_template("flicket_editpost.html", title="Edit Post", form=form)

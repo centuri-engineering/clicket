@@ -32,7 +32,7 @@ def ticket_institute(ticket_id=False):
     form = InstituteForm()
     ticket = FlicketTicket.query.get_or_404(ticket_id)
 
-    if ticket.current_status.status in ("Finished", "Canceled"):
+    if ticket.current_status.status == "Closed":
         flash(gettext("Can't change the institute on a closed ticket."))
         return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket_id))
 

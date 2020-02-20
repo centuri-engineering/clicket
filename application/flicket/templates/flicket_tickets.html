@@ -19,7 +19,7 @@
                                          requester=requester,
                                          referee=referee,
                                          requester_role=requester_role,
-                                         request_type=request_type,
+                                         request_stage=request_stage,
                                          procedure_stage=procedure_stage,
                                          user_id=user_id) }}"
                         title="csv file">
@@ -48,7 +48,7 @@
                     {{ form.requester_role(class="form-control form-control-sm flicket-tickets-content p-0", id="requester_role") }}
                   </div>
                   <div class="col-md col-6 text-center">
-                    {{ form.request_type(class="form-control form-control-sm flicket-tickets-content p-0", id="request_type") }}
+                    {{ form.request_stage(class="form-control form-control-sm flicket-tickets-content p-0", id="request_stage") }}
                   </div>
                 </div>
                 <div class="row m-2 bg-white p-2 rounded border">
@@ -107,16 +107,6 @@
                             <i class="fas fa-sort-numeric-down"></i>
                             {{ _('Ticket ID') }}
                         </a>
-                        <a class="dropdown-item small{% if sort == 'ticketid_desc' %} active{% endif %}"
-                           href="{{ url_for(base_url, sort='ticketid_desc', **request.args) }}">
-                            <i class="fas fa-sort-numeric-up"></i>
-                            {{ _('Ticket ID') }}
-                        </a>
-                        <a class="dropdown-item small{% if sort == 'title' %} active{% endif %}"
-                           href="{{ url_for(base_url, sort='title', **request.args) }}">
-                            <i class="fas fa-sort-alpha-down"></i>
-                            {{ _('Title') }}
-                        </a>
                         <a class="dropdown-item small{% if sort == 'addedby' %} active{% endif %}"
                            href="{{ url_for(base_url, sort='addedby', **request.args) }}">
                             <i class="fas fa-sort-alpha-down"></i>
@@ -147,10 +137,10 @@
                             <i class="fas fa-sort-numeric-down"></i>
                             {{ _('Requester Role') }}
                         </a>
-                        <a class="dropdown-item small{% if sort == 'request_type' %} active{% endif %}"
-                           href="{{ url_for(base_url, sort='request_type', **request.args) }}">
+                        <a class="dropdown-item small{% if sort == 'request_stage' %} active{% endif %}"
+                           href="{{ url_for(base_url, sort='request_stage', **request.args) }}">
                             <i class="fas fa-sort-numeric-down"></i>
-                            {{ _('Request Type') }}
+                            {{ _('Request Stage') }}
                         </a>
                         <a class="dropdown-item small{% if sort == 'procedure_stage' %} active{% endif %}"
                            href="{{ url_for(base_url, sort='procedure_stage', **request.args) }}">
@@ -202,8 +192,18 @@
 
                         <div class="row m-1 {%- if t.current_status.status == 'Closed' %}
                                         flicket-status-closed{% endif %}">
-                            <div class="col-md-1 col-6">
+
+                            <div class="col-md-2 col-6">
                                 <div class="flicket-tickets-title">
+                                    date
+                                </div>
+                                <div class="flicket-tickets-content">
+                                    {{ t.date_added.strftime('%Y-%m-%d') }}
+                                </div>
+                            </div>
+
+                            <div class="col-md-1 col-6">
+                              <div class="flicket-tickets-title">
                                     priority
                                 </div>
                                 <div class="flicket-tickets-content  {%- if t.current_status.status == 'Closed' %}
@@ -220,6 +220,25 @@
                             </div>
                             <div class="col-md-2 col-6">
                                 <div class="flicket-tickets-title">
+                                    request stage
+                                </div>
+                                <div class="flicket-tickets-content">
+                                    {{ t.request_stage.request_stage }}
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-6">
+                                <div class="flicket-tickets-title">
+                                    procedure stage
+                                </div>
+                                <div class="flicket-tickets-content">
+                                    {{ t.procedure_stage.procedure_stage }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row m-1 {%- if t.current_status.status == 'Closed' %}
+                                        flicket-status-closed{% endif %}">
+                            <div class="col-md-2 col-6">
+                                <div class="flicket-tickets-title">
                                     submitted by
                                 </div>
                                 <div class="flicket-tickets-content">
@@ -228,21 +247,21 @@
                             </div>
                             <div class="col-md-2 col-6">
                                 <div class="flicket-tickets-title">
-                                    date
+                                    assigned to
                                 </div>
                                 <div class="flicket-tickets-content">
-                                    {{ t.date_added.strftime('%Y-%m-%d') }}
+                                    {{ t.assigned.name }}
                                 </div>
                             </div>
-                            <div class="col-md-3 col-6">
+                            <div class="col-md-2 col-6">
                                 <div class="flicket-tickets-title">
-                                    institute / domain
+                                    institute
                                 </div>
                                 <div class="flicket-tickets-content">
-                                    {{ t.institute.institute }} / {{ t.domain.domain }}
+                                    {{ t.institute.institute }}
                                 </div>
                             </div>
-                            <div class="col-md-3 col-6">
+                            <div class="col-md-2 col-6">
                                 <div class="flicket-tickets-title">
                                     requester
                                 </div>
@@ -250,15 +269,7 @@
                                     {{ t.requester }}
                                 </div>
                             </div>
-                            <div class="col-md-3 col-6">
-                                <div class="flicket-tickets-title">
-                                    requester role
-                                </div>
-                                <div class="flicket-tickets-content">
-                                    {{ t.requester_role.requester_role }}
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-6">
+                            <div class="col-md-2 col-6">
                                 <div class="flicket-tickets-title">
                                     referee
                                 </div>
@@ -266,38 +277,9 @@
                                     {{ t.referee }}
                                 </div>
                             </div>
-                            <div class="col-md-3 col-6">
-                                <div class="flicket-tickets-title">
-                                    request type
-                                </div>
-                                <div class="flicket-tickets-content">
-                                    {{ t.request_type.request_type }}
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-6">
-                                <div class="flicket-tickets-title">
-                                    procedure stage
-                                </div>
-                                <div class="flicket-tickets-content">
-                                    {{ t.procedure_stage.procedure_stage }}
-                                </div>
-                            </div>
-                            <div class="col-md-2 col-6">
-                                <div class="flicket-tickets-title">
-                                    status
-                                </div>
-                                <div class="flicket-tickets-content">
-                                    {{ t.current_status.status }}
-                                </div>
-                            </div>
-                            <div class="col-md-2 col-6">
-                                <div class="flicket-tickets-title">
-                                    assigned
-                                </div>
-                                <div class="flicket-tickets-content">
-                                    {{ t.assigned.name }}
-                                </div>
-                            </div>
+                        </div>
+                        <div class="row m-1 {%- if t.current_status.status == 'Closed' %}
+                                        flicket-status-closed{% endif %}">
                         </div>
                     </div>
                 {% endfor %}

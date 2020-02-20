@@ -13,7 +13,7 @@ from application.flicket.models.flicket_models import (
     FlicketStatus,
     FlicketPriority,
     FlicketRequesterRole,
-    FlicketRequestType,
+    FlicketRequestStage,
     FlicketProcedureStage,
     FlicketInstitute,
     FlicketDomain,
@@ -86,7 +86,7 @@ procedure_stages = [
 ]
 
 
-request_types = ["New", "In progress", "Pending", "Ready", "Finished", "Declined"]
+request_stages = ["New", "In progress", "Pending", "Ready", "Finished", "Declined"]
 
 
 class RunSetUP(Command):
@@ -103,7 +103,7 @@ class RunSetUP(Command):
         self.create_default_ticket_status()
         self.create_default_priority_levels()
         self.create_default_requester_role_levels()
-        self.create_default_request_type_levels()
+        self.create_default_request_stage_levels()
         self.create_default_procedure_stage_levels()
         self.create_default_depts()
         # commit changes to the database
@@ -290,19 +290,19 @@ class RunSetUP(Command):
                     print("Added requester role level {}".format(p))
 
     @staticmethod
-    def create_default_request_type_levels(silent=False):
-        """ set up default request_type levels """
+    def create_default_request_stage_levels(silent=False):
+        """ set up default request_stage levels """
 
-        for level in request_types:
-            request_type = FlicketRequestType.query.filter_by(
-                request_type=level
+        for level in request_stages:
+            request_stage = FlicketRequestStage.query.filter_by(
+                request_stage=level
             ).first()
-            if not request_type:
-                add_request_type = FlicketRequestType(request_type=level)
-                db.session.add(add_request_type)
+            if not request_stage:
+                add_request_stage = FlicketRequestStage(request_stage=level)
+                db.session.add(add_request_stage)
 
                 if not silent:
-                    print("Added request type level {}".format(level))
+                    print("Added request stage level {}".format(level))
 
     @staticmethod
     def create_default_procedure_stage_levels(silent=False):

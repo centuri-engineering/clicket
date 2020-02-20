@@ -47,20 +47,20 @@ def upgrade():
 
     ## Request type
     op.create_table(
-        "flicket_request_types",
+        "flicket_request_stages",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("request_type", sa.String(length=128), nullable=True),
+        sa.Column("request_stage", sa.String(length=128), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )
     op.add_column(
-        "flicket_topic", sa.Column("request_type", sa.Integer(), nullable=True,),
+        "flicket_topic", sa.Column("request_stage", sa.Integer(), nullable=True,),
     )
     op.add_column(
         "flicket_topic",
         sa.Column(
-            "request_type_id",
+            "request_stage_id",
             sa.Integer(),
-            sa.ForeignKey("flicket_request_types.id"),
+            sa.ForeignKey("flicket_request_stages.id"),
             nullable=True,
         ),
     )
