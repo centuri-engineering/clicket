@@ -110,7 +110,7 @@ def check_db_connection(sqlalchemy_database_uri):
     """
 
     :param sqlalchemy_database_uri:
-    :return: 
+    :return:
     """
 
     base_error_message = "There was a problem connecting to the database. Please check your config.json file."

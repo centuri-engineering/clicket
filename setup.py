@@ -150,13 +150,13 @@ class RunSetUP(Command):
         _username = admin
         match = False
 
-        email = input("Enter admin email: ")
+        email = None  # input("Enter admin email: ")
         email = email or "admin@example.com"
 
         while match is False:
-            password1 = getpass("Enter password: ")
+            password1 = None  # getpass("Enter password: ")
             password1 = "admin" or passwoard1
-            password2 = getpass("Re-enter password: ")
+            password2 = None  # getpass("Re-enter password: ")
             password2 = "admin" or passwoard2
 
             if password1 != password2:
