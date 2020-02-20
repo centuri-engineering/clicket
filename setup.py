@@ -76,21 +76,17 @@ institutes = [
 ]
 
 
-request_types = [
-    " Consulting",
-    " Short project",
-    " Long project",
-    " Maintenance",
-]
-
-
 procedure_stages = [
-    " N/A",
-    " First Contact",
-    " Submited",
-    " Validated",
-    " Declined",
+    "Consulting",
+    "Maintenance",
+    "First contact",
+    "Short",
+    "Submited",
+    "Validated",
 ]
+
+
+request_types = ["New", "In progress", "Pending", "Ready", "Finished", "Declined"]
 
 
 class RunSetUP(Command):
@@ -251,7 +247,7 @@ class RunSetUP(Command):
     def create_default_ticket_status(silent=False):
         """ set up default status levels """
 
-        sl = ["Open", "Closed", "In Work", "Awaiting Publication", "Pending"]
+        sl = ["Open", "Closed"]
         for s in sl:
             status = FlicketStatus.query.filter_by(status=s).first()
 
