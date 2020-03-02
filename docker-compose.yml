@@ -10,14 +10,16 @@ services:
       - POSTGRES_PASSWORD=Flicket888
       - POSTGRES_DB=flicket
     ports:
-      - 5433:5432
+      - 5432:5432
   web:
     build: .
     command: python manage.py runserver
     volumes:
       - .:/usr/src/app/
     ports:
-      - 5002:5001
+      - 5001:5001
+    expose:
+      - "5001"
     env_file:
       - ./.env.dev
     depends_on:
@@ -25,7 +27,7 @@ services:
 volumes:
   postgres_data:
 
-
-# python manage.py db upgrade \
-# && python -d manage.py run_set_up \
-# && python -m manage.py runserver
+#
+# python manage.py db migrate
+# python -d manage.py run_set_up
+# python manage.py runserver

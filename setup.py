@@ -115,7 +115,7 @@ class RunSetUP(Command):
         print(
             'Please enter site base url including port. For example this would be "http://192.168.1.1:8000".'
         )
-        base_url = input("Base url> ")
+        base_url = "0.0.0.0:5001" #None # input("Base url> ")
         base_url = base_url or "127.0.0.1:5001"
 
         count = FlicketConfig.query.count()
