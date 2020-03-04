@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 import datetime
-from getpass import getpass
+import json
 
 from flask_script import Command
 
-from scripts.create_json import WriteConfigJson
+from scripts.create_json import WriteConfigJson, config_file
 from application import db, app
 from application.flicket_admin.models.flicket_config import FlicketConfig
 from application.flicket.models.flicket_models import (
@@ -112,11 +112,10 @@ class RunSetUP(Command):
     @staticmethod
     def set_db_config_defaults(silent=False):
 
-        print(
-            'Please enter site base url including port. For example this would be "http://192.168.1.1:8000".'
-        )
-        base_url = "0.0.0.0:5001" #None # input("Base url> ")
-        base_url = base_url or "127.0.0.1:5001"
+        with open(config_file, "r") as f:
+            config_data = json.load(f)
+
+        base_url = config_data["base_url"]
 
         count = FlicketConfig.query.count()
         if count > 0:
@@ -132,7 +131,7 @@ class RunSetUP(Command):
             ticket_upload_folder=flicket_config["ticket_upload_folder"],
             avatar_upload_folder=flicket_config["avatar_upload_folder"],
             base_url=base_url,
-            application_title="Flicket",
+            application_title="Clicket",
             mail_max_emails=10,
             mail_port=465,
         )
@@ -148,22 +147,12 @@ class RunSetUP(Command):
 
         # todo: add some password validation to prevent easy passwords being entered
         _username = admin
-        match = False
+        with open(config_file, "r") as f:
+            config_data = json.load(f)
 
-        email = None  # input("Enter admin email: ")
-        email = email or "admin@example.com"
-
-        while match is False:
-            password1 = None  # getpass("Enter password: ")
-            password1 = "admin" or passwoard1
-            password2 = None  # getpass("Re-enter password: ")
-            password2 = "admin" or passwoard2
-
-            if password1 != password2:
-                print("Passwords do not match, please try again.\n\n")
-                match = False
-            else:
-                return _username, password1, email
+        email = config_data["admin_email"]
+        password = config_data["admin_password"]
+        return _username, password, email
 
     @staticmethod
     def create_admin(username, password, email, job_title, silent=False):

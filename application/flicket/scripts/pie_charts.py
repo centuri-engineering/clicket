@@ -13,11 +13,11 @@ from application.flicket.models.flicket_models import FlicketStatus
 from application.flicket.models.flicket_models import FlicketTicket
 
 
-def count_institute_tickets(institute, status):
+def count_domain_tickets(domain, status):
     query = (
         FlicketTicket.query.join(FlicketDomain)
         .join(FlicketStatus)
-        .filter(FlicketInstitute.institute == institute)
+        .filter(FlicketDomain.domain == domain)
         .filter(FlicketStatus.status == status)
     )
 
@@ -31,18 +31,18 @@ def create_pie_chart_dict():
     """
 
     statii = FlicketStatus.query
-    institutes = FlicketInstitute.query
+    domains = FlicketDomain.query
 
     graphs = []
 
-    for institute in institutes:
+    for domain in domains:
 
-        graph_title = institute.institute
+        graph_title = domain.domain
         graph_labels = []
         graph_values = []
         for status in statii:
             graph_labels.append(status.status)
-            graph_values.append(count_institute_tickets(graph_title, status.status))
+            graph_values.append(count_domain_tickets(graph_title, status.status))
 
         # append graphs if have values.
         if any(graph_values):

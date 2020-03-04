@@ -1,5 +1,5 @@
 #! usr/bin/python3
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 #
 # Flicket - copyright Paul Bourne: evereux@gmail.com
 
@@ -180,9 +180,9 @@ class AddUserForm(FlaskForm):
             DataRequired(),
             EqualTo("confirm", message="Passwords must match"),
             check_password_formatting,
-            Length(
-                min=user_field_size["password_min"], max=user_field_size["password_max"]
-            ),
+            # Length(
+            #     min=user_field_size["password_min"], max=user_field_size["password_max"]
+            # ),
         ],
     )
     confirm = PasswordField(lazy_gettext("Repeat Password"))
