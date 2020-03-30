@@ -16,6 +16,7 @@ Flask-Principal
 Flask-Script
 Flask-SQLAlchemy
 Flask-WTF
+gunicorn
 itsdangerous
 Jinja2
 Mako

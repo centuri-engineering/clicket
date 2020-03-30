@@ -199,6 +199,9 @@ class FlicketTicketExt:
         ticket.domain = ticket_domain
         ticket.institute = ticket_institute
         ticket.days = days
+        # set status to Open
+        ticket_status = FlicketStatus.query.filter_by(status="Open").first()
+        ticket.current_status=ticket_status,
 
         files = files
         upload_attachments = UploadAttachment(files)
