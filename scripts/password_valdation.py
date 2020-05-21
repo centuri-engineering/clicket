@@ -22,7 +22,7 @@ class PasswordStrength:
 
     def is_valid(self):
         minimum_length = False
-        has_digits = False
+        has_digits = True
         has_uppercase = False
         has_lowercase = False
 
