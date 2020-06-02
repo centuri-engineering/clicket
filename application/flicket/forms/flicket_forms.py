@@ -121,6 +121,9 @@ class CreateTicketForm(FlaskForm):
         self.procedure_stage.choices = [
             (s.id, s.procedure_stage) for s in FlicketProcedureStage.query.all()
         ]
+        self.request_stage.choices = [
+            (s.id, s.request_stage) for s in FlicketRequestStage.query.all()
+        ]
 
         self.domain.choices = [(c.id, c.domain) for c in FlicketDomain.query.all()]
         self.institute.choices = [
@@ -158,6 +161,9 @@ class CreateTicketForm(FlaskForm):
     )
     procedure_stage = SelectField(
         lazy_gettext("procedure stage"), validators=[DataRequired()], coerce=int
+    )
+    request_stage = SelectField(
+        lazy_gettext("request stage"), validators=[DataRequired()], coerce=int
     )
 
     content = PageDownField(
