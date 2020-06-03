@@ -77,9 +77,9 @@ institutes = [
 
 
 procedure_stages = [
+    "First contact",
     "Consulting",
     "Maintenance",
-    "First contact",
     "Short",
     "Submited",
     "Validated",
