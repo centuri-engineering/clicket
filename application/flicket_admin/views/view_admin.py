@@ -1,5 +1,5 @@
 #! usr/bin/python3
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 #
 # Flicket - copyright Paul Bourne: evereux@gmail.com
 
@@ -137,7 +137,7 @@ def edit_user():
             if form.password.data != "":
                 user.password = hash_password(form.password.data)
 
-            user.email = form.email.data
+            user.email = form.email.data.lower()
             user.name = form.name.data
             user.job_title = form.job_title.data
 

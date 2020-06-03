@@ -52,7 +52,7 @@ def check_username_edit(form, field):
 def check_email_edit(form, field):
     query = FlicketUser.query.filter_by(id=form.user_id.data).first()
 
-    if form.email.data == query.email:
+    if form.email.data == query.email.lower():
         return True
 
     check_email(form, field)
@@ -127,6 +127,7 @@ def check_email(form, field):
     :return:
     """
     ok = True
+    form.email.data = form.email.data.lower()
     if not check_email_format(field.data):
         field.errors.append("Please enter a correctly formatted email address.")
         ok = False

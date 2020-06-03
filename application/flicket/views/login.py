@@ -139,6 +139,7 @@ def password_reset():
 
     if form.validate_on_submit():
         new_password = FlicketUser.generate_password()
+        print(new_password)
         hashed_password = hash_password(new_password)
         user = FlicketUser.query.filter_by(email=form.email.data).first()
         user.password = hashed_password
