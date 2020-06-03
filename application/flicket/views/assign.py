@@ -43,7 +43,8 @@ def ticket_assign(ticket_id=False):
 
         # assign ticket
         ticket.assigned = user
-        ticket.current_status = "Open"
+        ticket.current_status = FlicketStatus.query.filter_by(id=1).first()
+
 
         if not user.total_assigned:
             user.total_assigned = 1
