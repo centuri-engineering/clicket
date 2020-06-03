@@ -31,7 +31,7 @@ def ticket_create():
             requester=form.requester.data,
             referee=form.referee.data,
             requester_role=form.requester_role.data,
-            request_stage="New",
+            request_stage=1,
             procedure_stage=form.procedure_stage.data,
             domain=form.domain.data,
             institute=form.institute.data,

@@ -61,6 +61,7 @@ def edit_ticket(ticket_id):
         return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket_id))
 
     if form.validate_on_submit():
+
         ticket_id = FlicketTicketExt.edit_ticket(
             ticket=ticket,
             title=form.title.data,
@@ -70,7 +71,7 @@ def edit_ticket(ticket_id):
             referee=form.referee.data,
             priority=form.priority.data,
             requester_role=form.requester_role.data,
-            request_stage=form.request_stage.data,
+            request_stage=1,
             procedure_stage=form.procedure_stage.data,
             domain=form.domain.data,
             institute=form.institute.data,
@@ -80,7 +81,6 @@ def edit_ticket(ticket_id):
         )
 
         flash("Ticket successfully edited.", category="success")
-
         return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket_id))
 
     form.content.data = ticket.content
@@ -95,7 +95,6 @@ def edit_ticket(ticket_id):
     form.institute.data = ticket.institute_id
 
     title = gettext("Edit Ticket")
-
     return render_template("flicket_edittopic.html", title=title, form=form)
 
 

@@ -121,10 +121,6 @@ class CreateTicketForm(FlaskForm):
         self.procedure_stage.choices = [
             (s.id, s.procedure_stage) for s in FlicketProcedureStage.query.all()
         ]
-        self.request_stage.choices = [
-            (s.id, s.request_stage) for s in FlicketRequestStage.query.all()
-        ]
-
         self.domain.choices = [(c.id, c.domain) for c in FlicketDomain.query.all()]
         self.institute.choices = [
             (c.id, c.institute) for c in FlicketInstitute.query.all()
@@ -161,9 +157,6 @@ class CreateTicketForm(FlaskForm):
     )
     procedure_stage = SelectField(
         lazy_gettext("procedure stage"), validators=[DataRequired()], coerce=int
-    )
-    request_stage = SelectField(
-        lazy_gettext("request stage"), validators=[DataRequired()], coerce=int
     )
 
     content = PageDownField(
@@ -203,7 +196,6 @@ class EditTicketForm(CreateTicketForm):
         self.form = super(EditTicketForm, self).__init__(*args, **kwargs)
         # get ticket data from ticket_id
         ticket = FlicketTicket.query.filter_by(id=ticket_id).first()
-
         # define the multi select box for document uploads
         uploads = []
         for u in ticket.uploads:
@@ -213,6 +205,8 @@ class EditTicketForm(CreateTicketForm):
             uri = url_for("flicket_bp.view_ticket_uploads", filename=x[1])
             uri_label = '<a href="' + uri + '">' + x[2] + "</a>"
             self.uploads.choices.append((x[0], uri_label))
+
+
 
     uploads = MultiCheckBoxField("Label", coerce=int)
     submit = SubmitField(
