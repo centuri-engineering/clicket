@@ -1,6 +1,7 @@
 #! usr/bin/python3
 # -*- coding: utf-8 -*-
 
+import sys
 
 from base64 import b64encode
 from getpass import getpass
@@ -23,11 +24,10 @@ class WriteConfigJson:
             return True
         else:
             print(
-                'Config json file "{}" does not exist. Exiting application.'.format(
-                    config_file
-                )
+                f'Config json file "{config_file}" does not exist.'
+                " Exiting application."
             )
-            exit()
+            sys.exit()
 
     @staticmethod
     def create_file():
