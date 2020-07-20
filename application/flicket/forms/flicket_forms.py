@@ -193,6 +193,7 @@ class MultiCheckBoxField(SelectMultipleField):
 
 class EditTicketForm(CreateTicketForm):
     def __init__(self, ticket_id, *args, **kwargs):
+
         self.form = super(EditTicketForm, self).__init__(*args, **kwargs)
         # get ticket data from ticket_id
         ticket = FlicketTicket.query.filter_by(id=ticket_id).first()
@@ -205,7 +206,6 @@ class EditTicketForm(CreateTicketForm):
             uri = url_for("flicket_bp.view_ticket_uploads", filename=x[1])
             uri_label = '<a href="' + uri + '">' + x[2] + "</a>"
             self.uploads.choices.append((x[0], uri_label))
-
 
 
     uploads = MultiCheckBoxField("Label", coerce=int)
