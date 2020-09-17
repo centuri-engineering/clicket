@@ -40,16 +40,16 @@ class BaseConfiguration(object):
     # default flicket_admin group name
     ADMIN_GROUP_NAME = "flicket_admin"
     SUPER_USER_GROUP_NAME = "super_user"
-
     SECRET_KEY = config_data["SECRET_KEY"]
 
     # The base url for your application.
-    WEBHOME = "/"
+    WEBHOME = "/clicket/"
+    # WEBHOME = "/"
     # The base url for flicket.
     FLICKET = WEBHOME + ""
     FLICKET_API = WEBHOME + "flicket-api/"
     FLICKET_REST_API = WEBHOME + "flicket-rest-api"
-    ADMINHOME = "/flicket_admin/"
+    ADMINHOME = "/clicket/flicket_admin/"
 
     # flicket user used to post replies to tickets for status changes.
     NOTIFICATION = {
