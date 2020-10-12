@@ -391,7 +391,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
 
         if form.procedure_stage.data:
             procedure_stage = (
-                FlicketRequesterRole.query.filter_by(id=form.procedure_stage.data)
+                FlicketProcedureStage.query.filter_by(id=form.procedure_stage.data)
                 .first()
                 .procedure_stage
             )
@@ -879,7 +879,7 @@ class FlicketUploads(PaginatedAPIMixin, Base):
 
 class FlicketHistory(PaginatedAPIMixin, Base):
     """
-        A database to track the editing of tickets and posts.
+    A database to track the editing of tickets and posts.
     """
 
     __tablename__ = "flicket_history"
