@@ -91,12 +91,7 @@ def does_institute_exist(form, field):
 
 
 def does_domain_exist(form, field):
-    """
-    Username must be unique so we check against the database to ensure it doesn't
-    :param form:
-    :param field:
-    :return True / False:
-    """
+    """"""
     result = (
         FlicketDomain.query.filter_by(domain=form.domain.data)
         .filter_by(institute_id=form.institute_id.data)
@@ -207,7 +202,6 @@ class EditTicketForm(CreateTicketForm):
             uri_label = '<a href="' + uri + '">' + x[2] + "</a>"
             self.uploads.choices.append((x[0], uri_label))
 
-
     uploads = MultiCheckBoxField("Label", coerce=int)
     submit = SubmitField(
         lazy_gettext("Edit Ticket"),
@@ -231,7 +225,9 @@ class ReplyForm(FlaskForm):
             (s.id, s.procedure_stage) for s in FlicketProcedureStage.query.all()
         ]
 
-    content = PageDownField(lazy_gettext("Reply"),)
+    content = PageDownField(
+        lazy_gettext("Reply"),
+    )
     file = FileField(lazy_gettext("Add Files"), render_kw={"multiple": True})
     priority = SelectField(
         lazy_gettext("Priority"), validators=[DataRequired()], coerce=int

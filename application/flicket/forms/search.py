@@ -8,6 +8,7 @@ from flask_wtf import FlaskForm
 from wtforms import SelectField, StringField
 
 from .flicket_forms import does_user_exist
+
 from application.flicket.models.flicket_models import (
     FlicketInstitute,
     FlicketDomain,
@@ -16,6 +17,7 @@ from application.flicket.models.flicket_models import (
     FlicketRequestStage,
     FlicketProcedureStage,
 )
+from application.flicket.models.flicket_user import FlicketUser
 
 
 class SearchTicketForm(FlaskForm):
@@ -37,6 +39,13 @@ class SearchTicketForm(FlaskForm):
             for c in FlicketDomain.query.order_by(FlicketDomain.domain.asc()).all()
         ]
         self.domain.choices.insert(0, (0, "domain"))
+
+        self.username.choices = [
+            (u.id, u.username)
+            for u in FlicketUser.query.all()
+            if not u.username in ["admin", "notification"]
+        ]
+        self.username.choices.insert(0, (0, "username"))
 
         self.status.choices = [(s.id, s.status) for s in FlicketStatus.query.all()]
         self.status.choices.insert(0, (0, "status"))
@@ -60,7 +69,7 @@ class SearchTicketForm(FlaskForm):
     institute = SelectField(lazy_gettext("institute"), coerce=int, validators=[])
     domain = SelectField(lazy_gettext("domain"), coerce=int)
     status = SelectField(lazy_gettext("status"), coerce=int)
-    username = StringField(lazy_gettext("username"), validators=[does_user_exist])
+    username = SelectField(lazy_gettext("username"), validators=[])
     content = StringField(lazy_gettext("content"), validators=[])
     requester_role = SelectField(lazy_gettext("requester role"), coerce=int)
     request_stage = SelectField(lazy_gettext("request stage"), coerce=int)
