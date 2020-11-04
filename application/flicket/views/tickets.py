@@ -48,12 +48,12 @@ def tickets_view(page, is_my_view=False):
 
     if form.validate_on_submit():
         redirect_url = FlicketTicket.form_redirect(form, url="flicket_bp.tickets")
-        print(request.args)
 
         return redirect(redirect_url)
 
     arg_sort = request.args.get("sort")
     if arg_sort:
+        print(arg_sort)
         args = request.args.copy()
         del args["sort"]
 

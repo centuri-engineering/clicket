@@ -69,7 +69,7 @@ class SearchTicketForm(FlaskForm):
     institute = SelectField(lazy_gettext("institute"), coerce=int, validators=[])
     domain = SelectField(lazy_gettext("domain"), coerce=int)
     status = SelectField(lazy_gettext("status"), coerce=int)
-    username = SelectField(lazy_gettext("username"), validators=[])
+    username = SelectField(lazy_gettext("username"), coerce=int, validators=[])
     content = StringField(lazy_gettext("content"), validators=[])
     requester_role = SelectField(lazy_gettext("requester role"), coerce=int)
     request_stage = SelectField(lazy_gettext("request stage"), coerce=int)
