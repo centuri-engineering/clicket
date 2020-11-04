@@ -29,7 +29,7 @@ def clean_csv_data(input_text):
 
 def tickets_view(page, is_my_view=False):
     """
-        Function common to 'tickets' and 'my_tickets' expect where query is filtered for users own tickets.
+    Function common to 'tickets' and 'my_tickets' expect where query is filtered for users own tickets.
     """
 
     form = SearchTicketForm()
@@ -48,6 +48,7 @@ def tickets_view(page, is_my_view=False):
 
     if form.validate_on_submit():
         redirect_url = FlicketTicket.form_redirect(form, url="flicket_bp.tickets")
+        print(request.args)
 
         return redirect(redirect_url)
 

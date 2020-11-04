@@ -358,10 +358,12 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         requester_role = ""
         request_stage = ""
         procedure_stage = ""
+        print("form redirect")
 
-        user = FlicketUser.query.filter_by(username=form.username.data).first()
-        if user:
-            user_id = user.id
+        if form.username.data:
+            user = FlicketUser.query.filter_by(id=form.username.data).first()
+            if user:
+                user_id = user.id
 
         # convert form inputs to it's table title
         if form.institute.data:
