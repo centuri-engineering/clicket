@@ -29,18 +29,12 @@ def ticket_claim(ticket_id=False):
             return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket.id))
 
         # set status to in work
-        status = FlicketStatus.query.filter_by(status="In Work").first()
         ticket.assigned = g.user
         g.user.total_assigned += 1
-        ticket.current_status = status
         db.session.commit()
 
         # add action record
         add_action(ticket, "claim")
-
-        # send email notifications
-        f_mail = FlicketMail()
-        f_mail.assign_ticket(ticket=ticket)
 
         flash(gettext("You claimed ticket: %(value)s", value=ticket.id))
         return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket.id))
