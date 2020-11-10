@@ -18,22 +18,6 @@
 
     <div class="row m-1 {%- if t.current_status.status in ('Finished', 'Canceled') %}
                                         flicket-status-closed{% endif %}">
-        <div class="col-md-1 col-6">
-            <div class="flicket-tickets-title">
-                {{ _('priority') }}
-            </div>
-            <div class="flicket-tickets-content  {%- if t.current_status.status in ('Finished', 'Canceled') %}
-                                        flicket-status-closed{% endif %}
-                                            {%- if t.ticket_priority.priority == 'high' %}
-                                        flicket-status-high
-                                            {% elif t.ticket_priority.priority == 'medium' %}
-                                        flicket-status-medium
-                                            {% elif t.ticket_priority.priority == 'low' %}
-                                        flicket-status-low
-                                            {% endif %}">
-                {{ t.ticket_priority.priority }}
-            </div>
-        </div>
         <div class="col-md-2 col-6">
             <div class="flicket-tickets-title">
                 {{ _('submitted by') }}

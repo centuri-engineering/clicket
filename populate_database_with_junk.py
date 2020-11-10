@@ -15,7 +15,6 @@ from application import db
 from application.flicket.models.flicket_models import (
     FlicketTicket,
     FlicketStatus,
-    FlicketPriority,
     FlicketDomain,
     FlicketPost,
     field_size,
@@ -42,13 +41,6 @@ def get_random_status():
     id_ = randint(1, status.count())
 
     return FlicketStatus.query.filter_by(id=id_).first()
-
-
-def get_random_priority():
-    priority = FlicketPriority.query
-    id_ = randint(1, priority.count())
-
-    return FlicketPriority.query.filter_by(id=id_).first()
 
 
 def get_random_domain():

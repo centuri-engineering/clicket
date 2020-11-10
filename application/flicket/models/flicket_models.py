@@ -25,8 +25,6 @@ field_size = {
     "domain_max_length": 128,
     "filename_min_length": 3,
     "filename_max_length": 128,
-    "priority_min_length": 3,
-    "priority_max_length": 12,
     "action_max_length": 30,
 }
 
@@ -126,38 +124,11 @@ class FlicketDomain(PaginatedAPIMixin, Base):
         return "<FlicketDomain: id={}, domain={}>".format(self.id, self.domain)
 
 
-class FlicketPriority(PaginatedAPIMixin, Base):
-    __tablename__ = "flicket_priorities"
-
-    id = db.Column(db.Integer, primary_key=True)
-    priority = db.Column(db.String(field_size["priority_max_length"]))
-
-    def to_dict(self):
-        """
-        Returns a dictionary object about the domain and its institute
-        :return:
-        """
-        data = {
-            "id": self.id,
-            "priority": self.priority,
-            "links": {
-                "self": app.config["base_url"]
-                + url_for("bp_api.get_priority", id=self.id),
-                "priorities": app.config["base_url"] + url_for("bp_api.get_priorities"),
-            },
-        }
-
-        return data
-
-    def __repr__(self):
-        return "<FlicketPriority: id={}, priority={}>".format(self.id, self.priority)
-
-
 class FlicketRequesterRole(PaginatedAPIMixin, Base):
     __tablename__ = "flicket_requester_roles"
 
     id = db.Column(db.Integer, primary_key=True)
-    requester_role = db.Column(db.String(field_size["priority_max_length"]))
+    requester_role = db.Column(db.String(30))
 
     def to_dict(self):
         """
@@ -187,7 +158,7 @@ class FlicketRequestStage(PaginatedAPIMixin, Base):
     __tablename__ = "flicket_request_stages"
 
     id = db.Column(db.Integer, primary_key=True)
-    request_stage = db.Column(db.String(field_size["priority_max_length"]))
+    request_stage = db.Column(db.String(30))
 
     def to_dict(self):
         """
@@ -217,7 +188,7 @@ class FlicketProcedureStage(PaginatedAPIMixin, Base):
     __tablename__ = "flicket_procedure_stages"
 
     id = db.Column(db.Integer, primary_key=True)
-    procedure_stage = db.Column(db.String(field_size["priority_max_length"]))
+    procedure_stage = db.Column(db.String(30))
 
     def to_dict(self):
         """
@@ -273,9 +244,6 @@ class FlicketTicket(PaginatedAPIMixin, Base):
     assigned_id = db.Column(db.Integer, db.ForeignKey(FlicketUser.id))
     assigned = db.relationship(FlicketUser, foreign_keys="FlicketTicket.assigned_id")
 
-    ticket_priority_id = db.Column(db.Integer, db.ForeignKey(FlicketPriority.id))
-    ticket_priority = db.relationship(FlicketPriority)
-
     requester_role_id = db.Column(db.Integer, db.ForeignKey(FlicketRequesterRole.id))
     requester_role = db.relationship(FlicketRequesterRole)
 
@@ -326,21 +294,6 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             if s.user == user:
                 return True
         return False
-
-    @staticmethod
-    def carousel_query():
-        """
-        Return all 'open' 'high priority' tickets for carousel.
-        :return:
-        """
-
-        tickets = (
-            FlicketTicket.query.filter(FlicketTicket.ticket_priority_id == 3)
-            .filter(FlicketTicket.status_id == 1)
-            .limit(100)
-        )
-
-        return tickets
 
     @staticmethod
     def form_redirect(form, url="flicket_bp.tickets"):
@@ -572,15 +525,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         :param sort:
         :return:
         """
-        if sort == "priority":
-            ticket_query = ticket_query.order_by(
-                FlicketTicket.ticket_priority_id, FlicketTicket.id
-            )
-        elif sort == "priority_desc":
-            ticket_query = ticket_query.order_by(
-                FlicketTicket.ticket_priority_id.desc(), FlicketTicket.id
-            )
-        elif sort == "requester_role":
+        if sort == "requester_role":
             ticket_query = ticket_query.order_by(
                 FlicketTicket.requester_role_id, FlicketTicket.id
             )
@@ -670,7 +615,6 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "referee",
             "domain_id",
             "institute_id",
-            "ticket_priority_id",
             "requester_role_id",
             "request_stage_id",
             "procedure_stage_id",
@@ -711,7 +655,6 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "started_id": self.started_id,
             "status_id": self.status_id,
             "title": self.title,
-            "ticket_priority_id": self.ticket_priority_id,
             "requester_role_id": self.requester_role_id,
             "request_stage_id": self.request_stage_id,
             "procedure_stage_id": self.procedure_stage_id,
@@ -719,8 +662,6 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 "self": app.config["base_url"]
                 + url_for("bp_api.get_ticket", id=self.id),
                 "assigned": assigned,
-                "priority": app.config["base_url"]
-                + url_for("bp_api.get_priority", id=self.ticket_priority_id),
                 "requester_role": app.config["base_url"]
                 + url_for("bp_api.get_requester_role", id=self.requester_role_id),
                 "request_stage": app.config["base_url"]
@@ -1060,12 +1001,6 @@ class FlicketAction(PaginatedAPIMixin, Base):
         if self.action == "procedure_stage":
             return (
                 f'Ticket procedure stage has been changed to "{self.data["procedure_stage"]}"'
-                f' by <a href="mailto:{self.user.email}">{self.user.name}</a> | {_date}'
-            )
-
-        if self.action == "priority":
-            return (
-                f'Ticket priority has been changed to "{self.data["priority"]}"'
                 f' by <a href="mailto:{self.user.email}">{self.user.name}</a> | {_date}'
             )
 

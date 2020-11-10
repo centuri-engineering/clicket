@@ -92,16 +92,6 @@
                         {{ _('Sort') }}
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item small{% if sort == 'priority_desc' %} active{% endif %}"
-                           href="{{ url_for(base_url, sort='priority_desc', **request.args) }}">
-                            <i class="fas fa-sort-amount-down"></i>
-                            {{ _('Priority') }}
-                        </a>
-                        <a class="dropdown-item small{% if sort == 'priority' %} active{% endif %}"
-                           href="{{ url_for(base_url, sort='priority', **request.args) }}">
-                            <i class="fas fa-sort-amount-up"></i>
-                            {{ _('Priority') }}
-                        </a>
                         <a class="dropdown-item small{% if sort == 'ticketid' %} active{% endif %}"
                            href="{{ url_for(base_url, sort='ticketid', **request.args) }}">
                             <i class="fas fa-sort-numeric-down"></i>
@@ -202,22 +192,6 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-1 col-6">
-                              <div class="flicket-tickets-title">
-                                    priority
-                                </div>
-                                <div class="flicket-tickets-content  {%- if t.current_status.status == 'Closed' %}
-                                        flicket-status-closed{% endif %}
-                                            {%- if t.ticket_priority.priority == 'high' %}
-                                        flicket-status-high
-                                            {% elif t.ticket_priority.priority == 'medium' %}
-                                        flicket-status-medium
-                                            {% elif t.ticket_priority.priority == 'low' %}
-                                        flicket-status-low
-                                            {% endif %}">
-                                    {{ t.ticket_priority.priority }}
-                                </div>
-                            </div>
                             <div class="col-md-2 col-6">
                                 <div class="flicket-tickets-title">
                                     Domain

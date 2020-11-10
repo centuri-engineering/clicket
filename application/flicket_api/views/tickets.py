@@ -53,7 +53,6 @@
                     "domain": "http://localhost:5000/flicket-api/domain/1",
                     "histories": "http://localhost:5000/flicket-api/histories/?topic_id=1",
                     "modified_by": null,
-                    "priority": "http://localhost:5000/flicket-api/priority/3",
                     "self": "http://localhost:5000/flicket-api/ticket/1",
                     "started_ny": "http://localhost:5000/flicket-api/user/12",
                     "status": "http://localhost:5000/flicket-api/status/2",
@@ -63,7 +62,6 @@
                 "modified_id": null,
                 "started_id": 12,
                 "status_id": 2,
-                "ticket_priority_id": 3,
                 "title": "He looked inquisitively at his keyboard and wrote another sentence."
             }
 
@@ -126,7 +124,6 @@
                             "domain": "http://localhost:5000/flicket-api/domain/1",
                             "histories": "http://localhost:5000/flicket-api/histories/?topic_id=1",
                             "modified_by": null,
-                            "priority": "http://localhost:5000/flicket-api/priority/3",
                             "self": "http://localhost:5000/flicket-api/ticket/1",
                             "started_ny": "http://localhost:5000/flicket-api/user/12",
                             "status": "http://localhost:5000/flicket-api/status/2",
@@ -136,7 +133,6 @@
                         "modified_id": null,
                         "started_id": 12,
                         "status_id": 2,
-                        "ticket_priority_id": 3,
                         "title": "He looked inquisitively at his keyboard and wrote another sentence."
                     }
                 ]
@@ -146,7 +142,7 @@
     Create Ticket
     ~~~~~~~~~~~~~
 
-    .. http:post:: /flicket-api/tickets(str:title,str:content,int:domain_id,int:ticket_priority_id)
+    .. http:post:: /flicket-api/tickets(str:title,str:content,int:domain_id)
 
         **Request**
 
@@ -161,7 +157,6 @@
                 "title": "this is my ticket",
                 "content": "this is my content",
                 "domain_id": 1,
-                "ticket_priority_id": 1
             }
 
         **Response**
@@ -187,7 +182,6 @@
                         "domain": "http://localhost:5000/flicket-api/domain/1",
                         "histories": "http://localhost:5000/flicket-api/histories/?topic_id=10001",
                         "modified_by": null,
-                        "priority": "http://localhost:5000/flicket-api/priority/1",
                         "self": "http://localhost:5000/flicket-api/ticket/10001",
                         "started_ny": "http://localhost:5000/flicket-api/user/1",
                         "status": "http://localhost:5000/flicket-api/status/1",
@@ -197,7 +191,6 @@
                     "modified_id": null,
                     "started_id": 1,
                     "status_id": 1,
-                    "ticket_priority_id": 1,
                     "title": "this is my ticket"
                 }
 
@@ -214,7 +207,6 @@ from .sphinx_helper import api_url
 from . import bp_api
 from application import app, db
 from application.flicket.models.flicket_models import (
-    FlicketPriority,
     FlicketTicket,
     FlicketDomain,
 )
@@ -249,26 +241,11 @@ def get_tickets(page=1):
 def create_ticket():
     data = request.get_json() or {}
 
-    if (
-        "title" not in data
-        or "content" not in data
-        or "domain_id" not in data
-        or "ticket_priority_id" not in data
-    ):
-        return bad_request(
-            "Must include title, content, domain_id and ticket_priority_id."
-        )
-
-    if not isinstance(data["domain_id"], int) or not isinstance(
-        data["ticket_priority_id"], int
-    ):
-        return bad_request("ticket_priority_id and domain_id must be integers.")
+    if "title" not in data or "content" not in data or "domain_id" not in data:
+        return bad_request("Must include title, content, domain_id")
 
     if not FlicketDomain.query.filter_by(id=data["domain_id"]).first():
         return bad_request("not a valid domain_id")
-
-    if not FlicketPriority.query.filter_by(id=data["ticket_priority_id"]).first():
-        return bad_request("not a valid ticket_priority_id")
 
     ticket = FlicketTicket()
     ticket.from_dict(data)

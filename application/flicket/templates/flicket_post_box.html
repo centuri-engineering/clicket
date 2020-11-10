@@ -61,10 +61,6 @@
     </div>
     <div class="row mt-2 align-self-end">
         <div class="col-2 align-self-end">
-            <label class="m-0 flicket-tickets-title">{{ _('Priority Level') }}</label>
-            {{ form.priority(class="form-control form-control-sm m-0") }}
-        </div>
-        <div class="col-2 align-self-end">
             <label class="m-0 flicket-tickets-title">{{ form.days.label.text }}</label>
             {{ form.days(class="form-control form-control-sm m-0") }}
         </div>
@@ -106,16 +102,6 @@
       {% endfor %}
     </div>
     {% endif %}
-
-
-    {% if form.priority.errors %}
-    <div class="alert alert-warning small">
-      {% for error in form.priority.errors %}
-      {{ error }}
-      {% endfor %}
-    </div>
-    {% endif %}
-
 
     {% if form.domain.errors %}
     <div class="alert alert-warning small">

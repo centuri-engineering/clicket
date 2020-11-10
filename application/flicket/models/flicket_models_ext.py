@@ -11,7 +11,6 @@ from application.flicket.scripts.flicket_upload import UploadAttachment
 from application.flicket.models.flicket_models import (
     FlicketTicket,
     FlicketStatus,
-    FlicketPriority,
     FlicketRequesterRole,
     FlicketRequestStage,
     FlicketProcedureStage,
@@ -38,7 +37,6 @@ class FlicketTicketExt:
         content=None,
         requester=None,
         referee=None,
-        priority=None,
         requester_role=None,
         request_stage=None,
         procedure_stage=None,
@@ -51,7 +49,6 @@ class FlicketTicketExt:
         :param title:
         :param user:
         :param content:
-        :param priority:
         :param requester:
         :param requester_role:
         :param domain:
@@ -61,7 +58,6 @@ class FlicketTicketExt:
         """
 
         ticket_status = FlicketStatus.query.filter_by(status="Open").first()
-        ticket_priority = FlicketPriority.query.filter_by(id=int(priority)).first()
         ticket_institute = FlicketInstitute.query.filter_by(id=int(institute)).first()
         ticket_domain = FlicketDomain.query.filter_by(id=int(domain)).first()
         requester_role = FlicketRequesterRole.query.filter_by(
@@ -87,7 +83,6 @@ class FlicketTicketExt:
             institute=ticket_institute,
             requester=requester,
             referee=referee,
-            ticket_priority=ticket_priority,
             requester_role=requester_role,
             request_stage=request_stage,
             procedure_stage=procedure_stage,
@@ -117,7 +112,6 @@ class FlicketTicketExt:
         content=None,
         requester=None,
         referee=None,
-        priority=None,
         requester_role=None,
         request_stage=None,
         procedure_stage=None,
@@ -133,7 +127,6 @@ class FlicketTicketExt:
         :param title:
         :param user:
         :param content:
-        :param priority:
         :param domain:
         :param files:
         :param form_uploads:
@@ -171,7 +164,6 @@ class FlicketTicketExt:
 
                 db.session.delete(query)
 
-        ticket_priority = FlicketPriority.query.filter_by(id=int(priority)).first()
         requester_role = FlicketRequesterRole.query.filter_by(
             id=int(requester_role)
         ).first()
@@ -192,7 +184,6 @@ class FlicketTicketExt:
         ticket.title = title
         ticket.modified = user
         ticket.date_modified = datetime.datetime.now()
-        ticket.ticket_priority = ticket_priority
         ticket.requester_role = requester_role
         ticket.request_stage = request_stage
         ticket.procedure_stage = procedure_stage

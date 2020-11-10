@@ -17,7 +17,6 @@ from application.flicket.models.flicket_models import (
     FlicketHistory,
     FlicketPost,
     FlicketStatus,
-    FlicketPriority,
     FlicketRequesterRole,
     FlicketProcedureStage,
     FlicketRequestStage,
@@ -69,7 +68,6 @@ def edit_ticket(ticket_id):
             content=form.content.data,
             requester=form.requester.data,
             referee=form.referee.data,
-            priority=form.priority.data,
             requester_role=form.requester_role.data,
             request_stage=1,
             procedure_stage=form.procedure_stage.data,
@@ -86,7 +84,6 @@ def edit_ticket(ticket_id):
     form.content.data = ticket.content
     form.requester.data = ticket.requester
     form.referee.data = ticket.referee
-    form.priority.data = ticket.ticket_priority_id
     form.requester_role.data = ticket.requester_role_id
     form.procedure_stage.data = ticket.procedure_stage_id
     form.title.data = ticket.title
@@ -160,15 +157,6 @@ def edit_post(post_id):
         post.date_modified = datetime.datetime.now()
         post.days = form.days.data
 
-        if post.ticket.ticket_priority_id != form.priority.data:
-            priority = FlicketPriority.query.get(form.priority.data)
-            post.ticket.ticket_priority = priority
-            add_action(
-                post.ticket,
-                "priority",
-                data={"priority_id": priority.id, "priority": priority.priority},
-            )
-
         if post.ticket.request_stage_id != form.request_stage.data:
             request_stage = FlicketRequestStage.query.get(form.request_stage.data)
             post.ticket.request_stage = request_stage
@@ -207,7 +195,6 @@ def edit_post(post_id):
 
     form.content.data = post.content
     form.days.data = post.days
-    form.priority.data = post.ticket.ticket_priority_id
     form.request_stage.data = post.ticket.request_stage_id
     form.procedure_stage.data = post.ticket.procedure_stage_id
 

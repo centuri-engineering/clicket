@@ -16,7 +16,6 @@ from application.flicket.models.flicket_models import FlicketTicket
 from application.flicket.models.flicket_models import FlicketStatus
 from application.flicket.models.flicket_models import FlicketRequestStage
 from application.flicket.models.flicket_models import FlicketProcedureStage
-from application.flicket.models.flicket_models import FlicketPriority
 from application.flicket.models.flicket_models import FlicketPost
 from application.flicket.models.flicket_models import FlicketSubscription
 from application.flicket.models.flicket_user import FlicketUser
@@ -113,14 +112,6 @@ def ticket_view(ticket_id, page=1):
                 },
             )
 
-        if ticket.ticket_priority_id != form.priority.data:
-            priority = FlicketPriority.query.get(form.priority.data)
-            ticket.ticket_priority = priority
-            add_action(
-                ticket,
-                "priority",
-                data={"priority_id": priority.id, "priority": priority.priority},
-            )
         db.session.add(new_reply)
 
         # add files to database.
@@ -189,7 +180,6 @@ def ticket_view(ticket_id, page=1):
 
     replies = replies.paginate(page, app.config["posts_per_page"])
 
-    form.priority.data = ticket.ticket_priority_id
     form.request_stage.data = ticket.request_stage_id
     form.procedure_stage.data = ticket.procedure_stage_id
 

@@ -11,7 +11,6 @@ from application import db, app
 from application.flicket_admin.models.flicket_config import FlicketConfig
 from application.flicket.models.flicket_models import (
     FlicketStatus,
-    FlicketPriority,
     FlicketRequesterRole,
     FlicketRequestStage,
     FlicketProcedureStage,
@@ -93,7 +92,6 @@ class RunSetUP(Command):
         self.create_notifier()
         self.create_admin_group()
         self.create_default_ticket_status()
-        self.create_default_priority_levels()
         self.create_default_requester_role_levels()
         self.create_default_request_stage_levels()
         self.create_default_procedure_stage_levels()
@@ -237,21 +235,6 @@ class RunSetUP(Command):
                 db.session.add(add_status)
                 if not silent:
                     print("Added status level {}".format(s))
-
-    @staticmethod
-    def create_default_priority_levels(silent=False):
-        """ set up default priority levels """
-
-        pl = ["low", "medium", "high"]
-        for p in pl:
-            priority = FlicketPriority.query.filter_by(priority=p).first()
-
-            if not priority:
-                add_priority = FlicketPriority(priority=p)
-                db.session.add(add_priority)
-
-                if not silent:
-                    print("Added priority level {}".format(p))
 
     @staticmethod
     def create_default_requester_role_levels(silent=False):
