@@ -73,20 +73,12 @@ institutes = [
     "IMM",
     "Centrale Marseille",
     "LIS",
+    "CENTURI",
 ]
 
 
-procedure_stages = [
-    "First contact",
-    "Consulting",
-    "Maintenance",
-    "Short",
-    "Submited",
-    "Validated",
-]
-
-
-request_stages = ["New", "In progress", "Pending", "Ready", "Finished", "Declined"]
+procedure_stages = ["Consulting", "Short", "Validated", "Declined"]
+request_stages = ["In progress", "Pending", "Finished"]
 
 
 class RunSetUP(Command):

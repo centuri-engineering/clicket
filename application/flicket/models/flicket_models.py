@@ -385,7 +385,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             )
         if form.request_stage.data:
             request_stage = (
-                FlicketRequesterRole.query.filter_by(id=form.request_stage.data)
+                FlicketRequestStage.query.filter_by(id=form.request_stage.data)
                 .first()
                 .request_stage
             )
