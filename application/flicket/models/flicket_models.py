@@ -687,6 +687,21 @@ class FlicketTicket(PaginatedAPIMixin, Base):
 
         return data
 
+    @staticmethod
+    def carousel_query():
+        """
+        Return all 'open' 'high priority' tickets for carousel.
+        :return:
+        """
+
+        tickets = (
+            FlicketTicket.query.filter(FlicketTicket.procedure_stage_id == 3)
+            .filter(FlicketTicket.status_id == 1)
+            .limit(100)
+        )
+
+        return tickets
+
     def __repr__(self):
         return (
             f"<FlicketTicket: "
