@@ -142,16 +142,6 @@
                             <i class="fas fa-sort-alpha-down"></i>
                             {{ _('Assigned') }}
                         </a>
-                        <a class="dropdown-item small{% if sort == 'time' %} active{% endif %}"
-                           href="{{ url_for(base_url, sort='time', **request.args) }}">
-                            <i class="fas fa-sort-numeric-down"></i>
-                            {{ _('Days') }}
-                        </a>
-                        <a class="dropdown-item small{% if sort == 'time_desc' %} active{% endif %}"
-                           href="{{ url_for(base_url, sort='time_desc', **request.args) }}">
-                            <i class="fas fa-sort-numeric-up"></i>
-                            {{ _('Days') }}
-                        </a>
                     </div>
                 </div>
             </div>
@@ -175,14 +165,9 @@
                             <div class="col-md-2 col-6 order-2 flicket-tickets-content">
                                 Replies: {{ t.num_replies }}
                             </div>
-                            <div class="col-md-2 col-6 order-3 flicket-tickets-content">
-                                Days: {{ t.total_days }}
-                            </div>
                         </div>
-
                         <div class="row m-1 {%- if t.current_status.status == 'Closed' %}
                                         flicket-status-closed{% endif %}">
-
                             <div class="col-md-2 col-6">
                                 <div class="flicket-tickets-title">
                                     date
@@ -191,7 +176,6 @@
                                     {{ t.date_added.strftime('%Y-%m-%d') }}
                                 </div>
                             </div>
-
                             <div class="col-md-2 col-6">
                                 <div class="flicket-tickets-title">
                                     Domain
