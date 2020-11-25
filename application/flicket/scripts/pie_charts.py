@@ -9,16 +9,18 @@ import plotly
 
 from application.flicket.models.flicket_models import FlicketDomain
 from application.flicket.models.flicket_models import FlicketInstitute
-from application.flicket.models.flicket_models import FlicketStatus
+from application.flicket.models.flicket_models import FlicketStatus, FlicketRequestStage
+
+
 from application.flicket.models.flicket_models import FlicketTicket
 
 
-def count_domain_tickets(domain, status):
+def count_domain_tickets(domain, stage):
     query = (
         FlicketTicket.query.join(FlicketDomain)
-        .join(FlicketStatus)
+        .join(FlicketRequestStage)
         .filter(FlicketDomain.domain == domain)
-        .filter(FlicketStatus.status == status)
+        .filter(FlicketRequestStage.request_stage == stage)
     )
 
     return query.count()
@@ -30,7 +32,7 @@ def create_pie_chart_dict():
     :return:
     """
 
-    statii = FlicketStatus.query
+    stages = FlicketRequestStage.query
     domains = FlicketDomain.query
 
     graphs = []
@@ -40,9 +42,9 @@ def create_pie_chart_dict():
         graph_title = domain.domain
         graph_labels = []
         graph_values = []
-        for status in statii:
-            graph_labels.append(status.status)
-            graph_values.append(count_domain_tickets(graph_title, status.status))
+        for stage in stages:
+            graph_labels.append(stage.request_stage)
+            graph_values.append(count_domain_tickets(graph_title, stage.request_stage))
 
         # append graphs if have values.
         if any(graph_values):
