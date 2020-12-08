@@ -13,7 +13,6 @@ from application.flicket.models.flicket_models import (
     FlicketStatus,
     FlicketInstrument,
     FlicketRequestStage,
-    FlicketProcedureStage,
     FlicketRequest,
     FlicketTeam,
     FlicketSubscription,
@@ -39,7 +38,6 @@ class FlicketTicketExt:
         referee=None,
         instrument=None,
         request_stage=None,
-        procedure_stage=None,
         request=None,
         team=None,
         files=None,
@@ -60,14 +58,9 @@ class FlicketTicketExt:
         ticket_status = FlicketStatus.query.filter_by(status="Open").first()
         ticket_team = FlicketTeam.query.filter_by(id=int(team)).first()
         ticket_request = FlicketRequest.query.filter_by(id=int(request)).first()
-        instrument = FlicketInstrument.query.filter_by(
-            id=int(instrument)
-        ).first()
+        instrument = FlicketInstrument.query.filter_by(id=int(instrument)).first()
 
         request_stage = FlicketRequestStage.query.filter_by(request_stage="New").first()
-        procedure_stage = FlicketProcedureStage.query.filter_by(
-            id=int(procedure_stage)
-        ).first()
 
         upload_attachments = UploadAttachment(files)
         if upload_attachments.are_attachments():
@@ -85,7 +78,6 @@ class FlicketTicketExt:
             referee=referee,
             instrument=instrument,
             request_stage=request_stage,
-            procedure_stage=procedure_stage,
             request=ticket_request,
             days=days,
         )
@@ -114,7 +106,6 @@ class FlicketTicketExt:
         referee=None,
         instrument=None,
         request_stage=None,
-        procedure_stage=None,
         request=None,
         team=None,
         files=None,
@@ -164,15 +155,9 @@ class FlicketTicketExt:
 
                 db.session.delete(query)
 
-        instrument = FlicketInstrument.query.filter_by(
-            id=int(instrument)
-        ).first()
+        instrument = FlicketInstrument.query.filter_by(id=int(instrument)).first()
         request_stage = FlicketRequestStage.query.filter_by(
             id=int(request_stage)
-        ).first()
-
-        procedure_stage = FlicketProcedureStage.query.filter_by(
-            id=int(procedure_stage)
         ).first()
 
         ticket_request = FlicketRequest.query.filter_by(id=int(request)).first()
@@ -186,7 +171,6 @@ class FlicketTicketExt:
         ticket.date_modified = datetime.datetime.now()
         ticket.instrument = instrument
         ticket.request_stage = request_stage
-        ticket.procedure_stage = procedure_stage
         ticket.request = ticket_request
         ticket.team = ticket_team
         ticket.days = days

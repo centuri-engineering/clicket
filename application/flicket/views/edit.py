@@ -18,7 +18,6 @@ from application.flicket.models.flicket_models import (
     FlicketPost,
     FlicketStatus,
     FlicketInstrument,
-    FlicketProcedureStage,
     FlicketRequestStage,
     FlicketTicket,
     FlicketUploads,
@@ -70,7 +69,6 @@ def edit_ticket(ticket_id):
             referee=form.referee.data,
             instrument=form.instrument.data,
             request_stage=1,
-            procedure_stage=form.procedure_stage.data,
             request=form.request.data,
             team=form.team.data,
             files=request.files.getlist("file"),
@@ -85,7 +83,6 @@ def edit_ticket(ticket_id):
     form.requester.data = ticket.requester
     form.referee.data = ticket.referee
     form.instrument.data = ticket.instrument_id
-    form.procedure_stage.data = ticket.procedure_stage_id
     form.title.data = ticket.title
     form.request.data = ticket.request_id
     form.team.data = ticket.team_id
@@ -168,17 +165,6 @@ def edit_post(post_id):
                     "request_stage": request_stage.request_stage,
                 },
             )
-        if post.ticket.procedure_stage_id != form.procedure_stage.data:
-            procedure_stage = FlicketProcedureStage.query.get(form.procedure_stage.data)
-            post.ticket.procedure_stage = procedure_stage
-            add_action(
-                post.ticket,
-                "procedure_stage",
-                data={
-                    "procedure_stage_id": procedure_stage.id,
-                    "procedure_stage": procedure_stage.procedure_stage,
-                },
-            )
 
         files = request.files.getlist("file")
         upload_attachments = UploadAttachment(files)
@@ -196,6 +182,5 @@ def edit_post(post_id):
     form.content.data = post.content
     form.days.data = post.days
     form.request_stage.data = post.ticket.request_stage_id
-    form.procedure_stage.data = post.ticket.procedure_stage_id
 
     return render_template("flicket_editpost.html", title="Edit Post", form=form)

@@ -174,8 +174,6 @@ from .flicket_api.views import instruments
 # noinspection PyPep8
 from .flicket_api.views import request_stages
 
-# noinspection PyPep8
-from .flicket_api.views import procedure_stages
 
 # noinspection PyPep8
 from .flicket_errors import handlers

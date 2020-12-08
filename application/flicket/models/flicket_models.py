@@ -78,8 +78,7 @@ class FlicketTeam(PaginatedAPIMixin, Base):
             "id": self.id,
             "team": self.team,
             "links": {
-                "self": app.config["base_url"]
-                + url_for("bp_api.get_team", id=self.id),
+                "self": app.config["base_url"] + url_for("bp_api.get_team", id=self.id),
                 "teams": app.config["base_url"] + url_for("bp_api.get_teams"),
             },
         }
@@ -184,36 +183,6 @@ class FlicketRequestStage(PaginatedAPIMixin, Base):
         )
 
 
-class FlicketProcedureStage(PaginatedAPIMixin, Base):
-    __tablename__ = "flicket_procedure_stages"
-
-    id = db.Column(db.Integer, primary_key=True)
-    procedure_stage = db.Column(db.String(30))
-
-    def to_dict(self):
-        """
-        Returns a dictionary object about the procedure stage
-        :return:
-        """
-        data = {
-            "id": self.id,
-            "role": self.procedure_stage,
-            "links": {
-                "self": app.config["base_url"]
-                + url_for("bp_api.get_procedure_stage", id=self.id),
-                "procedure_stages": app.config["base_url"]
-                + url_for("bp_api.get_procedure_stages"),
-            },
-        }
-
-        return data
-
-    def __repr__(self):
-        return "<FlicketProcedureStage: id={}, procedure_stage={}>".format(
-            self.id, self.procedure_stage
-        )
-
-
 class FlicketTicket(PaginatedAPIMixin, Base):
     __tablename__ = "flicket_topic"
 
@@ -249,9 +218,6 @@ class FlicketTicket(PaginatedAPIMixin, Base):
 
     request_stage_id = db.Column(db.Integer, db.ForeignKey(FlicketRequestStage.id))
     request_stage = db.relationship(FlicketRequestStage)
-
-    procedure_stage_id = db.Column(db.Integer, db.ForeignKey(FlicketProcedureStage.id))
-    procedure_stage = db.relationship(FlicketProcedureStage)
 
     posts = db.relationship("FlicketPost", back_populates="ticket")
 
@@ -310,7 +276,6 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         user_id = ""
         instrument = ""
         request_stage = ""
-        procedure_stage = ""
 
         if form.username.data:
             user = FlicketUser.query.filter_by(id=form.username.data).first()
@@ -319,13 +284,11 @@ class FlicketTicket(PaginatedAPIMixin, Base):
 
         # convert form inputs to it's table title
         if form.team.data:
-            team = (
-                FlicketTeam.query.filter_by(id=form.team.data)
-                .first()
-                .team
-            )
+            team = FlicketTeam.query.filter_by(id=form.team.data).first().team
         if form.request.data:
-            request = FlicketRequest.query.filter_by(id=form.request.data).first().request
+            request = (
+                FlicketRequest.query.filter_by(id=form.request.data).first().request
+            )
 
         if form.status.data:
             status = FlicketStatus.query.filter_by(id=form.status.data).first().status
@@ -343,13 +306,6 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 .request_stage
             )
 
-        if form.procedure_stage.data:
-            procedure_stage = (
-                FlicketProcedureStage.query.filter_by(id=form.procedure_stage.data)
-                .first()
-                .procedure_stage
-            )
-
         redirect_url = url_for(
             url,
             content=form.content.data,
@@ -359,7 +315,6 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             user_id=user_id,
             instrument=instrument,
             request_stage=request_stage,
-            procedure_stage=procedure_stage,
         )
 
         return redirect_url
@@ -433,15 +388,11 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                     )
             if key == "instrument" and value:
                 ticket_query = ticket_query.filter(
-                    FlicketTicket.instrument.has(
-                        FlicketInstrument.instrument == value
-                    )
+                    FlicketTicket.instrument.has(FlicketInstrument.instrument == value)
                 )
                 if form:
                     form.instrument.data = (
-                        FlicketInstrument.query.filter_by(instrument=value)
-                        .first()
-                        .id
+                        FlicketInstrument.query.filter_by(instrument=value).first().id
                     )
             if key == "request_stage" and value:
                 ticket_query = ticket_query.filter(
@@ -455,26 +406,12 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                         .first()
                         .id
                     )
-            if key == "procedure_stage" and value:
-                ticket_query = ticket_query.filter(
-                    FlicketTicket.procedure_stage.has(
-                        FlicketProcedureStage.procedure_stage == value
-                    )
-                )
-                if form:
-                    form.procedure_stage.data = (
-                        FlicketProcedureStage.query.filter_by(procedure_stage=value)
-                        .first()
-                        .id
-                    )
             if key == "team" and value:
                 ticket_query = ticket_query.filter(
                     FlicketTicket.team.has(FlicketTeam.team == value)
                 )
                 if form:
-                    form.team.data = (
-                        FlicketTeam.query.filter_by(team=value).first().id
-                    )
+                    form.team.data = FlicketTeam.query.filter_by(team=value).first().id
             if key == "request" and value:
                 ticket_query = ticket_query.filter(
                     FlicketTicket.request.has(FlicketRequest.request == value)
@@ -532,10 +469,6 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         elif sort == "request_stage":
             ticket_query = ticket_query.order_by(
                 FlicketTicket.request_stage_id, FlicketTicket.id
-            )
-        elif sort == "procedure_stage":
-            ticket_query = ticket_query.order_by(
-                FlicketTicket.procedure_stage_id, FlicketTicket.id
             )
         elif sort == "title":
             ticket_query = ticket_query.order_by(FlicketTicket.title, FlicketTicket.id)
@@ -617,7 +550,6 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "team_id",
             "instrument_id",
             "request_stage_id",
-            "procedure_stage_id",
         ]:
             if field in data:
                 setattr(self, field, data[field])
@@ -657,7 +589,6 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "title": self.title,
             "instrument_id": self.instrument_id,
             "request_stage_id": self.request_stage_id,
-            "procedure_stage_id": self.procedure_stage_id,
             "links": {
                 "self": app.config["base_url"]
                 + url_for("bp_api.get_ticket", id=self.id),
@@ -666,8 +597,6 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 + url_for("bp_api.get_instrument", id=self.instrument_id),
                 "request_stage": app.config["base_url"]
                 + url_for("bp_api.get_request_stage", id=self.request_stage_id),
-                "procedure_stage": app.config["base_url"]
-                + url_for("bp_api.get_procedure_stage", id=self.procedure_stage_id),
                 "started_ny": app.config["base_url"]
                 + url_for("bp_api.get_user", id=self.started_id),
                 "modified_by": modified_by,
@@ -694,11 +623,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         :return:
         """
 
-        tickets = (
-            FlicketTicket.query.filter(FlicketTicket.procedure_stage_id == 3)
-            .filter(FlicketTicket.status_id == 1)
-            .limit(100)
-        )
+        tickets = FlicketTicket.query.filter(FlicketTicket.status_id == 1).limit(100)
 
         return tickets
 
@@ -1010,12 +935,6 @@ class FlicketAction(PaginatedAPIMixin, Base):
         if self.action == "request_stage":
             return (
                 f'Ticket request stage  has been changed to "{self.data["request_stage"]}"'
-                f' by <a href="mailto:{self.user.email}">{self.user.name}</a> | {_date}'
-            )
-
-        if self.action == "procedure_stage":
-            return (
-                f'Ticket procedure stage has been changed to "{self.data["procedure_stage"]}"'
                 f' by <a href="mailto:{self.user.email}">{self.user.name}</a> | {_date}'
             )
 

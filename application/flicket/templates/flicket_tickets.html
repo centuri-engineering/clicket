@@ -20,7 +20,6 @@
                                          referee=referee,
                                          instrument=instrument,
                                          request_stage=request_stage,
-                                         procedure_stage=procedure_stage,
                                          user_id=user_id) }}"
                         title="csv file">
                     <i class="fas fa-file-csv"></i>
@@ -54,9 +53,6 @@
                 <div class="row m-2 bg-white p-2 rounded border">
                   <div class="col-md col-6 text-center">
                     {{ form.status(class="form-control form-control-sm flicket-tickets-content p-0", id="status") }}
-                  </div>
-                  <div class="col-md col-6 text-center">
-                    {{ form.procedure_stage(class="form-control form-control-sm flicket-tickets-content p-0", id="procedure_stage") }}
                   </div>
                   <div class="col-md col-6 text-center">
                     {{ form.username(class="form-control form-control-sm flicket-tickets-content", placeholder="username", id="username",
@@ -132,11 +128,6 @@
                             <i class="fas fa-sort-numeric-down"></i>
                             {{ _('Request Stage') }}
                         </a>
-                        <a class="dropdown-item small{% if sort == 'procedure_stage' %} active{% endif %}"
-                           href="{{ url_for(base_url, sort='procedure_stage', **request.args) }}">
-                            <i class="fas fa-sort-numeric-down"></i>
-                            {{ _('Procedure Stage') }}
-                        </a>
                         <a class="dropdown-item small{% if sort == 'assigned' %} active{% endif %}"
                            href="{{ url_for(base_url, sort='assigned', **request.args) }}">
                             <i class="fas fa-sort-alpha-down"></i>
@@ -190,14 +181,6 @@
                                 </div>
                                 <div class="flicket-tickets-content">
                                     {{ t.request_stage.request_stage }}
-                                </div>
-                            </div>
-                            <div class="col-md-2 col-6">
-                                <div class="flicket-tickets-title">
-                                    procedure stage
-                                </div>
-                                <div class="flicket-tickets-content">
-                                    {{ t.procedure_stage.procedure_stage }}
                                 </div>
                             </div>
                         </div>

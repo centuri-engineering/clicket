@@ -32,7 +32,6 @@ def ticket_create():
             referee=form.referee.data,
             instrument=form.instrument.data,
             request_stage=1,
-            procedure_stage=form.procedure_stage.data,
             request=form.request.data,
             team=form.team.data,
             days=form.days.data,

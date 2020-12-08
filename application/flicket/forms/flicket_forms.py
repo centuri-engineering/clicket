@@ -24,7 +24,6 @@ from application.flicket.models.flicket_models import (
     FlicketTeam,
     FlicketInstrument,
     FlicketRequestStage,
-    FlicketProcedureStage,
     FlicketStatus,
     FlicketTicket,
     field_size,
@@ -109,13 +108,8 @@ class CreateTicketForm(FlaskForm):
         self.instrument.choices = [
             (p.id, p.instrument) for p in FlicketInstrument.query.all()
         ]
-        self.procedure_stage.choices = [
-            (s.id, s.procedure_stage) for s in FlicketProcedureStage.query.all()
-        ]
         self.request.choices = [(c.id, c.request) for c in FlicketRequest.query.all()]
-        self.team.choices = [
-            (c.id, c.team) for c in FlicketTeam.query.all()
-        ]
+        self.team.choices = [(c.id, c.team) for c in FlicketTeam.query.all()]
 
     """ Log in form. """
     title = StringField(
@@ -146,9 +140,6 @@ class CreateTicketForm(FlaskForm):
     instrument = SelectField(
         lazy_gettext("requester role"), validators=[DataRequired()], coerce=int
     )
-    procedure_stage = SelectField(
-        lazy_gettext("procedure stage"), validators=[DataRequired()], coerce=int
-    )
 
     content = PageDownField(
         lazy_gettext("content"),
@@ -163,9 +154,7 @@ class CreateTicketForm(FlaskForm):
     request = SelectField(
         lazy_gettext("request"), validators=[DataRequired()], coerce=int
     )
-    team = SelectField(
-        lazy_gettext("team"), validators=[DataRequired()], coerce=int
-    )
+    team = SelectField(lazy_gettext("team"), validators=[DataRequired()], coerce=int)
     file = FileField(lazy_gettext("Upload Documents"), render_kw={"multiple": True})
     days = DecimalField(lazy_gettext("days"), default=0)
     submit = SubmitField(
@@ -210,19 +199,11 @@ class ReplyForm(FlaskForm):
         self.request_stage.choices = [
             (s.id, s.request_stage) for s in FlicketRequestStage.query.all()
         ]
-        self.procedure_stage.choices = [
-            (s.id, s.procedure_stage) for s in FlicketProcedureStage.query.all()
-        ]
 
-    content = PageDownField(
-        lazy_gettext("Reply"),
-    )
+    content = PageDownField(lazy_gettext("Reply"),)
     file = FileField(lazy_gettext("Add Files"), render_kw={"multiple": True})
     request_stage = SelectField(
         lazy_gettext("request stage"), validators=[DataRequired()], coerce=int
-    )
-    procedure_stage = SelectField(
-        lazy_gettext("procedure stage"), validators=[DataRequired()], coerce=int
     )
     days = DecimalField(lazy_gettext("days"), default=0)
     submit = SubmitField(lazy_gettext("reply"), render_kw=form_class_button)
@@ -279,8 +260,7 @@ class TeamForm(FlaskForm):
         validators=[
             DataRequired(),
             Length(
-                min=field_size["team_min_length"],
-                max=field_size["team_max_length"],
+                min=field_size["team_min_length"], max=field_size["team_max_length"],
             ),
             does_team_exist,
         ],

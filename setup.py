@@ -13,7 +13,6 @@ from application.flicket.models.flicket_models import (
     FlicketStatus,
     FlicketInstrument,
     FlicketRequestStage,
-    FlicketProcedureStage,
     FlicketTeam,
     FlicketRequest,
 )
@@ -96,7 +95,6 @@ instruments = [
     "Widefield microscope",
 ]
 
-procedure_stages = ["Consulting", "Short", "Validated", "Declined"]
 request_stages = ["opened", "pending", "stopped"]
 
 
@@ -114,7 +112,6 @@ class RunSetUP(Command):
         self.create_default_ticket_status()
         self.create_default_instrument_levels()
         self.create_default_request_stage_levels()
-        self.create_default_procedure_stage_levels()
         self.create_default_depts()
         # commit changes to the database
         db.session.commit()
@@ -284,21 +281,6 @@ class RunSetUP(Command):
 
                 if not silent:
                     print("Added request stage level {}".format(level))
-
-    @staticmethod
-    def create_default_procedure_stage_levels(silent=False):
-        """ set up default procedure_stage levels """
-
-        for level in procedure_stages:
-            procedure_stage = FlicketProcedureStage.query.filter_by(
-                procedure_stage=level
-            ).first()
-            if not procedure_stage:
-                add_procedure_stage = FlicketProcedureStage(procedure_stage=level)
-                db.session.add(add_procedure_stage)
-
-                if not silent:
-                    print("Added procedure stage level {}".format(level))
 
     @staticmethod
     def create_default_depts(silent=False):

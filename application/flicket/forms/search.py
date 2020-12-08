@@ -15,7 +15,6 @@ from application.flicket.models.flicket_models import (
     FlicketStatus,
     FlicketInstrument,
     FlicketRequestStage,
-    FlicketProcedureStage,
 )
 from application.flicket.models.flicket_user import FlicketUser
 
@@ -28,9 +27,7 @@ class SearchTicketForm(FlaskForm):
         # form can be loaded on page view
         self.team.choices = [
             (d.id, d.team)
-            for d in FlicketTeam.query.order_by(
-                FlicketTeam.team.asc()
-            ).all()
+            for d in FlicketTeam.query.order_by(FlicketTeam.team.asc()).all()
         ]
         self.team.choices.insert(0, (0, "team"))
 
@@ -60,11 +57,6 @@ class SearchTicketForm(FlaskForm):
         ]
         self.request_stage.choices.insert(0, (0, "request stage"))
 
-        self.procedure_stage.choices = [
-            (s.id, s.procedure_stage) for s in FlicketProcedureStage.query.all()
-        ]
-        self.procedure_stage.choices.insert(0, (0, "procedure stage"))
-
     """ Search form. """
     team = SelectField(lazy_gettext("team"), coerce=int, validators=[])
     request = SelectField(lazy_gettext("request"), coerce=int)
@@ -73,7 +65,6 @@ class SearchTicketForm(FlaskForm):
     content = StringField(lazy_gettext("content"), validators=[])
     instrument = SelectField(lazy_gettext("requester role"), coerce=int)
     request_stage = SelectField(lazy_gettext("request stage"), coerce=int)
-    procedure_stage = SelectField(lazy_gettext("procedure stage"), coerce=int)
 
     def __repr__(self):
         return "<SearchTicketForm>"

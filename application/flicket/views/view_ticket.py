@@ -15,7 +15,6 @@ from application.flicket.forms.flicket_forms import ReplyForm, SubscribeUser
 from application.flicket.models.flicket_models import FlicketTicket
 from application.flicket.models.flicket_models import FlicketStatus
 from application.flicket.models.flicket_models import FlicketRequestStage
-from application.flicket.models.flicket_models import FlicketProcedureStage
 from application.flicket.models.flicket_models import FlicketPost
 from application.flicket.models.flicket_models import FlicketSubscription
 from application.flicket.models.flicket_user import FlicketUser
@@ -100,18 +99,6 @@ def ticket_view(ticket_id, page=1):
                 },
             )
 
-        if ticket.procedure_stage_id != form.procedure_stage.data:
-            procedure_stage = FlicketProcedureStage.query.get(form.procedure_stage.data)
-            ticket.procedure_stage = procedure_stage
-            add_action(
-                ticket,
-                "procedure_stage",
-                data={
-                    "procedure_stage_id": procedure_stage.id,
-                    "procedure_stage": procedure_stage.procedure_stage,
-                },
-            )
-
         db.session.add(new_reply)
 
         # add files to database.
@@ -179,9 +166,7 @@ def ticket_view(ticket_id, page=1):
         form.content.data = block_quoter(reply_contents)
 
     replies = replies.paginate(page, app.config["posts_per_page"])
-
     form.request_stage.data = ticket.request_stage_id
-    form.procedure_stage.data = ticket.procedure_stage_id
 
     title = gettext("View Ticket")
 

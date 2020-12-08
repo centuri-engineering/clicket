@@ -44,7 +44,6 @@ def tickets_view(page, is_my_view=False):
     user_id = request.args.get("user_id")
     instrument = request.args.get("instrument")
     request_stage = request.args.get("request_stage")
-    procedure_stage = request.args.get("procedure_stage")
 
     if form.validate_on_submit():
         redirect_url = FlicketTicket.form_redirect(form, url="flicket_bp.tickets")
@@ -85,7 +84,6 @@ def tickets_view(page, is_my_view=False):
         referee=referee,
         instrument=instrument,
         request_stage=request_stage,
-        procedure_stage=procedure_stage,
     )
     if is_my_view:
         ticket_query = FlicketTicket.my_tickets(ticket_query)
@@ -118,7 +116,6 @@ def tickets_view(page, is_my_view=False):
             request=request,
             instrument=instrument,
             request_stage=request_stage,
-            procedure_stage=procedure_stage,
             user_id=user_id,
             sort=sort,
             base_url="flicket_bp.tickets",
