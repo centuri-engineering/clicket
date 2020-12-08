@@ -97,7 +97,7 @@ instruments = [
 ]
 
 procedure_stages = ["Consulting", "Short", "Validated", "Declined"]
-request_stages = ["In progress", "Pending", "Finished"]
+request_stages = ["opened", "pending", "stopped"]
 
 
 class RunSetUP(Command):
