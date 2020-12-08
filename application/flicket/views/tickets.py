@@ -36,7 +36,7 @@ def tickets_view(page, is_my_view=False):
 
     # get request arguments from the url
     status = request.args.get("status")
-    institute = request.args.get("institute")
+    team = request.args.get("team")
     domain = request.args.get("domain")
     content = request.args.get("content")
     requester = request.args.get("requester")
@@ -76,7 +76,7 @@ def tickets_view(page, is_my_view=False):
 
     ticket_query, form = FlicketTicket.query_tickets(
         form,
-        institute=institute,
+        team=team,
         domain=domain,
         status=status,
         user_id=user_id,
@@ -114,7 +114,7 @@ def tickets_view(page, is_my_view=False):
             page=page,
             number_results=number_results,
             status=status,
-            institute=institute,
+            team=team,
             domain=domain,
             requester_role=requester_role,
             request_stage=request_stage,
@@ -150,7 +150,7 @@ def tickets(page=1):
 def tickets_csv():
     # get request arguments from the url
     status = request.args.get("status")
-    institute = request.args.get("institute")
+    team = request.args.get("team")
     domain = request.args.get("domain")
     content = request.args.get("content")
     requester = request.args.get("requester")
@@ -158,7 +158,7 @@ def tickets_csv():
     user_id = request.args.get("user_id")
 
     ticket_query, form = FlicketTicket.query_tickets(
-        institute=institute,
+        team=team,
         domain=domain,
         status=status,
         user_id=user_id,
@@ -187,7 +187,7 @@ def tickets_csv():
             ticket.user.name,
             ticket.date_added.strftime("%Y-%m-%d"),
             ticket.num_replies,
-            clean_csv_data(ticket.domain.institute.institute),
+            clean_csv_data(ticket.domain.team.team),
             clean_csv_data(ticket.domain.domain),
             ticket.current_status.status,
             _name,

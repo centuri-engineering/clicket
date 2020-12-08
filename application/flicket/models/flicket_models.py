@@ -19,8 +19,8 @@ field_size = {
     "content_max_length": 5000,
     "status_min_length": 3,
     "status_max_length": 20,
-    "institute_min_length": 3,
-    "institute_max_length": 30,
+    "team_min_length": 3,
+    "team_max_length": 30,
     "domain_min_length": 3,
     "domain_max_length": 128,
     "filename_min_length": 3,
@@ -56,38 +56,38 @@ class FlicketStatus(PaginatedAPIMixin, Base):
         return "<FlicketStatus: id={}, status={}>".format(self.id, self.status)
 
 
-class FlicketInstitute(PaginatedAPIMixin, Base):
-    __tablename__ = "flicket_institute"
+class FlicketTeam(PaginatedAPIMixin, Base):
+    __tablename__ = "flicket_team"
 
     id = db.Column(db.Integer, primary_key=True)
-    institute = db.Column(db.String(field_size["institute_max_length"]))
+    team = db.Column(db.String(field_size["team_max_length"]))
 
-    def __init__(self, institute):
+    def __init__(self, team):
         """
 
-        :param institute:
+        :param team:
         """
-        self.institute = institute
+        self.team = team
 
     def to_dict(self):
         """
-        Returns a dictionary object about the institute
+        Returns a dictionary object about the team
         :return:
         """
         data = {
             "id": self.id,
-            "institute": self.institute,
+            "team": self.team,
             "links": {
                 "self": app.config["base_url"]
-                + url_for("bp_api.get_institute", id=self.id),
-                "institutes": app.config["base_url"] + url_for("bp_api.get_institutes"),
+                + url_for("bp_api.get_team", id=self.id),
+                "teams": app.config["base_url"] + url_for("bp_api.get_teams"),
             },
         }
 
         return data
 
     def __repr__(self):
-        return "<FlicketInstitute: id={}, institute={}>".format(self.id, self.institute)
+        return "<FlicketTeam: id={}, team={}>".format(self.id, self.team)
 
 
 class FlicketDomain(PaginatedAPIMixin, Base):
@@ -105,7 +105,7 @@ class FlicketDomain(PaginatedAPIMixin, Base):
 
     def to_dict(self):
         """
-        Returns a dictionary object about the domain and its institute
+        Returns a dictionary object about the domain and its team
         :return:
         """
         data = {
@@ -162,7 +162,7 @@ class FlicketRequestStage(PaginatedAPIMixin, Base):
 
     def to_dict(self):
         """
-        Returns a dictionary object about the domain and its institute
+        Returns a dictionary object about the domain and its team
         :return:
         """
         data = {
@@ -238,8 +238,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
     domain_id = db.Column(db.Integer, db.ForeignKey(FlicketDomain.id))
     domain = db.relationship(FlicketDomain)
 
-    institute_id = db.Column(db.Integer, db.ForeignKey(FlicketInstitute.id))
-    institute = db.relationship(FlicketInstitute)
+    team_id = db.Column(db.Integer, db.ForeignKey(FlicketTeam.id))
+    team = db.relationship(FlicketTeam)
 
     assigned_id = db.Column(db.Integer, db.ForeignKey(FlicketUser.id))
     assigned = db.relationship(FlicketUser, foreign_keys="FlicketTicket.assigned_id")
@@ -304,7 +304,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         :return:
         """
 
-        institute = ""
+        team = ""
         domain = ""
         status = ""
         user_id = ""
@@ -318,11 +318,11 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 user_id = user.id
 
         # convert form inputs to it's table title
-        if form.institute.data:
-            institute = (
-                FlicketInstitute.query.filter_by(id=form.institute.data)
+        if form.team.data:
+            team = (
+                FlicketTeam.query.filter_by(id=form.team.data)
                 .first()
-                .institute
+                .team
             )
         if form.domain.data:
             domain = FlicketDomain.query.filter_by(id=form.domain.data).first().domain
@@ -353,7 +353,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         redirect_url = url_for(
             url,
             content=form.content.data,
-            institute=institute,
+            team=team,
             domain=domain,
             status=status,
             user_id=user_id,
@@ -467,13 +467,13 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                         .first()
                         .id
                     )
-            if key == "institute" and value:
+            if key == "team" and value:
                 ticket_query = ticket_query.filter(
-                    FlicketTicket.institute.has(FlicketInstitute.institute == value)
+                    FlicketTicket.team.has(FlicketTeam.team == value)
                 )
                 if form:
-                    form.institute.data = (
-                        FlicketInstitute.query.filter_by(institute=value).first().id
+                    form.team.data = (
+                        FlicketTeam.query.filter_by(team=value).first().id
                     )
             if key == "domain" and value:
                 ticket_query = ticket_query.filter(
@@ -614,7 +614,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "requester",
             "referee",
             "domain_id",
-            "institute_id",
+            "team_id",
             "requester_role_id",
             "request_stage_id",
             "procedure_stage_id",
@@ -645,7 +645,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "id": self.id,
             "assigned_id": self.assigned_id,
             "domain_id": self.domain_id,
-            "institute_id": self.institute_id,
+            "team_id": self.team_id,
             "content": self.content,
             "requester": self.requester,
             "referee": self.referee,
@@ -673,8 +673,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 "modified_by": modified_by,
                 "domain": app.config["base_url"]
                 + url_for("bp_api.get_domain", id=self.domain_id),
-                "institute": app.config["base_url"]
-                + url_for("bp_api.get_institute", id=self.institute_id),
+                "team": app.config["base_url"]
+                + url_for("bp_api.get_team", id=self.team_id),
                 "status": app.config["base_url"]
                 + url_for("bp_api.get_status", id=self.status_id),
                 "subscribers": app.config["base_url"]
@@ -709,7 +709,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             f'title="{self.title}", '
             f"created_by={self.user}, "
             f"domain={self.domain}"
-            f"institute={self.institute}"
+            f"team={self.team}"
             f"status={self.current_status}"
             f"assigned={self.assigned}>"
         )

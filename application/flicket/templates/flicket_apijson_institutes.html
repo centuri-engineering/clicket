@@ -2,7 +2,7 @@
 
     $(document).ready(function () {
         $.ajax({
-            url: '/flicket-api/institutes/',
+            url: '/flicket-api/teams/',
             datatype: 'json',
             headers: {
                 'Authorization': 'Bearer {{ g.user.token }}'
@@ -11,30 +11,30 @@
 
                 // use uri.js to pass the page uri
                 var result = URI.parse(document.URL);
-                // get value of institute in uri
+                // get value of team in uri
                 result = result.query;
-                result = URI.parseQuery(result).institute;
+                result = URI.parseQuery(result).team;
 
-                // populate the institute selection inputs
-                var institute = document.getElementById('institute');
-                $(institute).empty();
-                $(institute).append($('<option></option>').text('--institutes--').val('0'));
+                // populate the team selection inputs
+                var team = document.getElementById('team');
+                $(team).empty();
+                $(team).append($('<option></option>').text('--teams--').val('0'));
                 for (var i = 0; i < data._meta.total_items; i++) {
                     var dep_id = data.items[i].id;
-                    var dep_name = data.items[i].institute;
-                    $(institute).append($('<option></option>').text(dep_name).val(dep_id));
+                    var dep_name = data.items[i].team;
+                    $(team).append($('<option></option>').text(dep_name).val(dep_id));
                 }
 
                 // set the preselected value
                 if (result) {
-                    // find id of institute
+                    // find id of team
                     for (var item in data.items) {
-                        var d = data.items[item].institute;
+                        var d = data.items[item].team;
                         if (d === result) {
-                            var institute_id = data.items[item].id
+                            var team_id = data.items[item].id
                         }
                     }
-                    $(institute).val(institute_id)
+                    $(team).val(team_id)
                 }
 
             }

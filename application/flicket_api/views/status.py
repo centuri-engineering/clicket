@@ -70,7 +70,7 @@
                 "_links": {
                     "next": null,
                     "prev": null,
-                    "self": "http://127.0.0.1:5000/flicket-api/institutes/?page=1&per_page=50"
+                    "self": "http://127.0.0.1:5000/flicket-api/teams/?page=1&per_page=50"
                 },
                 "_meta": {
                     "page": 1,
@@ -139,6 +139,6 @@ def get_statuses():
         request.args.get("per_page", app.config["posts_per_page"], type=int), 100
     )
     data = FlicketStatus.to_collection_dict(
-        FlicketStatus.query, page, per_page, "bp_api.get_institutes"
+        FlicketStatus.query, page, per_page, "bp_api.get_teams"
     )
     return jsonify(data)

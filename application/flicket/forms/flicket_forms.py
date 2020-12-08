@@ -21,7 +21,7 @@ from wtforms.widgets import ListWidget, CheckboxInput
 
 from application.flicket.models.flicket_models import (
     FlicketDomain,
-    FlicketInstitute,
+    FlicketTeam,
     FlicketRequesterRole,
     FlicketRequestStage,
     FlicketProcedureStage,
@@ -74,16 +74,16 @@ def does_user_exist(form, field):
     return True
 
 
-def does_institute_exist(form, field):
+def does_team_exist(form, field):
     """
     Username must be unique so we check against the database to ensure it doesn't
     :param form:
     :param field:
     :return True / False:
     """
-    result = FlicketInstitute.query.filter_by(institute=form.institute.data).count()
+    result = FlicketTeam.query.filter_by(team=form.team.data).count()
     if result > 0:
-        field.errors.append(gettext("Institute already exists."))
+        field.errors.append(gettext("Team already exists."))
         return False
 
     return True
@@ -93,7 +93,7 @@ def does_domain_exist(form, field):
     """"""
     result = (
         FlicketDomain.query.filter_by(domain=form.domain.data)
-        .filter_by(institute_id=form.institute_id.data)
+        .filter_by(team_id=form.team_id.data)
         .count()
     )
     if result > 0:
@@ -113,8 +113,8 @@ class CreateTicketForm(FlaskForm):
             (s.id, s.procedure_stage) for s in FlicketProcedureStage.query.all()
         ]
         self.domain.choices = [(c.id, c.domain) for c in FlicketDomain.query.all()]
-        self.institute.choices = [
-            (c.id, c.institute) for c in FlicketInstitute.query.all()
+        self.team.choices = [
+            (c.id, c.team) for c in FlicketTeam.query.all()
         ]
 
     """ Log in form. """
@@ -163,8 +163,8 @@ class CreateTicketForm(FlaskForm):
     domain = SelectField(
         lazy_gettext("domain"), validators=[DataRequired()], coerce=int
     )
-    institute = SelectField(
-        lazy_gettext("institute"), validators=[DataRequired()], coerce=int
+    team = SelectField(
+        lazy_gettext("team"), validators=[DataRequired()], coerce=int
     )
     file = FileField(lazy_gettext("Upload Documents"), render_kw={"multiple": True})
     days = DecimalField(lazy_gettext("days"), default=0)
@@ -271,21 +271,21 @@ class SubscribeUser(SearchUserForm):
     submit = SubmitField(lazy_gettext("subscribe user"), render_kw=form_class_button)
 
 
-class InstituteForm(FlaskForm):
-    """ Institute form. """
+class TeamForm(FlaskForm):
+    """ Team form. """
 
-    institute = StringField(
-        lazy_gettext("Institute"),
+    team = StringField(
+        lazy_gettext("Team"),
         validators=[
             DataRequired(),
             Length(
-                min=field_size["institute_min_length"],
-                max=field_size["institute_max_length"],
+                min=field_size["team_min_length"],
+                max=field_size["team_max_length"],
             ),
-            does_institute_exist,
+            does_team_exist,
         ],
     )
-    submit = SubmitField(lazy_gettext("add institute"), render_kw=form_class_button)
+    submit = SubmitField(lazy_gettext("add team"), render_kw=form_class_button)
 
 
 class DomainForm(FlaskForm):

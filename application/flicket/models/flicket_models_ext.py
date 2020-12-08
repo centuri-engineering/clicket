@@ -15,7 +15,7 @@ from application.flicket.models.flicket_models import (
     FlicketRequestStage,
     FlicketProcedureStage,
     FlicketDomain,
-    FlicketInstitute,
+    FlicketTeam,
     FlicketSubscription,
     FlicketHistory,
     FlicketUploads,
@@ -41,7 +41,7 @@ class FlicketTicketExt:
         request_stage=None,
         procedure_stage=None,
         domain=None,
-        institute=None,
+        team=None,
         files=None,
         days=0,
     ):
@@ -58,7 +58,7 @@ class FlicketTicketExt:
         """
 
         ticket_status = FlicketStatus.query.filter_by(status="Open").first()
-        ticket_institute = FlicketInstitute.query.filter_by(id=int(institute)).first()
+        ticket_team = FlicketTeam.query.filter_by(id=int(team)).first()
         ticket_domain = FlicketDomain.query.filter_by(id=int(domain)).first()
         requester_role = FlicketRequesterRole.query.filter_by(
             id=int(requester_role)
@@ -80,7 +80,7 @@ class FlicketTicketExt:
             user=user,
             current_status=ticket_status,
             content=content,
-            institute=ticket_institute,
+            team=ticket_team,
             requester=requester,
             referee=referee,
             requester_role=requester_role,
@@ -116,7 +116,7 @@ class FlicketTicketExt:
         request_stage=None,
         procedure_stage=None,
         domain=None,
-        institute=None,
+        team=None,
         files=None,
         form_uploads=None,
         days=None,
@@ -176,7 +176,7 @@ class FlicketTicketExt:
         ).first()
 
         ticket_domain = FlicketDomain.query.filter_by(id=int(domain)).first()
-        ticket_institute = FlicketInstitute.query.filter_by(id=int(institute)).first()
+        ticket_team = FlicketTeam.query.filter_by(id=int(team)).first()
 
         ticket.content = content
         ticket.requester = requester
@@ -188,7 +188,7 @@ class FlicketTicketExt:
         ticket.request_stage = request_stage
         ticket.procedure_stage = procedure_stage
         ticket.domain = ticket_domain
-        ticket.institute = ticket_institute
+        ticket.team = ticket_team
         ticket.days = days
         # set status to Open
         ticket_status = FlicketStatus.query.filter_by(status="Open").first()

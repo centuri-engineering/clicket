@@ -72,7 +72,7 @@ def edit_ticket(ticket_id):
             request_stage=1,
             procedure_stage=form.procedure_stage.data,
             domain=form.domain.data,
-            institute=form.institute.data,
+            team=form.team.data,
             files=request.files.getlist("file"),
             days=form.days.data,
             form_uploads=form.uploads.data,
@@ -88,7 +88,7 @@ def edit_ticket(ticket_id):
     form.procedure_stage.data = ticket.procedure_stage_id
     form.title.data = ticket.title
     form.domain.data = ticket.domain_id
-    form.institute.data = ticket.institute_id
+    form.team.data = ticket.team_id
 
     title = gettext("Edit Ticket")
     return render_template("flicket_edittopic.html", title=title, form=form)

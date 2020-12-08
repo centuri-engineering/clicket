@@ -16,7 +16,7 @@ from application.flicket.models.flicket_models import (
     FlicketUploads,
     FlicketPost,
     FlicketDomain,
-    FlicketInstitute,
+    FlicketTeam,
     FlicketHistory,
 )
 from . import flicket_bp
@@ -162,61 +162,61 @@ def delete_domain(domain_id=False):
         )
 
 
-# delete institute
+# delete team
 @flicket_bp.route(
-    app.config["FLICKET"] + "delete/institute/<int:institute_id>/",
+    app.config["FLICKET"] + "delete/team/<int:team_id>/",
     methods=["GET", "POST"],
 )
 @login_required
-def delete_institute(institute_id=False):
-    if institute_id:
+def delete_team(team_id=False):
+    if team_id:
 
-        # check user is authorised to delete institutes. Only admin or super_user can do this.
+        # check user is authorised to delete teams. Only admin or super_user can do this.
         if not any([g.user.is_admin, g.user.is_super_user]):
             flash(
-                gettext("You are not authorised to delete institutes."),
+                gettext("You are not authorised to delete teams."),
                 category="warning",
             )
-            return redirect("flicket_bp.institutes")
+            return redirect("flicket_bp.teams")
 
         form = ConfirmPassword()
 
         #
-        institutes = FlicketTicket.query.filter_by(institute_id=institute_id)
-        institute = FlicketInstitute.query.filter_by(id=institute_id).first()
+        teams = FlicketTicket.query.filter_by(team_id=team_id)
+        team = FlicketTeam.query.filter_by(id=team_id).first()
 
-        # we can't delete any institutes associated with domains.
-        if institutes.count() > 0:
+        # we can't delete any teams associated with domains.
+        if teams.count() > 0:
             flash(
                 gettext(
                     (
-                        "Institute has tickets linked to it. Institute can not be deleted unless all linked tickets are "
+                        "Team has tickets linked to it. Team can not be deleted unless all linked tickets are "
                         "first removed."
                     )
                 ),
                 category="danger",
             )
-            return redirect(url_for("flicket_bp.institutes"))
+            return redirect(url_for("flicket_bp.teams"))
 
         if form.validate_on_submit():
             # delete domain from database
-            institute = FlicketInstitute.query.filter_by(id=institute_id).first()
+            team = FlicketTeam.query.filter_by(id=team_id).first()
 
-            db.session.delete(institute)
+            db.session.delete(team)
             # commit changes
             db.session.commit()
             flash(
-                'Institute "{}" deleted.'.format(institute.institute),
+                'Team "{}" deleted.'.format(team.team),
                 category="success",
             )
-            return redirect(url_for("flicket_bp.institutes"))
+            return redirect(url_for("flicket_bp.teams"))
 
         notification = gettext(
-            'You are trying to delete institute <span class="label label-default">%(value)s</span>.',
-            value=institute.institute,
+            'You are trying to delete team <span class="label label-default">%(value)s</span>.',
+            value=team.team,
         )
 
-        title = gettext("Delete Institute")
+        title = gettext("Delete Team")
 
         return render_template(
             "flicket_delete.html", form=form, notification=notification, title=title

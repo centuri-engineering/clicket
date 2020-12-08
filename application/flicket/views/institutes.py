@@ -9,68 +9,68 @@ from flask_login import login_required
 
 from . import flicket_bp
 from application import app, db
-from application.flicket.forms.flicket_forms import InstituteForm
-from application.flicket.models.flicket_models import FlicketInstitute
+from application.flicket.forms.flicket_forms import TeamForm
+from application.flicket.models.flicket_models import FlicketTeam
 
 
 # create ticket
-@flicket_bp.route(app.config["FLICKET"] + "institutes/", methods=["GET", "POST"])
+@flicket_bp.route(app.config["FLICKET"] + "teams/", methods=["GET", "POST"])
 @flicket_bp.route(
-    app.config["FLICKET"] + "institutes/<int:page>/", methods=["GET", "POST"]
+    app.config["FLICKET"] + "teams/<int:page>/", methods=["GET", "POST"]
 )
 @login_required
-def institutes(page=1):
-    form = InstituteForm()
+def teams(page=1):
+    form = TeamForm()
 
-    query = FlicketInstitute.query.order_by(FlicketInstitute.institute.asc())
+    query = FlicketTeam.query.order_by(FlicketTeam.team.asc())
 
     if form.validate_on_submit():
-        add_institute = FlicketInstitute(institute=form.institute.data)
-        db.session.add(add_institute)
+        add_team = FlicketTeam(team=form.team.data)
+        db.session.add(add_team)
         db.session.commit()
         flash(
-            gettext(f'New institute "{form.institute.data}" added.'),
+            gettext(f'New team "{form.team.data}" added.'),
             category="success",
         )
-        return redirect(url_for("flicket_bp.institutes"))
+        return redirect(url_for("flicket_bp.teams"))
 
-    _institutes = query.paginate(page, app.config["posts_per_page"])
+    _teams = query.paginate(page, app.config["posts_per_page"])
 
-    title = gettext("Institutes")
+    title = gettext("Teams")
 
     return render_template(
-        "flicket_institutes.html",
+        "flicket_teams.html",
         title=title,
         form=form,
         page=page,
-        institutes=_institutes,
+        teams=_teams,
     )
 
 
 @flicket_bp.route(
-    app.config["FLICKET"] + "institute_edit/<int:institute_id>/",
+    app.config["FLICKET"] + "team_edit/<int:team_id>/",
     methods=["GET", "POST"],
 )
 @login_required
-def institute_edit(institute_id=False):
-    if institute_id:
+def team_edit(team_id=False):
+    if team_id:
 
-        form = InstituteForm()
-        query = FlicketInstitute.query.filter_by(id=institute_id).first()
+        form = TeamForm()
+        query = FlicketTeam.query.filter_by(id=team_id).first()
 
         if form.validate_on_submit():
-            query.institute = form.institute.data
+            query.team = form.team.data
             db.session.commit()
-            flash(gettext('Institute "%(value)s" edited.', value=form.institute.data))
-            return redirect(url_for("flicket_bp.institutes"))
+            flash(gettext('Team "%(value)s" edited.', value=form.team.data))
+            return redirect(url_for("flicket_bp.teams"))
 
-        form.institute.data = query.institute
+        form.team.data = query.team
 
         return render_template(
-            "flicket_institute_edit.html",
-            title="Edit Institute",
+            "flicket_team_edit.html",
+            title="Edit Team",
             form=form,
-            institute=query,
+            team=query,
         )
 
-    return redirect(url_for("flicket_bp.institutes"))
+    return redirect(url_for("flicket_bp.teams"))

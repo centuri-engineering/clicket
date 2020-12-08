@@ -5,7 +5,7 @@
         <div class="row bg-white m-2 border round">
             <div class="col">
                 <h1>{{ title }}</h1>
-                <p>{{ _('If you require new institutes and / or domains added / deleted, please raise a ticket.') }}</p>
+                <p>{{ _('If you require new teams and / or domains added / deleted, please raise a ticket.') }}</p>
             </div>
         </div>
 
@@ -17,16 +17,16 @@
                   method="post"
                   name="create_ticket">
                 {{ form.hidden_tag() }}
-                <label class="sr-only">{{ form.institute.label }}</label>
+                <label class="sr-only">{{ form.team.label }}</label>
                 <div class="col-md-6 col-12 mb-1">
-                    {{ form.institute(class="form-control form-control-sm", placeholder="institute") }}
+                    {{ form.team(class="form-control form-control-sm", placeholder="team") }}
                 </div>
                 <div class="col-md-6 col text-center">
                     {{ form.submit }}
                 </div>
-                {% if form.institute.errors %}
+                {% if form.team.errors %}
                     <div class="alert alert-warning small">
-                        {% for error in form.institute.errors %}
+                        {% for error in form.team.errors %}
                             {{ error }}
                         {% endfor %}
                     </div>
@@ -36,26 +36,26 @@
 
 
         <ul class="pagination pagination-sm m-2">
-            <li class="page-item {% if not institutes.has_prev -%} disabled {%- endif -%} ">
+            <li class="page-item {% if not teams.has_prev -%} disabled {%- endif -%} ">
                 <a class="page-link"
-                   href="{{ url_for('flicket_bp.institutes', page=institutes.prev_num, **request.args) }}">
+                   href="{{ url_for('flicket_bp.teams', page=teams.prev_num, **request.args) }}">
                     <<
                 </a>
             </li>
 
-            {%- for page in institutes.iter_pages() -%}
+            {%- for page in teams.iter_pages() -%}
                 {%- if page -%}
-                    {%- if page != institutes.page -%}
+                    {%- if page != teams.page -%}
                         <li class="page-item">
                             <a class="page-link"
-                               href="{{ url_for('flicket_bp.institutes', page=page, **request.args) }}">
+                               href="{{ url_for('flicket_bp.teams', page=page, **request.args) }}">
                                 {{ page }}
                             </a>
                         </li>
                     {%- else -%}
                         <li class="page-item active">
                             <a class="page-link active"
-                               href="{{ url_for('flicket_bp.institutes', page=page, **request.args) }}">
+                               href="{{ url_for('flicket_bp.teams', page=page, **request.args) }}">
                                 {{ page }}
                             </a>
                         </li>
@@ -67,9 +67,9 @@
                 {%- endif -%}
             {%- endfor -%}
 
-            <li class="page-item {% if not institutes.has_next -%} disabled {%- endif -%} ">
+            <li class="page-item {% if not teams.has_next -%} disabled {%- endif -%} ">
                 <a class="page-link"
-                   href="{{ url_for('flicket_bp.institutes', page=institutes.next_num, **request.args) }}">
+                   href="{{ url_for('flicket_bp.teams', page=teams.next_num, **request.args) }}">
                     >>
                 </a>
             </li>
@@ -80,24 +80,24 @@
             <div class="col">
                 <div class="row border-bottom p-2">
                     <div class="col">
-                        {{ _('Institute') }}
+                        {{ _('Team') }}
                     </div>
                     <div class="col">
                         {{ _('Categories') }}
                     </div>
                 </div>
-                {%- for d in institutes.items -%}
+                {%- for d in teams.items -%}
                     <div class="row p-2">
                         <div class="col">
-                            {{ d.institute }}
+                            {{ d.team }}
                             {%- if g.user.is_admin or g.user.is_super_user -%}
 
-                                <a href="{{ url_for('flicket_bp.institute_edit', institute_id=d.id) }}"
+                                <a href="{{ url_for('flicket_bp.team_edit', team_id=d.id) }}"
                                    title="edit">
                                     <i class="fas fa-edit"></i>
                                 </a>
 
-                                <a href="{{ url_for('flicket_bp.delete_institute', institute_id=d.id) }}"
+                                <a href="{{ url_for('flicket_bp.delete_team', team_id=d.id) }}"
                                    title="delete">
                                     <i class="fas fa-trash" style="color: red"></i>
                                 </a>
@@ -119,7 +119,7 @@
                                 {%- endif -%}
                             {%- endfor -%}
                             {%- if g.user.is_admin or g.user.is_super_user -%}
-                                <a href="{{ url_for('flicket_bp.domains', institute_id=d.id) }}">
+                                <a href="{{ url_for('flicket_bp.domains', team_id=d.id) }}">
                                     <i class="fas fa-plus"></i>
                                 </a>
                             {%- endif -%}

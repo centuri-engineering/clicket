@@ -4,19 +4,19 @@
 # Flicket - copyright Paul Bourne: evereux@gmail.com
 
 """
-    Institutes
+    Teams
     ===========
 
-    Get Institute by ID
+    Get Team by ID
     ~~~~~~~~~~~~~~~~~~~~
 
-    .. http:get:: /flicket-api/institute/(int:institute_id)
+    .. http:get:: /flicket-api/team/(int:team_id)
 
         **Request**
 
         .. sourcecode:: http
 
-            GET /flicket-api/institute/1 HTTP/1.1
+            GET /flicket-api/team/1 HTTP/1.1
             HOST: localhost:5000
             Accept: application/json
             Authorization: Bearer <token>
@@ -32,24 +32,24 @@
             Server: Werkzeug/0.14.1 Python/3.7.3
 
             {
-                "institute": "Design",
+                "team": "Design",
                 "id": 1,
                 "links": {
-                    "institutes": "http://127.0.0.1:5000/flicket-api/institutes/",
-                    "self": "http://127.0.0.1:5000/flicket-api/institute/1"
+                    "teams": "http://127.0.0.1:5000/flicket-api/teams/",
+                    "self": "http://127.0.0.1:5000/flicket-api/team/1"
                 }
             }
 
-    Get Institutes
+    Get Teams
     ~~~~~~~~~~~~~~~~
 
-    .. http:get:: /flicket-api/institutes/
+    .. http:get:: /flicket-api/teams/
 
         **Request**
 
         .. sourcecode:: http
 
-            GET /flicket-api/institutes/ HTTP/1.1
+            GET /flicket-api/teams/ HTTP/1.1
             HOST: localhost:5000
             Accept: application/json
             Authorization: Bearer <token>
@@ -68,7 +68,7 @@
                 "_links": {
                     "next": null,
                     "prev": null,
-                    "self": "http://127.0.0.1:5000/flicket-api/institutes/?page=1&per_page=50"
+                    "self": "http://127.0.0.1:5000/flicket-api/teams/?page=1&per_page=50"
                 },
                 "_meta": {
                     "page": 1,
@@ -78,57 +78,57 @@
                 },
                 "items": [
                     {
-                        "institute": "Commercial",
+                        "team": "Commercial",
                         "id": 6,
                         "links": {
-                            "institutes": "http://127.0.0.1:5000/flicket-api/institutes/",
-                            "self": "http://127.0.0.1:5000/flicket-api/institute/6"
+                            "teams": "http://127.0.0.1:5000/flicket-api/teams/",
+                            "self": "http://127.0.0.1:5000/flicket-api/team/6"
                         }
                     },
                     {
-                        "institute": "Design",
+                        "team": "Design",
                         "id": 1,
                         "links": {
-                            "institutes": "http://127.0.0.1:5000/flicket-api/institutes/",
-                            "self": "http://127.0.0.1:5000/flicket-api/institute/1"
+                            "teams": "http://127.0.0.1:5000/flicket-api/teams/",
+                            "self": "http://127.0.0.1:5000/flicket-api/team/1"
                         }
                     },
                     {
-                        "institute": "Human Resources",
+                        "team": "Human Resources",
                         "id": 5,
                         "links": {
-                            "institutes": "http://127.0.0.1:5000/flicket-api/institutes/",
-                            "self": "http://127.0.0.1:5000/flicket-api/institute/5"
+                            "teams": "http://127.0.0.1:5000/flicket-api/teams/",
+                            "self": "http://127.0.0.1:5000/flicket-api/team/5"
                         }
                     },
                     {
-                        "institute": "IT",
+                        "team": "IT",
                         "id": 3,
                         "links": {
-                            "institutes": "http://127.0.0.1:5000/flicket-api/institutes/",
-                            "self": "http://127.0.0.1:5000/flicket-api/institute/3"
+                            "teams": "http://127.0.0.1:5000/flicket-api/teams/",
+                            "self": "http://127.0.0.1:5000/flicket-api/team/3"
                         }
                     }
                 ]
             }
 
 
-    Create Institute
+    Create Team
     ~~~~~~~~~~~~~~~~~
 
-    .. http:post:: http://localhost:5000/flicket-api/institutes(str:institute)
+    .. http:post:: http://localhost:5000/flicket-api/teams(str:team)
 
         **Request**
 
         .. sourcecode:: http
 
-            POST /flicket-api/institutes HTTP/1.1
+            POST /flicket-api/teams HTTP/1.1
             HOST: localhost:5000
             Accept: application/json
             Authorization: Bearer <token>
 
             {
-                "institute": "new institute"
+                "team": "new team"
             }
 
         **Response**
@@ -139,15 +139,15 @@
             Content-Length: 201
             Content-Type: application/json
             Date: Sun, 30 Jun 2019 12:45:35 GMT
-            Location: http://localhost:5000/flicket-api/institute/12
+            Location: http://localhost:5000/flicket-api/team/12
             Server: Werkzeug/0.14.1 Python/3.7.3
 
             {
-                "institute": "New Institute",
+                "team": "New Team",
                 "id": 12,
                 "links": {
-                    "institutes": "http://127.0.0.1:5000/flicket-api/institutes/",
-                    "self": "http://127.0.0.1:5000/flicket-api/institute/12"
+                    "teams": "http://127.0.0.1:5000/flicket-api/teams/",
+                    "self": "http://127.0.0.1:5000/flicket-api/team/12"
                 }
             }
 """
@@ -157,57 +157,57 @@ from flask import jsonify, request, url_for
 from .sphinx_helper import api_url
 from . import bp_api
 from application import app, db
-from application.flicket.models.flicket_models import FlicketInstitute
+from application.flicket.models.flicket_models import FlicketTeam
 from application.flicket_api.views.auth import token_auth
 from application.flicket_api.views.errors import bad_request
 
 
-@bp_api.route(api_url + "institute/<int:id>", methods=["GET"])
+@bp_api.route(api_url + "team/<int:id>", methods=["GET"])
 @token_auth.login_required
-def get_institute(id):
+def get_team(id):
     return jsonify(
-        FlicketInstitute.query.order_by(FlicketInstitute.institute.asc())
+        FlicketTeam.query.order_by(FlicketTeam.team.asc())
         .get_or_404(id)
         .to_dict()
     )
 
 
-@bp_api.route(api_url + "institutes/", methods=["GET"])
+@bp_api.route(api_url + "teams/", methods=["GET"])
 @token_auth.login_required
-def get_institutes():
+def get_teams():
     page = request.args.get("page", 1, type=int)
     per_page = min(
         request.args.get("per_page", app.config["posts_per_page"], type=int), 100
     )
-    data = FlicketInstitute.to_collection_dict(
-        FlicketInstitute.query.order_by(FlicketInstitute.institute.asc()),
+    data = FlicketTeam.to_collection_dict(
+        FlicketTeam.query.order_by(FlicketTeam.team.asc()),
         page,
         per_page,
-        "bp_api.get_institutes",
+        "bp_api.get_teams",
     )
     return jsonify(data)
 
 
-@bp_api.route(api_url + "institutes", methods=["POST"])
+@bp_api.route(api_url + "teams", methods=["POST"])
 @token_auth.login_required
-def create_institute():
+def create_team():
 
     # todo add authentication. only those in the admin or super_user groups should be allowed to create.
 
     data = request.get_json() or {}
 
-    if "institute" not in data:
-        return bad_request("Must include institute name.")
+    if "team" not in data:
+        return bad_request("Must include team name.")
 
-    if FlicketInstitute.query.filter_by(institute=data["institute"]).first():
-        return bad_request("Institute already created.")
+    if FlicketTeam.query.filter_by(team=data["team"]).first():
+        return bad_request("Team already created.")
 
-    institute = FlicketInstitute(data["institute"])
-    db.session.add(institute)
+    team = FlicketTeam(data["team"])
+    db.session.add(team)
     db.session.commit()
 
-    response = jsonify(institute.to_dict())
+    response = jsonify(team.to_dict())
     response.status_code = 201
-    response.headers["Location"] = url_for("bp_api.get_institute", id=institute.id)
+    response.headers["Location"] = url_for("bp_api.get_team", id=team.id)
 
     return response

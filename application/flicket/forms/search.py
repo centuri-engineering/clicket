@@ -10,7 +10,7 @@ from wtforms import SelectField, StringField
 from .flicket_forms import does_user_exist
 
 from application.flicket.models.flicket_models import (
-    FlicketInstitute,
+    FlicketTeam,
     FlicketDomain,
     FlicketStatus,
     FlicketRequesterRole,
@@ -26,13 +26,13 @@ class SearchTicketForm(FlaskForm):
 
         # choices are populated via ajax query on page load. This are simply empty lists so
         # form can be loaded on page view
-        self.institute.choices = [
-            (d.id, d.institute)
-            for d in FlicketInstitute.query.order_by(
-                FlicketInstitute.institute.asc()
+        self.team.choices = [
+            (d.id, d.team)
+            for d in FlicketTeam.query.order_by(
+                FlicketTeam.team.asc()
             ).all()
         ]
-        self.institute.choices.insert(0, (0, "institute"))
+        self.team.choices.insert(0, (0, "team"))
 
         self.domain.choices = [
             (c.id, c.domain)
@@ -66,7 +66,7 @@ class SearchTicketForm(FlaskForm):
         self.procedure_stage.choices.insert(0, (0, "procedure stage"))
 
     """ Search form. """
-    institute = SelectField(lazy_gettext("institute"), coerce=int, validators=[])
+    team = SelectField(lazy_gettext("team"), coerce=int, validators=[])
     domain = SelectField(lazy_gettext("domain"), coerce=int)
     status = SelectField(lazy_gettext("status"), coerce=int)
     username = SelectField(lazy_gettext("username"), coerce=int, validators=[])

@@ -8,7 +8,7 @@ import json
 import plotly
 
 from application.flicket.models.flicket_models import FlicketDomain
-from application.flicket.models.flicket_models import FlicketInstitute
+from application.flicket.models.flicket_models import FlicketTeam
 from application.flicket.models.flicket_models import FlicketStatus, FlicketRequestStage
 
 

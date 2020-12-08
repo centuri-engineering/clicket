@@ -14,7 +14,7 @@ from application.flicket.models.flicket_models import (
     FlicketRequesterRole,
     FlicketRequestStage,
     FlicketProcedureStage,
-    FlicketInstitute,
+    FlicketTeam,
     FlicketDomain,
 )
 from application.flicket.models.flicket_user import FlicketUser, FlicketGroup
@@ -55,7 +55,7 @@ domains = [
     "Software Development",
 ]
 
-institutes = [
+teams = [
     "IBDM",
     "Institut Fresnel",
     "CIML",
@@ -285,16 +285,16 @@ class RunSetUP(Command):
 
     @staticmethod
     def create_default_depts(silent=False):
-        """ creates default institutes and domains. """
+        """ creates default teams and domains. """
 
-        for institute in institutes:
-            query = FlicketInstitute.query.filter_by(institute=institute).first()
+        for team in teams:
+            query = FlicketTeam.query.filter_by(team=team).first()
             if not query:
-                add_institute = FlicketInstitute(institute=institute)
-                db.session.add(add_institute)
+                add_team = FlicketTeam(team=team)
+                db.session.add(add_team)
 
                 if not silent:
-                    print("institute {} added.".format(institute))
+                    print("team {} added.".format(team))
 
         for domain in domains:
             query = FlicketDomain.query.filter_by(domain=domain).first()

@@ -8,70 +8,70 @@ from flask_babel import gettext
 from flask_login import login_required
 
 from application import app, db
-from application.flicket.forms.flicket_forms import InstituteForm
+from application.flicket.forms.flicket_forms import TeamForm
 from application.flicket.models.flicket_models import FlicketTicket
-from application.flicket.models.flicket_models import FlicketInstitute
+from application.flicket.models.flicket_models import FlicketTeam
 from application.flicket.scripts.flicket_functions import add_action
 from . import flicket_bp
 
 
 # tickets main
 @flicket_bp.route(
-    app.config["FLICKET"] + "ticket_institute/<int:ticket_id>/",
+    app.config["FLICKET"] + "ticket_team/<int:ticket_id>/",
     methods=["GET", "POST"],
 )
 @login_required
-def ticket_institute(ticket_id=False):
-    if not app.config["change_institute"]:
+def ticket_team(ticket_id=False):
+    if not app.config["change_team"]:
         abort(404)
 
-    if app.config["change_institute_only_admin_or_super_user"]:
+    if app.config["change_team_only_admin_or_super_user"]:
         if not g.user.is_admin and not g.user.is_super_user:
             abort(404)
 
-    form = InstituteForm()
+    form = TeamForm()
     ticket = FlicketTicket.query.get_or_404(ticket_id)
 
     if ticket.current_status.status == "Closed":
-        flash(gettext("Can't change the institute on a closed ticket."))
+        flash(gettext("Can't change the team on a closed ticket."))
         return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket_id))
 
     if form.validate_on_submit():
-        institute = FlicketInstitute.query.filter_by(
-            institute=form.institute.data
+        team = FlicketTeam.query.filter_by(
+            team=form.team.data
         ).one()
 
-        if ticket.institute_id == institute.institute_id:
+        if ticket.team_id == team.team_id:
             flash(
                 gettext(
-                    f"Institute {ticket.institute.institute} is already assigned to ticket."
+                    f"Team {ticket.team.team} is already assigned to ticket."
                 ),
                 category="warning",
             )
             return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket.id))
 
-        # change institute
-        ticket.institute_id = institute.institute_id
+        # change team
+        ticket.team_id = team.team_id
 
         # add action record
         add_action(
             ticket,
-            "institute",
+            "team",
             data={
-                "institute": institute.institute,
-                "institute_id": institute.institute_id,
+                "team": team.team,
+                "team_id": team.team_id,
             },
         )
 
         db.session.commit()
 
         flash(
-            gettext(f"You changed institute of ticket: {ticket_id}"), category="success"
+            gettext(f"You changed team of ticket: {ticket_id}"), category="success"
         )
         return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket.id))
 
-    title = gettext("Change Institute of Ticket")
+    title = gettext("Change Team of Ticket")
 
     return render_template(
-        "flicket_institute.html", title=title, form=form, ticket=ticket
+        "flicket_team.html", title=title, form=form, ticket=ticket
     )

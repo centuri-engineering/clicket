@@ -1,10 +1,10 @@
 <script type="text/javascript">
     $(function () {
-        $('#institute').change(function () {
+        $('#team').change(function () {
             var id = $(this).val();
             if (id != 0) {
                 $.ajax({
-                    url: '/flicket-api/domains/?institute_id=' + id,
+                    url: '/flicket-api/domains/?team_id=' + id,
                     datatype: 'json',
                     headers: {
                         'Authorization' : 'Bearer {{ g.user.token }}'

@@ -70,7 +70,7 @@
                 "_links": {
                     "next": null,
                     "prev": null,
-                    "self": "http://127.0.0.1:5000/flicket-api/institutes/?page=1&per_page=50"
+                    "self": "http://127.0.0.1:5000/flicket-api/teams/?page=1&per_page=50"
                 },
                 "_meta": {
                     "page": 1,

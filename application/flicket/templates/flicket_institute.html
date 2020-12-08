@@ -15,31 +15,31 @@
             <div class="col">
                 <h2 class="flicket-title">#{{ ticket.id_zfill }} - {{ ticket.title }}</h2>
                 <p>
-                    {{ _('Type institute and pick from drop down list to change institute.') }} <a
-                        href="{{ url_for('flicket_bp.departments') }}" target="_blank">Available institutes</a>.
+                    {{ _('Type team and pick from drop down list to change team.') }} <a
+                        href="{{ url_for('flicket_bp.departments') }}" target="_blank">Available teams</a>.
                 </p>
                 <form action=""
                       class="form-horizontal"
                       enctype="multipart/form-data"
                       method="post"
-                      name="change_institute">
+                      name="change_team">
                     {{ form.hidden_tag() }}
 
 
                     <div class="row">
-                        <label class="col-2 col-form-label" for="autocomplete-institute">
-                            {{ form.institute.label }}
+                        <label class="col-2 col-form-label" for="autocomplete-team">
+                            {{ form.team.label }}
                         </label>
                         <div class="col-3">
-                            {{ form.institute(class="form-control form-control-sm", id="autocomplete-institute") }}
+                            {{ form.team(class="form-control form-control-sm", id="autocomplete-team") }}
                         </div>
                         <div class="col-6">
                             {{ form.submit }}
                         </div>
                     </div>
-                    {% if form.institute.errors %}
+                    {% if form.team.errors %}
                         <div class="alert alert-warning small">
-                            {% for error in form.institute.errors %}
+                            {% for error in form.team.errors %}
                                 {{ error }}
                             {% endfor %}
                         </div>
@@ -51,5 +51,5 @@
 
     </div>
 
-    {% include('flicket_apijson_institute.html') %}
+    {% include('flicket_apijson_team.html') %}
 {% endblock %}

@@ -93,10 +93,10 @@ from .flicket.views import create
 from .flicket.views import delete
 
 # noinspection PyPep8
-from .flicket.views import institutes
+from .flicket.views import teams
 
 # noinspection PyPep8
-from .flicket.views import institute
+from .flicket.views import team
 
 # noinspection PyPep8
 from .flicket.views import edit
@@ -142,7 +142,7 @@ from .flicket_api.views import actions
 from .flicket_api.views import domains
 
 # noinspection PyPep8
-from .flicket_api.views import institutes
+from .flicket_api.views import teams
 
 # noinspection PyPep8
 from .flicket_api.views import histories

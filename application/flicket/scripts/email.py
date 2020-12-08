@@ -45,7 +45,7 @@ class FlicketMail:
 
     def create_ticket(self, ticket):
         """"""
-        # todo: send email to institute heads
+        # todo: send email to team heads
         pass
 
     def reply_ticket(self, ticket=None, reply=None, user=None):

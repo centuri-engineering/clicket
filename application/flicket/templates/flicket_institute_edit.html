@@ -18,17 +18,17 @@
                   name="create_ticket">
                 {{ form.hidden_tag() }}
                 <label class="col-3 col-form-label">
-                    {{ _('Institute') }}
+                    {{ _('Team') }}
                 </label>
                 <div class="col-5 mr-2">
-                    {{ form.institute(class="form-control form-control-sm") }}
+                    {{ form.team(class="form-control form-control-sm") }}
                 </div>
                 <div class="col">
-                    <input class="btn btn-primary btn-sm" type="submit" value="edit institute"/>
+                    <input class="btn btn-primary btn-sm" type="submit" value="edit team"/>
                 </div>
-                {% if form.institute.errors %}
+                {% if form.team.errors %}
                     <div class="alert alert-warning small">
-                        {% for error in form.institute.errors %}
+                        {% for error in form.team.errors %}
                             {{ error }}
                         {% endfor %}
                     </div>

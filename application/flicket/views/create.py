@@ -34,7 +34,7 @@ def ticket_create():
             request_stage=1,
             procedure_stage=form.procedure_stage.data,
             domain=form.domain.data,
-            institute=form.institute.data,
+            team=form.team.data,
             days=form.days.data,
             files=request.files.getlist("file"),
         )

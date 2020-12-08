@@ -10,12 +10,12 @@ from flask_babel import gettext
 from . import flicket_bp
 from application import app, db
 from application.flicket.forms.flicket_forms import DomainForm
-from application.flicket.models.flicket_models import FlicketDomain, FlicketInstitute
+from application.flicket.models.flicket_models import FlicketDomain, FlicketTeam
 
 
 # create ticket
 @flicket_bp.route(
-    app.config["FLICKET"] + "domains/<int:institute_id>/", methods=["GET", "POST"]
+    app.config["FLICKET"] + "domains/<int:team_id>/", methods=["GET", "POST"]
 )
 @login_required
 def domains():
@@ -61,7 +61,7 @@ def domain_edit(domain_id=False):
             title=title,
             form=form,
             domain=domain,
-            institute=domain.institute.institute,
+            team=domain.team.team,
         )
 
     return redirect(url_for("flicket_bp.domains"))

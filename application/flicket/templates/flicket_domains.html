@@ -15,7 +15,7 @@
             <div class="col">
                 <div class="row">
                     <div class="col">
-                        <h3><span class="small">Institute:</span> {{ institute.institute }}</h3>
+                        <h3><span class="small">Team:</span> {{ team.team }}</h3>
                     </div>
                 </div>
                 <form action=""
@@ -24,7 +24,7 @@
                       method="post"
                       name="create_ticket">
                     {{ form.hidden_tag() }}
-                    {{ form.institute_id() }}
+                    {{ form.team_id() }}
                     <div class="row">
                         <label class="sr-only">{{ form.domain.label }}</label>
                         <div class="col">
