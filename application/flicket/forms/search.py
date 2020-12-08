@@ -13,7 +13,7 @@ from application.flicket.models.flicket_models import (
     FlicketTeam,
     FlicketRequest,
     FlicketStatus,
-    FlicketRequesterRole,
+    FlicketInstrument,
     FlicketRequestStage,
     FlicketProcedureStage,
 )
@@ -50,10 +50,10 @@ class SearchTicketForm(FlaskForm):
         self.status.choices = [(s.id, s.status) for s in FlicketStatus.query.all()]
         self.status.choices.insert(0, (0, "status"))
 
-        self.requester_role.choices = [
-            (s.id, s.requester_role) for s in FlicketRequesterRole.query.all()
+        self.instrument.choices = [
+            (s.id, s.instrument) for s in FlicketInstrument.query.all()
         ]
-        self.requester_role.choices.insert(0, (0, "requester role"))
+        self.instrument.choices.insert(0, (0, "requester role"))
 
         self.request_stage.choices = [
             (s.id, s.request_stage) for s in FlicketRequestStage.query.all()
@@ -71,7 +71,7 @@ class SearchTicketForm(FlaskForm):
     status = SelectField(lazy_gettext("status"), coerce=int)
     username = SelectField(lazy_gettext("username"), coerce=int, validators=[])
     content = StringField(lazy_gettext("content"), validators=[])
-    requester_role = SelectField(lazy_gettext("requester role"), coerce=int)
+    instrument = SelectField(lazy_gettext("requester role"), coerce=int)
     request_stage = SelectField(lazy_gettext("request stage"), coerce=int)
     procedure_stage = SelectField(lazy_gettext("procedure stage"), coerce=int)
 

@@ -27,20 +27,20 @@ def upgrade():
         "flicket_topic", sa.Column("referee", sa.String(length=128), nullable=True)
     )
     op.create_table(
-        "flicket_requester_roles",
+        "flicket_instruments",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("requester_role", sa.String(length=128), nullable=True),
+        sa.Column("instrument", sa.String(length=128), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )
     op.add_column(
-        "flicket_topic", sa.Column("requester_role", sa.Integer(), nullable=True,),
+        "flicket_topic", sa.Column("instrument", sa.Integer(), nullable=True,),
     )
     op.add_column(
         "flicket_topic",
         sa.Column(
-            "requester_role_id",
+            "instrument_id",
             sa.Integer(),
-            sa.ForeignKey("flicket_requester_roles.id"),
+            sa.ForeignKey("flicket_instruments.id"),
             nullable=True,
         ),
     )

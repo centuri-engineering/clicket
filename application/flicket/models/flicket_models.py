@@ -124,11 +124,11 @@ class FlicketRequest(PaginatedAPIMixin, Base):
         return "<FlicketRequest: id={}, request={}>".format(self.id, self.request)
 
 
-class FlicketRequesterRole(PaginatedAPIMixin, Base):
-    __tablename__ = "flicket_requester_roles"
+class FlicketInstrument(PaginatedAPIMixin, Base):
+    __tablename__ = "flicket_instruments"
 
     id = db.Column(db.Integer, primary_key=True)
-    requester_role = db.Column(db.String(30))
+    instrument = db.Column(db.String(30))
 
     def to_dict(self):
         """
@@ -137,20 +137,20 @@ class FlicketRequesterRole(PaginatedAPIMixin, Base):
         """
         data = {
             "id": self.id,
-            "role": self.requester_role,
+            "role": self.instrument,
             "links": {
                 "self": app.config["base_url"]
-                + url_for("bp_api.get_requester_role", id=self.id),
-                "requester_roles": app.config["base_url"]
-                + url_for("bp_api.get_requester_roles"),
+                + url_for("bp_api.get_instrument", id=self.id),
+                "instruments": app.config["base_url"]
+                + url_for("bp_api.get_instruments"),
             },
         }
 
         return data
 
     def __repr__(self):
-        return "<FlicketRequesterRole: id={}, requester_role={}>".format(
-            self.id, self.requester_role
+        return "<FlicketInstrument: id={}, instrument={}>".format(
+            self.id, self.instrument
         )
 
 
@@ -244,8 +244,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
     assigned_id = db.Column(db.Integer, db.ForeignKey(FlicketUser.id))
     assigned = db.relationship(FlicketUser, foreign_keys="FlicketTicket.assigned_id")
 
-    requester_role_id = db.Column(db.Integer, db.ForeignKey(FlicketRequesterRole.id))
-    requester_role = db.relationship(FlicketRequesterRole)
+    instrument_id = db.Column(db.Integer, db.ForeignKey(FlicketInstrument.id))
+    instrument = db.relationship(FlicketInstrument)
 
     request_stage_id = db.Column(db.Integer, db.ForeignKey(FlicketRequestStage.id))
     request_stage = db.relationship(FlicketRequestStage)
@@ -308,7 +308,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         request = ""
         status = ""
         user_id = ""
-        requester_role = ""
+        instrument = ""
         request_stage = ""
         procedure_stage = ""
 
@@ -330,11 +330,11 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         if form.status.data:
             status = FlicketStatus.query.filter_by(id=form.status.data).first().status
 
-        if form.requester_role.data:
-            requester_role = (
-                FlicketRequesterRole.query.filter_by(id=form.requester_role.data)
+        if form.instrument.data:
+            instrument = (
+                FlicketInstrument.query.filter_by(id=form.instrument.data)
                 .first()
-                .requester_role
+                .instrument
             )
         if form.request_stage.data:
             request_stage = (
@@ -357,7 +357,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             request=request,
             status=status,
             user_id=user_id,
-            requester_role=requester_role,
+            instrument=instrument,
             request_stage=request_stage,
             procedure_stage=procedure_stage,
         )
@@ -431,15 +431,15 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                     form.status.data = (
                         FlicketStatus.query.filter_by(status=value).first().id
                     )
-            if key == "requester_role" and value:
+            if key == "instrument" and value:
                 ticket_query = ticket_query.filter(
-                    FlicketTicket.requester_role.has(
-                        FlicketRequesterRole.requester_role == value
+                    FlicketTicket.instrument.has(
+                        FlicketInstrument.instrument == value
                     )
                 )
                 if form:
-                    form.requester_role.data = (
-                        FlicketRequesterRole.query.filter_by(requester_role=value)
+                    form.instrument.data = (
+                        FlicketInstrument.query.filter_by(instrument=value)
                         .first()
                         .id
                     )
@@ -525,9 +525,9 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         :param sort:
         :return:
         """
-        if sort == "requester_role":
+        if sort == "instrument":
             ticket_query = ticket_query.order_by(
-                FlicketTicket.requester_role_id, FlicketTicket.id
+                FlicketTicket.instrument_id, FlicketTicket.id
             )
         elif sort == "request_stage":
             ticket_query = ticket_query.order_by(
@@ -615,7 +615,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "referee",
             "request_id",
             "team_id",
-            "requester_role_id",
+            "instrument_id",
             "request_stage_id",
             "procedure_stage_id",
         ]:
@@ -655,15 +655,15 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "started_id": self.started_id,
             "status_id": self.status_id,
             "title": self.title,
-            "requester_role_id": self.requester_role_id,
+            "instrument_id": self.instrument_id,
             "request_stage_id": self.request_stage_id,
             "procedure_stage_id": self.procedure_stage_id,
             "links": {
                 "self": app.config["base_url"]
                 + url_for("bp_api.get_ticket", id=self.id),
                 "assigned": assigned,
-                "requester_role": app.config["base_url"]
-                + url_for("bp_api.get_requester_role", id=self.requester_role_id),
+                "instrument": app.config["base_url"]
+                + url_for("bp_api.get_instrument", id=self.instrument_id),
                 "request_stage": app.config["base_url"]
                 + url_for("bp_api.get_request_stage", id=self.request_stage_id),
                 "procedure_stage": app.config["base_url"]

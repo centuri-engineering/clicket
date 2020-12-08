@@ -18,7 +18,7 @@
                                          content=content,
                                          requester=requester,
                                          referee=referee,
-                                         requester_role=requester_role,
+                                         instrument=instrument,
                                          request_stage=request_stage,
                                          procedure_stage=procedure_stage,
                                          user_id=user_id) }}"
@@ -45,7 +45,7 @@
                     {{ form.request(class="form-control form-control-sm flicket-tickets-content p-0", id="request") }}
                   </div>
                   <div class="col-md col-6 text-center">
-                    {{ form.requester_role(class="form-control form-control-sm flicket-tickets-content p-0", id="requester_role") }}
+                    {{ form.instrument(class="form-control form-control-sm flicket-tickets-content p-0", id="instrument") }}
                   </div>
                   <div class="col-md col-6 text-center">
                     {{ form.request_stage(class="form-control form-control-sm flicket-tickets-content p-0", id="request_stage") }}
@@ -122,8 +122,8 @@
                             <i class="fas fa-sort-numeric-down"></i>
                             {{ _('Status') }}
                         </a>
-                        <a class="dropdown-item small{% if sort == 'requester_role' %} active{% endif %}"
-                           href="{{ url_for(base_url, sort='requester_role', **request.args) }}">
+                        <a class="dropdown-item small{% if sort == 'instrument' %} active{% endif %}"
+                           href="{{ url_for(base_url, sort='instrument', **request.args) }}">
                             <i class="fas fa-sort-numeric-down"></i>
                             {{ _('Requester Role') }}
                         </a>

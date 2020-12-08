@@ -17,7 +17,7 @@ from application.flicket.models.flicket_models import (
     FlicketHistory,
     FlicketPost,
     FlicketStatus,
-    FlicketRequesterRole,
+    FlicketInstrument,
     FlicketProcedureStage,
     FlicketRequestStage,
     FlicketTicket,
@@ -68,7 +68,7 @@ def edit_ticket(ticket_id):
             content=form.content.data,
             requester=form.requester.data,
             referee=form.referee.data,
-            requester_role=form.requester_role.data,
+            instrument=form.instrument.data,
             request_stage=1,
             procedure_stage=form.procedure_stage.data,
             request=form.request.data,
@@ -84,7 +84,7 @@ def edit_ticket(ticket_id):
     form.content.data = ticket.content
     form.requester.data = ticket.requester
     form.referee.data = ticket.referee
-    form.requester_role.data = ticket.requester_role_id
+    form.instrument.data = ticket.instrument_id
     form.procedure_stage.data = ticket.procedure_stage_id
     form.title.data = ticket.title
     form.request.data = ticket.request_id

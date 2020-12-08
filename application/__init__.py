@@ -169,7 +169,7 @@ from .flicket_api.views import uploads
 from .flicket_api.views import users
 
 # noinspection PyPep8
-from .flicket_api.views import requester_roles
+from .flicket_api.views import instruments
 
 # noinspection PyPep8
 from .flicket_api.views import request_stages

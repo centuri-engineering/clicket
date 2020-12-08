@@ -11,7 +11,7 @@ from application import db, app
 from application.flicket_admin.models.flicket_config import FlicketConfig
 from application.flicket.models.flicket_models import (
     FlicketStatus,
-    FlicketRequesterRole,
+    FlicketInstrument,
     FlicketRequestStage,
     FlicketProcedureStage,
     FlicketTeam,
@@ -76,6 +76,25 @@ teams = [
     "MS",
 ]
 
+instruments = [
+    "Confocal Kirk",
+    "Confocal Ray",
+    "Confocal Elmer",
+    "FCS",
+    "FCCS/FLIM",
+    "Light-sheet Ziggy",
+    "PC Imaris",
+    "Samsung digital presenter",
+    "Slide scanner Slash",
+    "Spinning disk HOT",
+    "Spinning disk Ella",
+    "Nanoscopy",
+    "Two-photon",
+    "Widefield inverted microscope",
+    "Widefield Peter",
+    "Widefield upright",
+    "Widefield microscope",
+]
 
 procedure_stages = ["Consulting", "Short", "Validated", "Declined"]
 request_stages = ["In progress", "Pending", "Finished"]
@@ -93,7 +112,7 @@ class RunSetUP(Command):
         self.create_notifier()
         self.create_admin_group()
         self.create_default_ticket_status()
-        self.create_default_requester_role_levels()
+        self.create_default_instrument_levels()
         self.create_default_request_stage_levels()
         self.create_default_procedure_stage_levels()
         self.create_default_depts()
@@ -238,18 +257,15 @@ class RunSetUP(Command):
                     print("Added status level {}".format(s))
 
     @staticmethod
-    def create_default_requester_role_levels(silent=False):
-        """ set up default requester_role levels """
+    def create_default_instrument_levels(silent=False):
+        """ set up default instrument levels """
 
-        pl = ["PhD", "PostDoc", "Engineer", "Researcher"]
-        for p in pl:
-            requester_role = FlicketRequesterRole.query.filter_by(
-                requester_role=p
-            ).first()
+        for i in instruments:
+            instrument = FlicketInstrument.query.filter_by(instrument=i).first()
 
-            if not requester_role:
-                add_requester_role = FlicketRequesterRole(requester_role=p)
-                db.session.add(add_requester_role)
+            if not instrument:
+                add_instrument = FlicketInstrument(instrument=i)
+                db.session.add(add_instrument)
 
                 if not silent:
                     print("Added requester role level {}".format(p))

@@ -22,7 +22,7 @@ from wtforms.widgets import ListWidget, CheckboxInput
 from application.flicket.models.flicket_models import (
     FlicketRequest,
     FlicketTeam,
-    FlicketRequesterRole,
+    FlicketInstrument,
     FlicketRequestStage,
     FlicketProcedureStage,
     FlicketStatus,
@@ -106,8 +106,8 @@ def does_request_exist(form, field):
 class CreateTicketForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         form = super(CreateTicketForm, self).__init__(*args, **kwargs)
-        self.requester_role.choices = [
-            (p.id, p.requester_role) for p in FlicketRequesterRole.query.all()
+        self.instrument.choices = [
+            (p.id, p.instrument) for p in FlicketInstrument.query.all()
         ]
         self.procedure_stage.choices = [
             (s.id, s.procedure_stage) for s in FlicketProcedureStage.query.all()
@@ -143,7 +143,7 @@ class CreateTicketForm(FlaskForm):
         description=lazy_gettext("contact of the requesters' referee"),
         validators=[],
     )
-    requester_role = SelectField(
+    instrument = SelectField(
         lazy_gettext("requester role"), validators=[DataRequired()], coerce=int
     )
     procedure_stage = SelectField(

@@ -42,7 +42,7 @@ def tickets_view(page, is_my_view=False):
     requester = request.args.get("requester")
     referee = request.args.get("referee")
     user_id = request.args.get("user_id")
-    requester_role = request.args.get("requester_role")
+    instrument = request.args.get("instrument")
     request_stage = request.args.get("request_stage")
     procedure_stage = request.args.get("procedure_stage")
 
@@ -83,7 +83,7 @@ def tickets_view(page, is_my_view=False):
         content=content,
         requester=requester,
         referee=referee,
-        requester_role=requester_role,
+        instrument=instrument,
         request_stage=request_stage,
         procedure_stage=procedure_stage,
     )
@@ -116,7 +116,7 @@ def tickets_view(page, is_my_view=False):
             status=status,
             team=team,
             request=request,
-            requester_role=requester_role,
+            instrument=instrument,
             request_stage=request_stage,
             procedure_stage=procedure_stage,
             user_id=user_id,
