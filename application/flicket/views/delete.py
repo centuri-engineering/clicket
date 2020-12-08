@@ -15,7 +15,7 @@ from application.flicket.models.flicket_models import (
     FlicketTicket,
     FlicketUploads,
     FlicketPost,
-    FlicketDomain,
+    FlicketRequest,
     FlicketTeam,
     FlicketHistory,
 )
@@ -108,54 +108,54 @@ def delete_post(post_id):
     return render_template("flicket_deletepost.html", form=form, post=post, title=title)
 
 
-# delete domain
+# delete request
 @flicket_bp.route(
-    app.config["FLICKET"] + "delete/domain/<int:domain_id>/", methods=["GET", "POST"]
+    app.config["FLICKET"] + "delete/request/<int:request_id>/", methods=["GET", "POST"]
 )
 @login_required
-def delete_domain(domain_id=False):
-    if domain_id:
+def delete_request(request_id=False):
+    if request_id:
 
-        # check user is authorised to delete domains. Only admin or super_user can do this.
+        # check user is authorised to delete requests. Only admin or super_user can do this.
         if not any([g.user.is_admin, g.user.is_super_user]):
             flash(
-                gettext("You are not authorised to delete domains."), category="warning"
+                gettext("You are not authorised to delete requests."), category="warning"
             )
-            return redirect("flicket_bp.domains")
+            return redirect("flicket_bp.requests")
 
         form = ConfirmPassword()
 
-        domains = FlicketTicket.query.filter_by(domain_id=domain_id)
-        domain = FlicketDomain.query.filter_by(id=domain_id).first()
+        requests = FlicketTicket.query.filter_by(request_id=request_id)
+        request = FlicketRequest.query.filter_by(id=request_id).first()
 
-        # stop the deletion of domains assigned to tickets.
-        if domains.count() > 0:
+        # stop the deletion of requests assigned to tickets.
+        if requests.count() > 0:
             flash(
                 gettext(
                     (
-                        "Domain is linked to posts. Domain can not be deleted unless all posts / topics are removed"
+                        "Request is linked to posts. Request can not be deleted unless all posts / topics are removed"
                         " / relinked."
                     )
                 ),
                 category="danger",
             )
-            return redirect(url_for("flicket_bp.domains"))
+            return redirect(url_for("flicket_bp.requests"))
 
         if form.validate_on_submit():
-            # delete domain from database
-            domain = FlicketDomain.query.filter_by(id=domain_id).first()
+            # delete request from database
+            request = FlicketRequest.query.filter_by(id=request_id).first()
 
-            db.session.delete(domain)
+            db.session.delete(request)
             # commit changes
             db.session.commit()
-            flash("Domain deleted", category="success")
-            return redirect(url_for("flicket_bp.domains"))
+            flash("Request deleted", category="success")
+            return redirect(url_for("flicket_bp.requests"))
 
-        notification = 'You are trying to delete domain <span class="label label-default">{}</span> .'.format(
-            domain.domain
+        notification = 'You are trying to delete request <span class="label label-default">{}</span> .'.format(
+            request.request
         )
 
-        title = gettext("Delete Domain")
+        title = gettext("Delete Request")
 
         return render_template(
             "flicket_delete.html", form=form, notification=notification, title=title
@@ -185,7 +185,7 @@ def delete_team(team_id=False):
         teams = FlicketTicket.query.filter_by(team_id=team_id)
         team = FlicketTeam.query.filter_by(id=team_id).first()
 
-        # we can't delete any teams associated with domains.
+        # we can't delete any teams associated with requests.
         if teams.count() > 0:
             flash(
                 gettext(
@@ -199,7 +199,7 @@ def delete_team(team_id=False):
             return redirect(url_for("flicket_bp.teams"))
 
         if form.validate_on_submit():
-            # delete domain from database
+            # delete request from database
             team = FlicketTeam.query.filter_by(id=team_id).first()
 
             db.session.delete(team)

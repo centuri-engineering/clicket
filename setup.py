@@ -15,7 +15,7 @@ from application.flicket.models.flicket_models import (
     FlicketRequestStage,
     FlicketProcedureStage,
     FlicketTeam,
-    FlicketDomain,
+    FlicketRequest,
 )
 from application.flicket.models.flicket_user import FlicketUser, FlicketGroup
 from application.flicket.scripts.hash_password import hash_password
@@ -45,34 +45,35 @@ flicket_config = {
     "avatar_upload_folder": "application/flicket/static/flicket_avatars",
 }
 
-# Default domains
-domains = [
-    "Bioinformatics",
-    "Database Management",
-    "Image data processing",
-    "Optics and biophotonics",
-    "Mechatronics",
-    "Software Development",
+# Default requests
+requests = [
+    "Maintenance",
+    "Acquisition",
+    "Sample prep",
+    "Data analysis",
+    "Collaboration",
+    "Informatique",
+    "Général",
+    "SMQ",
 ]
 
 teams = [
-    "IBDM",
-    "Institut Fresnel",
-    "CIML",
-    "INMED",
-    "CINAM",
-    "LAI",
-    "IRPHE",
-    "M2P2",
-    "TAGC",
-    "IUSTI",
-    "TAGC",
-    "Ciphe",
-    "CPT",
-    "IMM",
-    "Centrale Marseille",
-    "LIS",
-    "CENTURI",
+    "MB",
+    "MDa",
+    "JE",
+    "MG",
+    "JPG",
+    "H&M",
+    "BMM",
+    "PM",
+    "BN-SR",
+    "PN",
+    "PP",
+    "SP",
+    "RR",
+    "SU-EV",
+    "TL",
+    "MS",
 ]
 
 
@@ -285,7 +286,7 @@ class RunSetUP(Command):
 
     @staticmethod
     def create_default_depts(silent=False):
-        """ creates default teams and domains. """
+        """ creates default teams and requests. """
 
         for team in teams:
             query = FlicketTeam.query.filter_by(team=team).first()
@@ -296,14 +297,14 @@ class RunSetUP(Command):
                 if not silent:
                     print("team {} added.".format(team))
 
-        for domain in domains:
-            query = FlicketDomain.query.filter_by(domain=domain).first()
+        for request in requests:
+            query = FlicketRequest.query.filter_by(request=request).first()
             if not query:
-                add_domain = FlicketDomain(domain=domain)
-                db.session.add(add_domain)
+                add_request = FlicketRequest(request=request)
+                db.session.add(add_request)
 
                 if silent is False:
-                    print("domain {} added.".format(domain))
+                    print("request {} added.".format(request))
 
     @staticmethod
     def set_email_config(silent=False):

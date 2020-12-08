@@ -21,9 +21,9 @@ def set_flicket_config():
         avatar_upload_folder=config.avatar_upload_folder,
         base_url=config.base_url,
         application_title=config.application_title,
-        use_auth_domain=config.use_auth_domain,
-        auth_domain=config.auth_domain,
+        use_auth_request=config.use_auth_request,
+        auth_request=config.auth_request,
         csv_dump_limit=config.csv_dump_limit,
-        change_domain=config.change_domain,
-        change_domain_only_admin_or_super_user=config.change_domain_only_admin_or_super_user,
+        change_request=config.change_request,
+        change_request_only_admin_or_super_user=config.change_request_only_admin_or_super_user,
     )

@@ -7,16 +7,16 @@
     Categories
     ==========
 
-    Get Domain By ID
+    Get Request By ID
     ~~~~~~~~~~~~~~~~~~
 
-    .. http:get:: /flicket-api/domain/(int:domain_id)
+    .. http:get:: /flicket-api/request/(int:request_id)
 
         **Request**
 
         .. sourcecode:: http
 
-            GET /flicket-api/domain/1 HTTP/1.1
+            GET /flicket-api/request/1 HTTP/1.1
             HOST: localhost:5000
             Accept: application/json
             Authorization: Bearer <token>
@@ -32,24 +32,24 @@
             Server: Werkzeug/0.14.1 Python/3.7.3
 
             {
-                "domain": "Dataset",
+                "request": "Dataset",
                 "id": 1,
                 "links": {
-                    "domains": "http://127.0.0.1:5000/flicket-api/domains/",
-                    "self": "http://127.0.0.1:5000/flicket-api/domain/1"
+                    "requests": "http://127.0.0.1:5000/flicket-api/requests/",
+                    "self": "http://127.0.0.1:5000/flicket-api/request/1"
                 }
             }
 
-    Get Domains
+    Get Requests
     ~~~~~~~~~~~~~~
 
-    .. http:get:: /flicket-api/domains/
+    .. http:get:: /flicket-api/requests/
 
         **Request**
 
         .. sourcecode:: http
 
-            GET /flicket-api/domains/ HTTP/1.1
+            GET /flicket-api/requests/ HTTP/1.1
             HOST: localhost:5000
             Accept: application/json
             Authorization: Bearer <token>
@@ -68,7 +68,7 @@
                 "_links": {
                     "next": null,
                     "prev": null,
-                    "self": "http://127.0.0.1:5000/flicket-api/domains/?page=1&per_page=50"
+                    "self": "http://127.0.0.1:5000/flicket-api/requests/?page=1&per_page=50"
                 },
                 "_meta": {
                     "page": 1,
@@ -78,35 +78,35 @@
                 },
                 "items": [
                     {
-                        "domain": "Approved Suppliers",
+                        "request": "Approved Suppliers",
                         "id": 14,
                         "links": {
-                            "domains": "http://127.0.0.1:5000/flicket-api/domains/",
-                            "self": "http://127.0.0.1:5000/flicket-api/domain/14"
+                            "requests": "http://127.0.0.1:5000/flicket-api/requests/",
+                            "self": "http://127.0.0.1:5000/flicket-api/request/14"
                         }
                     },
                     {
-                        "domain": "Dataset",
+                        "request": "Dataset",
                         "id": 1,
                         "links": {
-                            "domains": "http://127.0.0.1:5000/flicket-api/domains/",
-                            "self": "http://127.0.0.1:5000/flicket-api/domain/1"
+                            "requests": "http://127.0.0.1:5000/flicket-api/requests/",
+                            "self": "http://127.0.0.1:5000/flicket-api/request/1"
                         }
                     },
                     {
-                        "domain": "ECR",
+                        "request": "ECR",
                         "id": 3,
                         "links": {
-                            "domains": "http://127.0.0.1:5000/flicket-api/domains/",
-                            "self": "http://127.0.0.1:5000/flicket-api/domain/3"
+                            "requests": "http://127.0.0.1:5000/flicket-api/requests/",
+                            "self": "http://127.0.0.1:5000/flicket-api/request/3"
                         }
                     },
                     {
-                        "domain": "Holidays",
+                        "request": "Holidays",
                         "id": 12,
                         "links": {
-                            "domains": "http://127.0.0.1:5000/flicket-api/domains/",
-                            "self": "http://127.0.0.1:5000/flicket-api/domain/12"
+                            "requests": "http://127.0.0.1:5000/flicket-api/requests/",
+                            "self": "http://127.0.0.1:5000/flicket-api/request/12"
                         }
                     }
                 ]
@@ -119,47 +119,47 @@ from flask import jsonify, request, url_for
 from .sphinx_helper import api_url
 from . import bp_api
 from application import app, db
-from application.flicket.models.flicket_models import FlicketDomain
+from application.flicket.models.flicket_models import FlicketRequest
 from application.flicket_api.views.auth import token_auth
 from application.flicket_api.views.errors import bad_request
 
 
-@bp_api.route(api_url + "domain/<int:id>", methods=["GET"])
+@bp_api.route(api_url + "request/<int:id>", methods=["GET"])
 @token_auth.login_required
-def get_domain(id):
-    return jsonify(FlicketDomain.query.get_or_404(id).to_dict())
+def get_request(id):
+    return jsonify(FlicketRequest.query.get_or_404(id).to_dict())
 
 
-@bp_api.route(api_url + "domains/", methods=["GET"])
+@bp_api.route(api_url + "requests/", methods=["GET"])
 @token_auth.login_required
-def get_domains():
-    domains = FlicketDomain.query.order_by(FlicketDomain.domain.asc())
+def get_requests():
+    requests = FlicketRequest.query.order_by(FlicketRequest.request.asc())
     page = request.args.get("page", 1, type=int)
     per_page = min(
         request.args.get("per_page", app.config["posts_per_page"], type=int), 100
     )
-    data = FlicketDomain.to_collection_dict(
-        domains, page, per_page, "bp_api.get_domains"
+    data = FlicketRequest.to_collection_dict(
+        requests, page, per_page, "bp_api.get_requests"
     )
     return jsonify(data)
 
 
-@bp_api.route(api_url + "domains", methods=["POST"])
+@bp_api.route(api_url + "requests", methods=["POST"])
 @token_auth.login_required
-def create_domain():
+def create_request():
     data = request.get_json() or {}
 
-    if "domain" not in data:
-        return bad_request("Must include domain name")
+    if "request" not in data:
+        return bad_request("Must include request name")
 
-    if FlicketDomain.query.filter_by(domain=data["domain"]).first():
-        return bad_request("Domain  already exists.")
+    if FlicketRequest.query.filter_by(request=data["request"]).first():
+        return bad_request("Request  already exists.")
 
-    domain = FlicketDomain(data["domain"])
-    db.session.add(domain)
+    request = FlicketRequest(data["request"])
+    db.session.add(request)
     db.session.commit()
 
-    response = jsonify(domain.to_dict())
+    response = jsonify(request.to_dict())
     response.status_code = 201
-    response.headers["Location"] = url_for("bp_api.get_domain", id=domain.id)
+    response.headers["Location"] = url_for("bp_api.get_request", id=request.id)
     return response

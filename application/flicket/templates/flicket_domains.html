@@ -26,17 +26,17 @@
                     {{ form.hidden_tag() }}
                     {{ form.team_id() }}
                     <div class="row">
-                        <label class="sr-only">{{ form.domain.label }}</label>
+                        <label class="sr-only">{{ form.request.label }}</label>
                         <div class="col">
-                            {{ form.domain(class="form-control form-control-sm", placeholder="domain") }}
+                            {{ form.request(class="form-control form-control-sm", placeholder="request") }}
                         </div>
                         <div class="col">{{ form.submit() }}
                         </div>
                     </div>
-                    {% if form.domain.errors %}
+                    {% if form.request.errors %}
                         <div class="row">
                             <div class="alert alert-warning small">
-                                {% for error in form.domain.errors %}
+                                {% for error in form.request.errors %}
                                     {{ error }}
                                 {% endfor %}
                             </div>
@@ -51,15 +51,15 @@
                 <div class="row">
                     <div class="col"><h3>{{ _('Existing Categories') }}</h3></div>
                 </div>
-                {% for c in domains %}
+                {% for c in requests %}
                     <div class="row">
                         <div class="col">
-                            {{ c.domain }}&nbsp;
-                            <a href="{{ url_for('flicket_bp.domain_edit', domain_id=c.id) }}" title="edit">
+                            {{ c.request }}&nbsp;
+                            <a href="{{ url_for('flicket_bp.request_edit', request_id=c.id) }}" title="edit">
                                 <i class="fas fa-edit"></i>
                             </a>
 
-                            <a href="{{ url_for('flicket_bp.delete_domain', domain_id=c.id) }}" title="delete">
+                            <a href="{{ url_for('flicket_bp.delete_request', request_id=c.id) }}" title="delete">
                                 <i class="fas fa-trash" style="color: red"></i>
                             </a>
 

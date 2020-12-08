@@ -1,9 +1,9 @@
-{% with messages = get_flashed_messages(with_domains=true) %}
+{% with messages = get_flashed_messages(with_requests=true) %}
     {% if messages %}
         <!-- {{ self._TemplateReference__context.name }} -->
         <div class="container">
             <div class="alert alert-{{ messages.0.0 }}" role="alert">
-                {% for domain, message in messages %}
+                {% for request, message in messages %}
                     {{ message }} <br>
                 {% endfor %}
             </div>

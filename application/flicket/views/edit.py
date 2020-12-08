@@ -71,7 +71,7 @@ def edit_ticket(ticket_id):
             requester_role=form.requester_role.data,
             request_stage=1,
             procedure_stage=form.procedure_stage.data,
-            domain=form.domain.data,
+            request=form.request.data,
             team=form.team.data,
             files=request.files.getlist("file"),
             days=form.days.data,
@@ -87,7 +87,7 @@ def edit_ticket(ticket_id):
     form.requester_role.data = ticket.requester_role_id
     form.procedure_stage.data = ticket.procedure_stage_id
     form.title.data = ticket.title
-    form.domain.data = ticket.domain_id
+    form.request.data = ticket.request_id
     form.team.data = ticket.team_id
 
     title = gettext("Edit Ticket")

@@ -5,7 +5,7 @@
         <div class="row bg-white m-2 border round">
             <div class="col">
                 <h1>{{ title }}</h1>
-                <p>{{ _('If you require new teams and / or domains added / deleted, please raise a ticket.') }}</p>
+                <p>{{ _('If you require new teams and / or requests added / deleted, please raise a ticket.') }}</p>
             </div>
         </div>
 
@@ -105,21 +105,21 @@
                             {%- endif -%}
                         </div>
                         <div class="col">
-                            {%- for c in d.domains -%}
-                                {{ c.domain }}
+                            {%- for c in d.requests -%}
+                                {{ c.request }}
                                 {%- if g.user.is_admin or g.user.is_super_user -%}
-                                    <a href="{{ url_for('flicket_bp.domain_edit', domain_id=c.id) }}"
+                                    <a href="{{ url_for('flicket_bp.request_edit', request_id=c.id) }}"
                                        title="edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="{{ url_for('flicket_bp.delete_domain', domain_id=c.id) }}"
+                                    <a href="{{ url_for('flicket_bp.delete_request', request_id=c.id) }}"
                                        title="delete">
                                         <i class="fas fa-trash" style="color: red"></i>
                                     </a>
                                 {%- endif -%}
                             {%- endfor -%}
                             {%- if g.user.is_admin or g.user.is_super_user -%}
-                                <a href="{{ url_for('flicket_bp.domains', team_id=d.id) }}">
+                                <a href="{{ url_for('flicket_bp.requests', team_id=d.id) }}">
                                     <i class="fas fa-plus"></i>
                                 </a>
                             {%- endif -%}

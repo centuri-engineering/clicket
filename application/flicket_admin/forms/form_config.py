@@ -65,14 +65,14 @@ class ConfigForm(FlaskForm):
         lazy_gettext("base_url"), validators=[Length(min=0, max=128)]
     )
 
-    use_auth_domain = BooleanField(lazy_gettext("use_auth_domain"), validators=[])
-    auth_domain = StringField(lazy_gettext("auth_domain"), validators=[])
+    use_auth_request = BooleanField(lazy_gettext("use_auth_request"), validators=[])
+    auth_request = StringField(lazy_gettext("auth_request"), validators=[])
 
     csv_dump_limit = IntegerField(lazy_gettext("csv_dump_limit"), validators=[])
 
-    change_domain = BooleanField(lazy_gettext("change_domain"), validators=[])
-    change_domain_only_admin_or_super_user = BooleanField(
-        lazy_gettext("change_domain_only_admin_or_super_user"), validators=[]
+    change_request = BooleanField(lazy_gettext("change_request"), validators=[])
+    change_request_only_admin_or_super_user = BooleanField(
+        lazy_gettext("change_request_only_admin_or_super_user"), validators=[]
     )
 
     submit = SubmitField(

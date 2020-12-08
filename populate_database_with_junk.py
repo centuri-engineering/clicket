@@ -15,7 +15,7 @@ from application import db
 from application.flicket.models.flicket_models import (
     FlicketTicket,
     FlicketStatus,
-    FlicketDomain,
+    FlicketRequest,
     FlicketPost,
     field_size,
 )
@@ -43,11 +43,11 @@ def get_random_status():
     return FlicketStatus.query.filter_by(id=id_).first()
 
 
-def get_random_domain():
-    domain = FlicketDomain.query
-    id_ = randint(1, domain.count())
+def get_random_request():
+    request = FlicketRequest.query
+    id_ = randint(1, request.count())
 
-    return FlicketDomain.query.filter_by(id=id_).first()
+    return FlicketRequest.query.filter_by(id=id_).first()
 
 
 def create_ticket_reply(new_ticket):
@@ -130,7 +130,7 @@ def topic_creation(num_topics_):
             date_added=datetime.datetime.now(),
             current_status=get_random_status(),
             ticket_priority=get_random_priority(),
-            domain=get_random_domain(),
+            request=get_random_request(),
             assigned=get_random_user(),
         )
 
@@ -164,7 +164,7 @@ if __name__ == "__main__":
     while mismatch is True:
         print(
             "When populating with junk users will be added with "
-            "<your_email_username>+<random_username>@<email_domain>."
+            "<your_email_username>+<random_username>@<email_request>."
         )
         base_email = input("Please enter your email for testing > ")
         base_email_confirm = input("Please confirm your email > ")

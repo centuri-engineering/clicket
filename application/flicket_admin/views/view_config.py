@@ -44,14 +44,14 @@ def config():
         config_details.ticket_upload_folder = form.ticket_upload_folder.data
         config_details.base_url = form.base_url.data
 
-        config_details.use_auth_domain = form.use_auth_domain.data
-        config_details.auth_domain = form.auth_domain.data
+        config_details.use_auth_request = form.use_auth_request.data
+        config_details.auth_request = form.auth_request.data
 
         config_details.csv_dump_limit = form.csv_dump_limit.data
 
-        config_details.change_domain = form.change_domain.data
-        config_details.change_domain_only_admin_or_super_user = (
-            form.change_domain_only_admin_or_super_user.data
+        config_details.change_request = form.change_request.data
+        config_details.change_request_only_admin_or_super_user = (
+            form.change_request_only_admin_or_super_user.data
         )
 
         # Don't change the password if nothing was entered.
@@ -82,14 +82,14 @@ def config():
     form.ticket_upload_folder.data = config_details.ticket_upload_folder
     form.base_url.data = config_details.base_url
 
-    form.use_auth_domain.data = config_details.use_auth_domain
-    form.auth_domain.data = config_details.auth_domain
+    form.use_auth_request.data = config_details.use_auth_request
+    form.auth_request.data = config_details.auth_request
 
     form.csv_dump_limit.data = config_details.csv_dump_limit
 
-    form.change_domain.data = config_details.change_domain
-    form.change_domain_only_admin_or_super_user.data = (
-        config_details.change_domain_only_admin_or_super_user
+    form.change_request.data = config_details.change_request
+    form.change_request_only_admin_or_super_user.data = (
+        config_details.change_request_only_admin_or_super_user
     )
 
     return render_template(

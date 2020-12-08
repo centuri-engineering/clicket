@@ -14,7 +14,7 @@
                         href="{{ url_for('flicket_bp.tickets_csv',
                                          status=status,
                                          team=team,
-                                         domain=domain,
+                                         request=request,
                                          content=content,
                                          requester=requester,
                                          referee=referee,
@@ -42,7 +42,7 @@
                     {{ form.team(class="form-control form-control-sm flicket-tickets-content p-0", id="team") }}
                   </div>
                   <div class="col-md col-6 text-center">
-                    {{ form.domain(class="form-control form-control-sm flicket-tickets-content p-0", id="domain") }}
+                    {{ form.request(class="form-control form-control-sm flicket-tickets-content p-0", id="request") }}
                   </div>
                   <div class="col-md col-6 text-center">
                     {{ form.requester_role(class="form-control form-control-sm flicket-tickets-content p-0", id="requester_role") }}
@@ -112,10 +112,10 @@
                             <i class="fas fa-sort-numeric-up"></i>
                             {{ _('Date') }}
                         </a>
-                        <a class="dropdown-item small{% if sort == 'team_domain' %} active{% endif %}"
-                           href="{{ url_for(base_url, sort='team_domain', **request.args) }}">
+                        <a class="dropdown-item small{% if sort == 'team_request' %} active{% endif %}"
+                           href="{{ url_for(base_url, sort='team_request', **request.args) }}">
                             <i class="fas fa-sort-alpha-down"></i>
-                            {{ _('Team / Domain') }}
+                            {{ _('Team / Request') }}
                         </a>
                         <a class="dropdown-item small{% if sort == 'status' %} active{% endif %}"
                            href="{{ url_for(base_url, sort='status', **request.args) }}">
@@ -178,10 +178,10 @@
                             </div>
                             <div class="col-md-2 col-6">
                                 <div class="flicket-tickets-title">
-                                    Domain
+                                    Request
                                 </div>
                                 <div class="flicket-tickets-content">
-                                    {{ t.domain.domain }}
+                                    {{ t.request.request }}
                                 </div>
                             </div>
                             <div class="col-md-2 col-6">

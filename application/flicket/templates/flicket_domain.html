@@ -15,31 +15,31 @@
             <div class="col">
                 <h2 class="flicket-title">#{{ ticket.id_zfill }} - {{ ticket.title }}</h2>
                 <p>
-                    {{ _('Type domain and pick from drop down list to change domain.') }} <a
-                        href="{{ url_for('flicket_bp.departments') }}" target="_blank">Available domains</a>.
+                    {{ _('Type request and pick from drop down list to change request.') }} <a
+                        href="{{ url_for('flicket_bp.departments') }}" target="_blank">Available requests</a>.
                 </p>
                 <form action=""
                       class="form-horizontal"
                       enctype="multipart/form-data"
                       method="post"
-                      name="change_domain">
+                      name="change_request">
                     {{ form.hidden_tag() }}
 
 
                     <div class="row">
-                        <label class="col-2 col-form-label" for="autocomplete-domain">
-                            {{ form.domain.label }}
+                        <label class="col-2 col-form-label" for="autocomplete-request">
+                            {{ form.request.label }}
                         </label>
                         <div class="col-3">
-                            {{ form.domain(class="form-control form-control-sm", id="autocomplete-domain") }}
+                            {{ form.request(class="form-control form-control-sm", id="autocomplete-request") }}
                         </div>
                         <div class="col-6">
                             {{ form.submit }}
                         </div>
                     </div>
-                    {% if form.domain.errors %}
+                    {% if form.request.errors %}
                         <div class="alert alert-warning small">
-                            {% for error in form.domain.errors %}
+                            {% for error in form.request.errors %}
                                 {{ error }}
                             {% endfor %}
                         </div>
@@ -51,5 +51,5 @@
 
     </div>
 
-    {% include('flicket_apijson_domain.html') %}
+    {% include('flicket_apijson_request.html') %}
 {% endblock %}

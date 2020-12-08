@@ -1,22 +1,22 @@
 <script type="text/javascript">
     $(function () {
-        $('#autocomplete-domain').autocomplete({
+        $('#autocomplete-request').autocomplete({
             source: function (request, response) {
                 $.ajax({
-                    url: '/flicket-api/domain/',
+                    url: '/flicket-api/request/',
                     datatype: 'json',
                     headers: {
                         'Authorization' : 'Bearer {{ g.user.token }}'
                     },
                     data: {
-                        domain: request.term
+                        request: request.term
                     },
                     success: function (data) {
                         console.log(data.items);
                         response($.map(data.items, function (item) {
                             return {
-                                label: item.domain,
-                                value: item.domain
+                                label: item.request,
+                                value: item.request
                             }
                         }));
                     }

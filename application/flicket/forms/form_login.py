@@ -32,8 +32,8 @@ def login_user_exist(form, field):
     username = form.username.data
     password = form.password.data
 
-    if app.config["use_auth_domain"]:
-        nt_authenticated = nt_log_on(app.config["auth_domain"], username, password)
+    if app.config["use_auth_request"]:
+        nt_authenticated = nt_log_on(app.config["auth_request"], username, password)
     else:
         nt_authenticated = False
 
@@ -44,14 +44,14 @@ def login_user_exist(form, field):
         )
     )
     if result.count() == 0:
-        # couldn't find username in database so check if the user is authenticated on the domain.
+        # couldn't find username in database so check if the user is authenticated on the request.
         if nt_authenticated:
             # user might have tried to login with full email?
             username = username.split("@")[0]
             # create the previously unregistered user.
             create_user(username, password, name=username)
         else:
-            # user can't be authenticated on the domain or found in the database.
+            # user can't be authenticated on the request or found in the database.
             field.errors.append("Invalid username or email.")
         return False
     result = result.first()

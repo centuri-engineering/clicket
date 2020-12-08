@@ -12,8 +12,8 @@
 
     <div class="row mt-2 align-self-end">
       <div class="col align-self-end">
-        <label class="control-label mb-0">{{ _('Domain') }}</label>
-        {{ form.domain(class="form-control form-control-sm m-0") }}
+        <label class="control-label mb-0">{{ _('Request') }}</label>
+        {{ form.request(class="form-control form-control-sm m-0") }}
       </div>
       <div class="col align-self-end">
         <label class="control-label mb-0">{{ _('Team') }}</label>
@@ -103,9 +103,9 @@
     </div>
     {% endif %}
 
-    {% if form.domain.errors %}
+    {% if form.request.errors %}
     <div class="alert alert-warning small">
-      {% for error in form.domain.errors %}
+      {% for error in form.request.errors %}
       {{ error }}
       {% endfor %}
     </div>

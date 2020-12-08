@@ -37,7 +37,7 @@ def tickets_view(page, is_my_view=False):
     # get request arguments from the url
     status = request.args.get("status")
     team = request.args.get("team")
-    domain = request.args.get("domain")
+    request = request.args.get("request")
     content = request.args.get("content")
     requester = request.args.get("requester")
     referee = request.args.get("referee")
@@ -77,7 +77,7 @@ def tickets_view(page, is_my_view=False):
     ticket_query, form = FlicketTicket.query_tickets(
         form,
         team=team,
-        domain=domain,
+        request=request,
         status=status,
         user_id=user_id,
         content=content,
@@ -115,7 +115,7 @@ def tickets_view(page, is_my_view=False):
             number_results=number_results,
             status=status,
             team=team,
-            domain=domain,
+            request=request,
             requester_role=requester_role,
             request_stage=request_stage,
             procedure_stage=procedure_stage,
@@ -151,7 +151,7 @@ def tickets_csv():
     # get request arguments from the url
     status = request.args.get("status")
     team = request.args.get("team")
-    domain = request.args.get("domain")
+    request = request.args.get("request")
     content = request.args.get("content")
     requester = request.args.get("requester")
     referee = request.args.get("referee")
@@ -159,7 +159,7 @@ def tickets_csv():
 
     ticket_query, form = FlicketTicket.query_tickets(
         team=team,
-        domain=domain,
+        request=request,
         status=status,
         user_id=user_id,
         content=content,
@@ -172,7 +172,7 @@ def tickets_csv():
     file_name = date_stamp + "ticketdump.csv"
 
     csv_contents = (
-        "Ticket_ID,Title,Submitted By,Date,Replies,Domain,Status,Assigned,URL\n"
+        "Ticket_ID,Title,Submitted By,Date,Replies,Request,Status,Assigned,URL\n"
     )
     for ticket in ticket_query:
 
@@ -187,8 +187,8 @@ def tickets_csv():
             ticket.user.name,
             ticket.date_added.strftime("%Y-%m-%d"),
             ticket.num_replies,
-            clean_csv_data(ticket.domain.team.team),
-            clean_csv_data(ticket.domain.domain),
+            clean_csv_data(ticket.request.team.team),
+            clean_csv_data(ticket.request.request),
             ticket.current_status.status,
             _name,
             app.config["base_url"],

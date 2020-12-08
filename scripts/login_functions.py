@@ -4,14 +4,14 @@
 import os
 
 
-def nt_log_on(domain, username, password):
+def nt_log_on(request, username, password):
     """
 
     This feature is experimental for windows hosts that want to authenticate on the
-    local machines domain running this application.
+    local machines request running this application.
 
     # todo: This will eventually be changed to use ldap but I don't currently have a means to test this.
-    :param domain:
+    :param request:
     :param username:
     :param password:
     :return:
@@ -34,7 +34,7 @@ def nt_log_on(domain, username, password):
         try:
             token = win32security.LogonUser(
                 username,
-                domain,
+                request,
                 password,
                 win32security.LOGON32_LOGON_NETWORK,
                 win32security.LOGON32_PROVIDER_DEFAULT,

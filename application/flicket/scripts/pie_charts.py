@@ -7,7 +7,7 @@ import json
 
 import plotly
 
-from application.flicket.models.flicket_models import FlicketDomain
+from application.flicket.models.flicket_models import FlicketRequest
 from application.flicket.models.flicket_models import FlicketTeam
 from application.flicket.models.flicket_models import FlicketStatus, FlicketRequestStage
 
@@ -15,11 +15,11 @@ from application.flicket.models.flicket_models import FlicketStatus, FlicketRequ
 from application.flicket.models.flicket_models import FlicketTicket
 
 
-def count_domain_tickets(domain, stage):
+def count_request_tickets(request, stage):
     query = (
-        FlicketTicket.query.join(FlicketDomain)
+        FlicketTicket.query.join(FlicketRequest)
         .join(FlicketRequestStage)
-        .filter(FlicketDomain.domain == domain)
+        .filter(FlicketRequest.request == request)
         .filter(FlicketRequestStage.request_stage == stage)
     )
 
@@ -33,18 +33,18 @@ def create_pie_chart_dict():
     """
 
     stages = FlicketRequestStage.query
-    domains = FlicketDomain.query
+    requests = FlicketRequest.query
 
     graphs = []
 
-    for domain in domains:
+    for request in requests:
 
-        graph_title = domain.domain
+        graph_title = request.request
         graph_labels = []
         graph_values = []
         for stage in stages:
             graph_labels.append(stage.request_stage)
-            graph_values.append(count_domain_tickets(graph_title, stage.request_stage))
+            graph_values.append(count_request_tickets(graph_title, stage.request_stage))
 
         # append graphs if have values.
         if any(graph_values):

@@ -9,59 +9,59 @@ from flask_babel import gettext
 
 from . import flicket_bp
 from application import app, db
-from application.flicket.forms.flicket_forms import DomainForm
-from application.flicket.models.flicket_models import FlicketDomain, FlicketTeam
+from application.flicket.forms.flicket_forms import RequestForm
+from application.flicket.models.flicket_models import FlicketRequest, FlicketTeam
 
 
 # create ticket
 @flicket_bp.route(
-    app.config["FLICKET"] + "domains/<int:team_id>/", methods=["GET", "POST"]
+    app.config["FLICKET"] + "requests/<int:team_id>/", methods=["GET", "POST"]
 )
 @login_required
-def domains():
-    form = DomainForm()
-    domains = FlicketDomain.query.order_by(FlicketDomain.domain.asc())
+def requests():
+    form = RequestForm()
+    requests = FlicketRequest.query.order_by(FlicketRequest.request.asc())
 
     if form.validate_on_submit():
-        add_domain = FlicketDomain(domain=form.domain.data)
-        db.session.add(add_domain)
+        add_request = FlicketRequest(request=form.request.data)
+        db.session.add(add_request)
         db.session.commit()
-        flash(gettext(f"New domain {form.domain.data} added."), category="success")
-        return redirect(url_for("flicket_bp.domains"))
+        flash(gettext(f"New request {form.request.data} added."), category="success")
+        return redirect(url_for("flicket_bp.requests"))
 
-    title = gettext("Domains")
+    title = gettext("Requests")
 
     return render_template(
-        "flicket_domains.html", title=title, form=form, domains=domains
+        "flicket_requests.html", title=title, form=form, requests=requests
     )
 
 
 @flicket_bp.route(
-    app.config["FLICKET"] + "domain_edit/<int:domain_id>/", methods=["GET", "POST"]
+    app.config["FLICKET"] + "request_edit/<int:request_id>/", methods=["GET", "POST"]
 )
 @login_required
-def domain_edit(domain_id=False):
-    if domain_id:
+def request_edit(request_id=False):
+    if request_id:
 
-        form = DomainForm()
-        domain = FlicketDomain.query.filter_by(id=domain_id).first()
+        form = RequestForm()
+        request = FlicketRequest.query.filter_by(id=request_id).first()
 
         if form.validate_on_submit():
-            domain.domain = form.domain.data
+            request.request = form.request.data
             db.session.commit()
-            flash(f"Domain {form.domain.data} edited.")
-            return redirect(url_for("flicket_bp.domains"))
+            flash(f"Request {form.request.data} edited.")
+            return redirect(url_for("flicket_bp.requests"))
 
-        form.domain.data = domain.domain
+        form.request.data = request.request
 
-        title = gettext("Edit Domain")
+        title = gettext("Edit Request")
 
         return render_template(
-            "flicket_domain_edit.html",
+            "flicket_request_edit.html",
             title=title,
             form=form,
-            domain=domain,
-            team=domain.team.team,
+            request=request,
+            team=request.team.team,
         )
 
-    return redirect(url_for("flicket_bp.domains"))
+    return redirect(url_for("flicket_bp.requests"))

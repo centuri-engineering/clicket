@@ -38,8 +38,8 @@ def upgrade():
         sa.Column("avatar_upload_folder", sa.String(length=256), nullable=True),
         sa.Column("application_title", sa.String(length=32), nullable=True),
         sa.Column("base_url", sa.String(length=128), nullable=True),
-        sa.Column("auth_domain", sa.String(length=64), nullable=True),
-        sa.Column("use_auth_domain", sa.BOOLEAN(), nullable=True),
+        sa.Column("auth_request", sa.String(length=64), nullable=True),
+        sa.Column("use_auth_request", sa.BOOLEAN(), nullable=True),
         sa.Column("csv_dump_limit", sa.Integer(), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )
@@ -87,9 +87,9 @@ def upgrade():
         op.f("ix_flicket_users_username"), "flicket_users", ["username"], unique=True
     )
     op.create_table(
-        "flicket_domain",
+        "flicket_request",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("domain", sa.String(length=30), nullable=True),
+        sa.Column("request", sa.String(length=30), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
@@ -116,12 +116,12 @@ def upgrade():
         sa.Column("date_modified", sa.DateTime(), nullable=True),
         sa.Column("modified_id", sa.Integer(), nullable=True),
         sa.Column("status_id", sa.Integer(), nullable=True),
-        sa.Column("domain_id", sa.Integer(), nullable=True),
+        sa.Column("request_id", sa.Integer(), nullable=True),
         sa.Column("team_id", sa.Integer(), nullable=True),
         sa.Column("assigned_id", sa.Integer(), nullable=True),
         sa.Column("ticket_priority_id", sa.Integer(), nullable=True),
         sa.ForeignKeyConstraint(["assigned_id"], ["flicket_users.id"],),
-        sa.ForeignKeyConstraint(["domain_id"], ["flicket_domain.id"],),
+        sa.ForeignKeyConstraint(["request_id"], ["flicket_request.id"],),
         sa.ForeignKeyConstraint(["team_id"], ["flicket_team.id"],),
         sa.ForeignKeyConstraint(["modified_id"], ["flicket_users.id"],),
         sa.ForeignKeyConstraint(["started_id"], ["flicket_users.id"],),
@@ -213,7 +213,7 @@ def downgrade():
     op.drop_index(op.f("ix_flicket_topic_title"), table_name="flicket_topic")
     op.drop_table("flicket_topic")
     op.drop_table("flicket_groups")
-    op.drop_table("flicket_domain")
+    op.drop_table("flicket_request")
     op.drop_index(op.f("ix_flicket_users_username"), table_name="flicket_users")
     op.drop_index(op.f("ix_flicket_users_token"), table_name="flicket_users")
     op.drop_table("flicket_users")

@@ -21,8 +21,8 @@ field_size = {
     "status_max_length": 20,
     "team_min_length": 3,
     "team_max_length": 30,
-    "domain_min_length": 3,
-    "domain_max_length": 128,
+    "request_min_length": 3,
+    "request_max_length": 128,
     "filename_min_length": 3,
     "filename_max_length": 128,
     "action_max_length": 30,
@@ -90,38 +90,38 @@ class FlicketTeam(PaginatedAPIMixin, Base):
         return "<FlicketTeam: id={}, team={}>".format(self.id, self.team)
 
 
-class FlicketDomain(PaginatedAPIMixin, Base):
-    __tablename__ = "flicket_domain"
+class FlicketRequest(PaginatedAPIMixin, Base):
+    __tablename__ = "flicket_request"
 
     id = db.Column(db.Integer, primary_key=True)
-    domain = db.Column(db.String(field_size["domain_max_length"]))
+    request = db.Column(db.String(field_size["request_max_length"]))
 
-    def __init__(self, domain):
+    def __init__(self, request):
         """
 
-        :param domain:
+        :param request:
         """
-        self.domain = domain
+        self.request = request
 
     def to_dict(self):
         """
-        Returns a dictionary object about the domain and its team
+        Returns a dictionary object about the request and its team
         :return:
         """
         data = {
             "id": self.id,
-            "domain": self.domain,
+            "request": self.request,
             "links": {
                 "self": app.config["base_url"]
-                + url_for("bp_api.get_domain", id=self.id),
-                "domains": app.config["base_url"] + url_for("bp_api.get_domains"),
+                + url_for("bp_api.get_request", id=self.id),
+                "requests": app.config["base_url"] + url_for("bp_api.get_requests"),
             },
         }
 
         return data
 
     def __repr__(self):
-        return "<FlicketDomain: id={}, domain={}>".format(self.id, self.domain)
+        return "<FlicketRequest: id={}, request={}>".format(self.id, self.request)
 
 
 class FlicketRequesterRole(PaginatedAPIMixin, Base):
@@ -162,7 +162,7 @@ class FlicketRequestStage(PaginatedAPIMixin, Base):
 
     def to_dict(self):
         """
-        Returns a dictionary object about the domain and its team
+        Returns a dictionary object about the request and its team
         :return:
         """
         data = {
@@ -235,8 +235,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
     status_id = db.Column(db.Integer, db.ForeignKey(FlicketStatus.id))
     current_status = db.relationship(FlicketStatus)
 
-    domain_id = db.Column(db.Integer, db.ForeignKey(FlicketDomain.id))
-    domain = db.relationship(FlicketDomain)
+    request_id = db.Column(db.Integer, db.ForeignKey(FlicketRequest.id))
+    request = db.relationship(FlicketRequest)
 
     team_id = db.Column(db.Integer, db.ForeignKey(FlicketTeam.id))
     team = db.relationship(FlicketTeam)
@@ -305,7 +305,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         """
 
         team = ""
-        domain = ""
+        request = ""
         status = ""
         user_id = ""
         requester_role = ""
@@ -324,8 +324,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 .first()
                 .team
             )
-        if form.domain.data:
-            domain = FlicketDomain.query.filter_by(id=form.domain.data).first().domain
+        if form.request.data:
+            request = FlicketRequest.query.filter_by(id=form.request.data).first().request
 
         if form.status.data:
             status = FlicketStatus.query.filter_by(id=form.status.data).first().status
@@ -354,7 +354,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             url,
             content=form.content.data,
             team=team,
-            domain=domain,
+            request=request,
             status=status,
             user_id=user_id,
             requester_role=requester_role,
@@ -475,13 +475,13 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                     form.team.data = (
                         FlicketTeam.query.filter_by(team=value).first().id
                     )
-            if key == "domain" and value:
+            if key == "request" and value:
                 ticket_query = ticket_query.filter(
-                    FlicketTicket.domain.has(FlicketDomain.domain == value)
+                    FlicketTicket.request.has(FlicketRequest.request == value)
                 )
                 if form:
-                    form.domain.data = (
-                        FlicketDomain.query.filter_by(domain=value).first().id
+                    form.request.data = (
+                        FlicketRequest.query.filter_by(request=value).first().id
                     )
             if key == "user_id" and value:
                 # ticket_query = ticket_query.filter_by(assigned_id=int(value))
@@ -613,7 +613,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             "content",
             "requester",
             "referee",
-            "domain_id",
+            "request_id",
             "team_id",
             "requester_role_id",
             "request_stage_id",
@@ -644,7 +644,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         data = {
             "id": self.id,
             "assigned_id": self.assigned_id,
-            "domain_id": self.domain_id,
+            "request_id": self.request_id,
             "team_id": self.team_id,
             "content": self.content,
             "requester": self.requester,
@@ -671,8 +671,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 "started_ny": app.config["base_url"]
                 + url_for("bp_api.get_user", id=self.started_id),
                 "modified_by": modified_by,
-                "domain": app.config["base_url"]
-                + url_for("bp_api.get_domain", id=self.domain_id),
+                "request": app.config["base_url"]
+                + url_for("bp_api.get_request", id=self.request_id),
                 "team": app.config["base_url"]
                 + url_for("bp_api.get_team", id=self.team_id),
                 "status": app.config["base_url"]
@@ -708,7 +708,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             f"id={self.id}, "
             f'title="{self.title}", '
             f"created_by={self.user}, "
-            f"domain={self.domain}"
+            f"request={self.request}"
             f"team={self.team}"
             f"status={self.current_status}"
             f"assigned={self.assigned}>"

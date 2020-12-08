@@ -20,7 +20,7 @@ from wtforms.validators import DataRequired, Length
 from wtforms.widgets import ListWidget, CheckboxInput
 
 from application.flicket.models.flicket_models import (
-    FlicketDomain,
+    FlicketRequest,
     FlicketTeam,
     FlicketRequesterRole,
     FlicketRequestStage,
@@ -89,15 +89,15 @@ def does_team_exist(form, field):
     return True
 
 
-def does_domain_exist(form, field):
+def does_request_exist(form, field):
     """"""
     result = (
-        FlicketDomain.query.filter_by(domain=form.domain.data)
+        FlicketRequest.query.filter_by(request=form.request.data)
         .filter_by(team_id=form.team_id.data)
         .count()
     )
     if result > 0:
-        field.errors.append(gettext("Domain already exists."))
+        field.errors.append(gettext("Request already exists."))
         return False
 
     return True
@@ -112,7 +112,7 @@ class CreateTicketForm(FlaskForm):
         self.procedure_stage.choices = [
             (s.id, s.procedure_stage) for s in FlicketProcedureStage.query.all()
         ]
-        self.domain.choices = [(c.id, c.domain) for c in FlicketDomain.query.all()]
+        self.request.choices = [(c.id, c.request) for c in FlicketRequest.query.all()]
         self.team.choices = [
             (c.id, c.team) for c in FlicketTeam.query.all()
         ]
@@ -160,8 +160,8 @@ class CreateTicketForm(FlaskForm):
             ),
         ],
     )
-    domain = SelectField(
-        lazy_gettext("domain"), validators=[DataRequired()], coerce=int
+    request = SelectField(
+        lazy_gettext("request"), validators=[DataRequired()], coerce=int
     )
     team = SelectField(
         lazy_gettext("team"), validators=[DataRequired()], coerce=int
@@ -288,19 +288,19 @@ class TeamForm(FlaskForm):
     submit = SubmitField(lazy_gettext("add team"), render_kw=form_class_button)
 
 
-class DomainForm(FlaskForm):
-    """ Domain form. """
+class RequestForm(FlaskForm):
+    """ Request form. """
 
-    domain = StringField(
-        lazy_gettext("Domain"),
+    request = StringField(
+        lazy_gettext("Request"),
         validators=[
             DataRequired(),
             Length(
-                min=field_size["domain_min_length"],
-                max=field_size["domain_max_length"],
+                min=field_size["request_min_length"],
+                max=field_size["request_max_length"],
             ),
-            does_domain_exist,
+            does_request_exist,
         ],
     )
 
-    submit = SubmitField(lazy_gettext("add domain"), render_kw=form_class_button)
+    submit = SubmitField(lazy_gettext("add request"), render_kw=form_class_button)
