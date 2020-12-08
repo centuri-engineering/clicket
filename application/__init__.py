@@ -151,9 +151,6 @@ from .flicket_api.views import histories
 from .flicket_api.views import posts
 
 # noinspection PyPep8
-from .flicket_api.views import priorities
-
-# noinspection PyPep8
 from .flicket_api.views import status
 
 # noinspection PyPep8

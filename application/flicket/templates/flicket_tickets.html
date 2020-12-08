@@ -59,7 +59,7 @@
                     {{ form.procedure_stage(class="form-control form-control-sm flicket-tickets-content p-0", id="procedure_stage") }}
                   </div>
                   <div class="col-md col-6 text-center">
-                    {{ form.username(class="form-control form-control-sm flicket-tickets-content", placeholder="username", id="autocomplete-username",
+                    {{ form.username(class="form-control form-control-sm flicket-tickets-content", placeholder="username", id="username",
                     **{'data-toggle': "tool-tip",
                     'title':'Filter results by user. Results will include all tickets user has either submitted or replied to.'}) }}
                   </div>
@@ -92,16 +92,6 @@
                         {{ _('Sort') }}
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item small{% if sort == 'priority_desc' %} active{% endif %}"
-                           href="{{ url_for(base_url, sort='priority_desc', **request.args) }}">
-                            <i class="fas fa-sort-amount-down"></i>
-                            {{ _('Priority') }}
-                        </a>
-                        <a class="dropdown-item small{% if sort == 'priority' %} active{% endif %}"
-                           href="{{ url_for(base_url, sort='priority', **request.args) }}">
-                            <i class="fas fa-sort-amount-up"></i>
-                            {{ _('Priority') }}
-                        </a>
                         <a class="dropdown-item small{% if sort == 'ticketid' %} active{% endif %}"
                            href="{{ url_for(base_url, sort='ticketid', **request.args) }}">
                             <i class="fas fa-sort-numeric-down"></i>
@@ -152,16 +142,6 @@
                             <i class="fas fa-sort-alpha-down"></i>
                             {{ _('Assigned') }}
                         </a>
-                        <a class="dropdown-item small{% if sort == 'time' %} active{% endif %}"
-                           href="{{ url_for(base_url, sort='time', **request.args) }}">
-                            <i class="fas fa-sort-numeric-down"></i>
-                            {{ _('Days') }}
-                        </a>
-                        <a class="dropdown-item small{% if sort == 'time_desc' %} active{% endif %}"
-                           href="{{ url_for(base_url, sort='time_desc', **request.args) }}">
-                            <i class="fas fa-sort-numeric-up"></i>
-                            {{ _('Days') }}
-                        </a>
                     </div>
                 </div>
             </div>
@@ -185,14 +165,9 @@
                             <div class="col-md-2 col-6 order-2 flicket-tickets-content">
                                 Replies: {{ t.num_replies }}
                             </div>
-                            <div class="col-md-2 col-6 order-3 flicket-tickets-content">
-                                Days: {{ t.total_days }}
-                            </div>
                         </div>
-
                         <div class="row m-1 {%- if t.current_status.status == 'Closed' %}
                                         flicket-status-closed{% endif %}">
-
                             <div class="col-md-2 col-6">
                                 <div class="flicket-tickets-title">
                                     date
@@ -201,21 +176,12 @@
                                     {{ t.date_added.strftime('%Y-%m-%d') }}
                                 </div>
                             </div>
-
-                            <div class="col-md-1 col-6">
-                              <div class="flicket-tickets-title">
-                                    priority
+                            <div class="col-md-2 col-6">
+                                <div class="flicket-tickets-title">
+                                    Domain
                                 </div>
-                                <div class="flicket-tickets-content  {%- if t.current_status.status == 'Closed' %}
-                                        flicket-status-closed{% endif %}
-                                            {%- if t.ticket_priority.priority == 'high' %}
-                                        flicket-status-high
-                                            {% elif t.ticket_priority.priority == 'medium' %}
-                                        flicket-status-medium
-                                            {% elif t.ticket_priority.priority == 'low' %}
-                                        flicket-status-low
-                                            {% endif %}">
-                                    {{ t.ticket_priority.priority }}
+                                <div class="flicket-tickets-content">
+                                    {{ t.domain.domain }}
                                 </div>
                             </div>
                             <div class="col-md-2 col-6">

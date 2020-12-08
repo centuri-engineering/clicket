@@ -22,7 +22,6 @@ from wtforms.widgets import ListWidget, CheckboxInput
 from application.flicket.models.flicket_models import (
     FlicketDomain,
     FlicketInstitute,
-    FlicketPriority,
     FlicketRequesterRole,
     FlicketRequestStage,
     FlicketProcedureStage,
@@ -91,12 +90,7 @@ def does_institute_exist(form, field):
 
 
 def does_domain_exist(form, field):
-    """
-    Username must be unique so we check against the database to ensure it doesn't
-    :param form:
-    :param field:
-    :return True / False:
-    """
+    """"""
     result = (
         FlicketDomain.query.filter_by(domain=form.domain.data)
         .filter_by(institute_id=form.institute_id.data)
@@ -112,9 +106,6 @@ def does_domain_exist(form, field):
 class CreateTicketForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         form = super(CreateTicketForm, self).__init__(*args, **kwargs)
-        self.priority.choices = [
-            (p.id, p.priority) for p in FlicketPriority.query.all()
-        ]
         self.requester_role.choices = [
             (p.id, p.requester_role) for p in FlicketRequesterRole.query.all()
         ]
@@ -169,10 +160,6 @@ class CreateTicketForm(FlaskForm):
             ),
         ],
     )
-
-    priority = SelectField(
-        lazy_gettext("priority"), validators=[DataRequired()], coerce=int
-    )
     domain = SelectField(
         lazy_gettext("domain"), validators=[DataRequired()], coerce=int
     )
@@ -193,6 +180,7 @@ class MultiCheckBoxField(SelectMultipleField):
 
 class EditTicketForm(CreateTicketForm):
     def __init__(self, ticket_id, *args, **kwargs):
+
         self.form = super(EditTicketForm, self).__init__(*args, **kwargs)
         # get ticket data from ticket_id
         ticket = FlicketTicket.query.filter_by(id=ticket_id).first()
@@ -205,8 +193,6 @@ class EditTicketForm(CreateTicketForm):
             uri = url_for("flicket_bp.view_ticket_uploads", filename=x[1])
             uri_label = '<a href="' + uri + '">' + x[2] + "</a>"
             self.uploads.choices.append((x[0], uri_label))
-
-
 
     uploads = MultiCheckBoxField("Label", coerce=int)
     submit = SubmitField(
@@ -221,9 +207,6 @@ class ReplyForm(FlaskForm):
 
     def __init__(self, *args, **kwargs):
         form = super(ReplyForm, self).__init__(*args, **kwargs)
-        self.priority.choices = [
-            (p.id, p.priority) for p in FlicketPriority.query.all()
-        ]
         self.request_stage.choices = [
             (s.id, s.request_stage) for s in FlicketRequestStage.query.all()
         ]
@@ -231,11 +214,10 @@ class ReplyForm(FlaskForm):
             (s.id, s.procedure_stage) for s in FlicketProcedureStage.query.all()
         ]
 
-    content = PageDownField(lazy_gettext("Reply"),)
-    file = FileField(lazy_gettext("Add Files"), render_kw={"multiple": True})
-    priority = SelectField(
-        lazy_gettext("Priority"), validators=[DataRequired()], coerce=int
+    content = PageDownField(
+        lazy_gettext("Reply"),
     )
+    file = FileField(lazy_gettext("Add Files"), render_kw={"multiple": True})
     request_stage = SelectField(
         lazy_gettext("request stage"), validators=[DataRequired()], coerce=int
     )

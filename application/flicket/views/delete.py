@@ -28,13 +28,8 @@ from . import flicket_bp
 )
 @login_required
 def delete_ticket(ticket_id):
-    # check is user is authorised to delete tickets. Currently, only admins can delete tickets.
-    if not g.user.is_admin:
-        flash(gettext("You are not authorised to delete tickets."), category="warning")
-        return redirect(url_for("flicket_bp.ticket_view", ticket_id=ticket_id))
 
     form = ConfirmPassword()
-
     ticket = FlicketTicket.query.filter_by(id=ticket_id).first()
 
     if form.validate_on_submit():

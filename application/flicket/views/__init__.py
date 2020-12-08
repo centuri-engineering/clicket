@@ -14,5 +14,5 @@ flicket_bp = Blueprint(
     __name__,
     template_folder="../templates",
     static_folder=static_folder,
-    static_url_path="/flicket/static",
+    static_url_path="/clicket/flicket/static",
 )

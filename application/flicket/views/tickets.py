@@ -29,7 +29,7 @@ def clean_csv_data(input_text):
 
 def tickets_view(page, is_my_view=False):
     """
-        Function common to 'tickets' and 'my_tickets' expect where query is filtered for users own tickets.
+    Function common to 'tickets' and 'my_tickets' expect where query is filtered for users own tickets.
     """
 
     form = SearchTicketForm()
@@ -53,6 +53,7 @@ def tickets_view(page, is_my_view=False):
 
     arg_sort = request.args.get("sort")
     if arg_sort:
+        print(arg_sort)
         args = request.args.copy()
         del args["sort"]
 
@@ -70,7 +71,7 @@ def tickets_view(page, is_my_view=False):
     if sort:
         set_cookie = True
     else:
-        sort = "priority_desc"
+        sort = "date_desc"
         set_cookie = False
 
     ticket_query, form = FlicketTicket.query_tickets(
@@ -170,7 +171,9 @@ def tickets_csv():
     date_stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     file_name = date_stamp + "ticketdump.csv"
 
-    csv_contents = "Ticket_ID,Priority,Title,Submitted By,Date,Replies,Domain,Status,Assigned,URL\n"
+    csv_contents = (
+        "Ticket_ID,Title,Submitted By,Date,Replies,Domain,Status,Assigned,URL\n"
+    )
     for ticket in ticket_query:
 
         if hasattr(ticket.assigned, "name"):
@@ -180,7 +183,6 @@ def tickets_csv():
 
         csv_contents += '{},{},"{}",{},{},{},{} - {},{},{},{}{}\n'.format(
             ticket.id_zfill,
-            ticket.ticket_priority.priority,
             clean_csv_data(ticket.title),
             ticket.user.name,
             ticket.date_added.strftime("%Y-%m-%d"),

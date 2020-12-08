@@ -5,35 +5,6 @@
     <script src="{{ url_for('flicket_bp.static', filename='js/plotly.min.js') }}"></script>
 
     <div class="container">
-
-        <div class="row m-2 p-2 border rounded bg-white">
-            <div class="col">
-                <div class="row">
-                    <div class="col text-center">
-                        <h1 class=>{{ _('Open High Priority Tickets') }}</h1>
-                    </div>
-
-
-                </div>
-                <div class="row">
-                    <div class="col">
-                        {% if tickets.count() > 0 %}
-                            <div id="carouselExampleControls" class="carousel slide mt-3" data-ride="carousel">
-                                <div class="carousel-inner">
-                                    {% for t in tickets %}
-                                        <div class="bg-white carousel-item {% if loop.first %} active {% endif %}">
-                                            {% include('flicket_items.html') %}
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
         <div class="row m-2 p-2 border rounded bg-white">
             <div class="col">
                 <div class="row">

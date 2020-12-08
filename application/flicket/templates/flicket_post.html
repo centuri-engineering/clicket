@@ -55,16 +55,14 @@
                         <a href="{{ url_for('flicket_bp.edit_post', post_id = content.id) }}">
                             <i class="fas fa-edit"></i>
                         </a>
-                        {% if g.user.is_admin or g.user.is_super_user %}
-                            <a href="{{ url_for('flicket_bp.delete_post', post_id = content.id) }}">
-                                <i class="fas fa-trash" style="color: red;"></i>
-                            </a>
-                        {%- endif -%}
+                        <a href="{{ url_for('flicket_bp.delete_post', post_id = content.id) }}">
+                          <i class="fas fa-trash" style="color: red;"></i>
+                        </a>
                     {% else %}
                         <a href="{{ url_for('flicket_bp.edit_ticket', ticket_id = content.id) }}">
                             <i class="fas fa-edit"></i>
                         </a>
-                        {% if g.user.is_admin or g.user.is_super_user %}
+                        {% if ( g.user.id == content.user_id ) or (g.user.is_admin) or (g.user.id == ticket.started_id) %}
                             <a href="{{ url_for('flicket_bp.delete_ticket', ticket_id = content.id) }}">
                                 <i class="fas fa-trash" style="color: red;"></i>
                             </a>

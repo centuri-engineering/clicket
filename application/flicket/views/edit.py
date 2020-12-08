@@ -17,7 +17,6 @@ from application.flicket.models.flicket_models import (
     FlicketHistory,
     FlicketPost,
     FlicketStatus,
-    FlicketPriority,
     FlicketRequesterRole,
     FlicketProcedureStage,
     FlicketRequestStage,
@@ -69,7 +68,6 @@ def edit_ticket(ticket_id):
             content=form.content.data,
             requester=form.requester.data,
             referee=form.referee.data,
-            priority=form.priority.data,
             requester_role=form.requester_role.data,
             request_stage=1,
             procedure_stage=form.procedure_stage.data,
@@ -86,9 +84,7 @@ def edit_ticket(ticket_id):
     form.content.data = ticket.content
     form.requester.data = ticket.requester
     form.referee.data = ticket.referee
-    form.priority.data = ticket.ticket_priority_id
     form.requester_role.data = ticket.requester_role_id
-    form.request_stage.data = ticket.request_stage_id
     form.procedure_stage.data = ticket.procedure_stage_id
     form.title.data = ticket.title
     form.domain.data = ticket.domain_id
@@ -126,10 +122,6 @@ def edit_post(post_id):
 
     if form.validate_on_submit():
 
-        # stop closing of ticket via edit.
-        if form.status.data == 2:
-            flash("You can not edit and close ticket.")
-
         # before we make any changes store the original post content in the history table if it has changed.
         if post.modified_id:
             history_id = post.modified_id
@@ -161,41 +153,10 @@ def edit_post(post_id):
                 db.session.delete(query)
 
         post.content = form.content.data
-        post.requester = form.requester.data
-        post.referee = form.referee.data
         post.modified = g.user
         post.date_modified = datetime.datetime.now()
         post.days = form.days.data
 
-        if post.ticket.status_id != form.status.data:
-            status = FlicketStatus.query.get(form.status.data)
-            post.ticket.current_status = status
-            add_action(
-                post.ticket,
-                "status",
-                data={"status_id": status.id, "status": status.status},
-            )
-
-        if post.ticket.ticket_priority_id != form.priority.data:
-            priority = FlicketPriority.query.get(form.priority.data)
-            post.ticket.ticket_priority = priority
-            add_action(
-                post.ticket,
-                "priority",
-                data={"priority_id": priority.id, "priority": priority.priority},
-            )
-
-        if post.ticket.requester_role_id != form.requester_role.data:
-            requester_role = FlicketRequesterRole.query.get(form.requester_role.data)
-            post.ticket.requester_role = requester_role
-            add_action(
-                post.ticket,
-                "requester_role",
-                data={
-                    "requester_role_id": requester_role.id,
-                    "requester_role": requester_role.requester_role,
-                },
-            )
         if post.ticket.request_stage_id != form.request_stage.data:
             request_stage = FlicketRequestStage.query.get(form.request_stage.data)
             post.ticket.request_stage = request_stage
@@ -233,12 +194,7 @@ def edit_post(post_id):
         return redirect(url_for("flicket_bp.ticket_view", ticket_id=post.ticket_id))
 
     form.content.data = post.content
-    form.requester.data = post.requester
-    form.referee.data = post.referee
     form.days.data = post.days
-    form.status.data = post.ticket.status_id
-    form.priority.data = post.ticket.ticket_priority_id
-    form.requester_role.data = post.ticket.requester_role_id
     form.request_stage.data = post.ticket.request_stage_id
     form.procedure_stage.data = post.ticket.procedure_stage_id
 
