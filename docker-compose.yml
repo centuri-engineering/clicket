@@ -1,16 +1,16 @@
 version: '3.7'
 
 services:
-  db:
+  db_ciml:
     image: postgres:11
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_USER=flicket
-      - POSTGRES_PASSWORD=Flicket888
-      - POSTGRES_DB=flicket
-    ports:
-      - 5432:5432
+      - POSTGRES_USER=clicket
+      - POSTGRES_PASSWORD=Clicket2021
+      - POSTGRES_DB=clicket_ciml
+    networks:
+      - omero
   web:
     build: .
     command: python manage.py runserver
@@ -23,11 +23,15 @@ services:
     env_file:
       - ./.env.dev
     depends_on:
-      - db
+      - db_ciml
+    networks:
+      - omero
 volumes:
   postgres_data:
 
-#
+networks:
+  omero:
+
 # python manage.py db migrate
 # python -d manage.py run_set_up
 # python manage.py runserver
