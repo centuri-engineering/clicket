@@ -1,31 +1,40 @@
 version: '3.7'
 
 services:
-  db:
-    image: postgres:11
+  clicket_db:
+    image: "postgres:11"
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+      - backup:/backup
     environment:
       - POSTGRES_USER=flicket
       - POSTGRES_PASSWORD=Flicket888
       - POSTGRES_DB=flicket
-    ports:
-      - 5432:5432
+    networks:
+      - clicket
   web:
     build: .
     command: python manage.py runserver
     volumes:
       - .:/usr/src/app/
     ports:
-      - 5001:5001
+      - 127.0.0.1:5001:5001
     expose:
       - "5001"
-    env_file:
-      - ./.env.dev
     depends_on:
-      - db
+      - clicket_db
+    networks:
+      - clicket
 volumes:
   postgres_data:
+  backup:
+    driver_opts:
+      type: none
+      device: /home/guillaume/data/backups/clicket
+      o: bind
+networks:
+  clicket:
+
 
 #
 # python manage.py db migrate
