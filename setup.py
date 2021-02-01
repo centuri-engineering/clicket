@@ -122,7 +122,7 @@ class RunSetUP(Command):
         with open(config_file, "r") as f:
             config_data = json.load(f)
 
-        base_url = config_data["base_url"]
+        base_url = config_data.get("db_url", "/")
 
         count = FlicketConfig.query.count()
         if count > 0:
@@ -265,7 +265,7 @@ class RunSetUP(Command):
                 db.session.add(add_instrument)
 
                 if not silent:
-                    print("Added requester role level {}".format(p))
+                    print("Added requester role level {}".format(i))
 
     @staticmethod
     def create_default_request_stage_levels(silent=False):

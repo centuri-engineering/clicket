@@ -19,7 +19,7 @@
 from flask import abort
 from flask import Flask
 from flask import g
-from flask import request
+from flask import request as rq
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_pagedown import PageDown
@@ -198,7 +198,7 @@ def get_locale():
     # otherwise try to guess the language from the user accept
     # header the browser transmits.  We support de/fr/en in this
     # example.  The best match wins.
-    return request.accept_languages.best_match(app.config["SUPPORTED_LANGUAGES"].keys())
+    return rq.accept_languages.best_match(app.config["SUPPORTED_LANGUAGES"].keys())
 
 
 @app.url_defaults

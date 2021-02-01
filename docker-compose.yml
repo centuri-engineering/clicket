@@ -13,7 +13,7 @@ services:
     networks:
       - clicket_ciml
     ports:
-      - 5433:5433
+      - 5433:5432
   web_ciml:
     build: .
     command: python manage.py runserver

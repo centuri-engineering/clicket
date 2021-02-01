@@ -6,7 +6,7 @@
 from datetime import datetime
 
 from flask import redirect
-from flask import request
+from flask import request as rq
 from flask import make_response
 from flask import render_template
 from flask import Response
@@ -35,25 +35,25 @@ def tickets_view(page, is_my_view=False):
     form = SearchTicketForm()
 
     # get request arguments from the url
-    status = request.args.get("status")
-    team = request.args.get("team")
-    request = request.args.get("request")
-    content = request.args.get("content")
-    requester = request.args.get("requester")
-    referee = request.args.get("referee")
-    user_id = request.args.get("user_id")
-    instrument = request.args.get("instrument")
-    request_stage = request.args.get("request_stage")
+    status = rq.args.get("status")
+    team = rq.args.get("team")
+    request = rq.args.get("request")
+    content = rq.args.get("content")
+    requester = rq.args.get("requester")
+    referee = rq.args.get("referee")
+    user_id = rq.args.get("user_id")
+    instrument = rq.args.get("instrument")
+    request_stage = rq.args.get("request_stage")
 
     if form.validate_on_submit():
         redirect_url = FlicketTicket.form_redirect(form, url="flicket_bp.tickets")
 
         return redirect(redirect_url)
 
-    arg_sort = request.args.get("sort")
+    arg_sort = rq.args.get("sort")
     if arg_sort:
         print(arg_sort)
-        args = request.args.copy()
+        args = rq.args.copy()
         del args["sort"]
 
         response = make_response(redirect(url_for("flicket_bp.tickets", **args)))
@@ -66,7 +66,7 @@ def tickets_view(page, is_my_view=False):
 
         return response
 
-    sort = request.cookies.get("tickets_sort")
+    sort = rq.cookies.get("tickets_sort")
     if sort:
         set_cookie = True
     else:
@@ -146,13 +146,13 @@ def tickets(page=1):
 @login_required
 def tickets_csv():
     # get request arguments from the url
-    status = request.args.get("status")
-    team = request.args.get("team")
-    request = request.args.get("request")
-    content = request.args.get("content")
-    requester = request.args.get("requester")
-    referee = request.args.get("referee")
-    user_id = request.args.get("user_id")
+    status = rq.args.get("status")
+    team = rq.args.get("team")
+    request = rq.args.get("request")
+    content = rq.args.get("content")
+    requester = rq.args.get("requester")
+    referee = rq.args.get("referee")
+    user_id = rq.args.get("user_id")
 
     ticket_query, form = FlicketTicket.query_tickets(
         team=team,

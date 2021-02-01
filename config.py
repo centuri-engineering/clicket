@@ -43,7 +43,7 @@ class BaseConfiguration(object):
     SECRET_KEY = config_data["SECRET_KEY"]
 
     # The base url for your application.
-    WEBHOME = "/clicket/"
+    WEBHOME = "/"
     # WEBHOME = "/"
     # The base url for flicket.
     FLICKET = WEBHOME + ""
@@ -73,7 +73,7 @@ class TestConfiguration(BaseConfiguration):
     TESTING = True
     SESSION_PROTECTION = None
     LOGIN_DISABLED = False
-    SERVER_NAME = "localhost:5001"
+    SERVER_NAME = "localhost:5002"
     config_data = {
         "db_username": "",
         "db_port": "",

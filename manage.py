@@ -24,7 +24,7 @@ manager.add_command("email_outstanding_tickets", EmailOutStandingTickets)
 
 manager.add_command(
     "runserver",
-    Server(host="0.0.0.0", port=6001, use_reloader=True, use_debugger=True),
+    Server(host="0.0.0.0", port=5002, use_reloader=True, use_debugger=True),
 )
 
 
