@@ -4,33 +4,42 @@ services:
   db_ciml:
     image: postgres:11
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - postgres_data_ciml:/var/lib/postgresql/data/
+      - backup_ciml:/backup
     environment:
       - POSTGRES_USER=clicket
       - POSTGRES_PASSWORD=Clicket2021
       - POSTGRES_DB=clicket_ciml
     networks:
-      - omero
-  web:
+      - clicket_ciml
+    ports:
+      - 5433:5433
+  web_ciml:
     build: .
     command: python manage.py runserver
     volumes:
       - .:/usr/src/app/
+    environment:
+      - POSTGRES_USER=clicket
+      - POSTGRES_PASSWORD=Clicket2021
+      - POSTGRES_DB=clicket_ciml
     ports:
-      - 5001:5001
+      - 5002:5002
     expose:
-      - "5001"
-    env_file:
-      - ./.env.dev
+      - "5002"
     depends_on:
       - db_ciml
     networks:
-      - omero
+      - clicket_ciml
 volumes:
-  postgres_data:
-
+  postgres_data_ciml:
+  backup_ciml:
+    driver_opts:
+      type: none
+      device: /home/guillaume/data/backups/clicket_ciml
+      o: bind
 networks:
-  omero:
+  clicket_ciml:
 
 # python manage.py db migrate
 # python -d manage.py run_set_up
