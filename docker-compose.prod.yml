@@ -1,12 +1,38 @@
 version: '3.7'
 
 services:
+  clicket_db:
+    image: "postgres:11"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+      - backup:/backup
+    environment:
+      - POSTGRES_USER=flicket
+      - POSTGRES_PASSWORD=Flicket888
+      - POSTGRES_DB=flicket
+    networks:
+      - clicket
+    ports:
+      - 127.0.0.1:5432:5432
   web:
     build: .
-    command: gunicorn --bind 0.0.0.0:5001 wsgi:app
+    command: gunicorn --bind 127.0.0.1:5001 wsgi:app
     volumes:
       - .:/usr/src/app/
     ports:
-      - 5001:5001
+      - 127.0.0.1:5001:5001
     expose:
       - "5001"
+    depends_on:
+      - clicket_db
+    networks:
+      - clicket
+volumes:
+  postgres_data:
+  backup:
+    driver_opts:
+      type: none
+      device: /home/guillaume/data/backups/clicket
+      o: bind
+networks:
+  clicket:

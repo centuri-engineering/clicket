@@ -12,11 +12,17 @@ services:
       - POSTGRES_DB=flicket
     networks:
       - clicket
+    ports:
+      - 5432:5432
   web:
     build: .
     command: python manage.py runserver
     volumes:
       - .:/usr/src/app/
+    environment:
+      - POSTGRES_USER=flicket
+      - POSTGRES_PASSWORD=Flicket888
+      - POSTGRES_DB=flicket
     ports:
       - 127.0.0.1:5001:5001
     expose:
