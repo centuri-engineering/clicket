@@ -14,7 +14,7 @@ from application.flicket.models.flicket_models import (
     FlicketInstrument,
     FlicketRequestStage,
     FlicketTeam,
-    FlicketRequest,
+    FlicketRequestType,
 )
 from application.flicket.models.flicket_user import FlicketUser, FlicketGroup
 from application.flicket.scripts.hash_password import hash_password
@@ -44,8 +44,8 @@ flicket_config = {
     "avatar_upload_folder": "application/flicket/static/flicket_avatars",
 }
 
-# Default requests
-requests = [
+# Default request_types
+request_types = [
     "Maintenance",
     "Acquisition",
     "Sample prep",
@@ -284,7 +284,7 @@ class RunSetUP(Command):
 
     @staticmethod
     def create_default_depts(silent=False):
-        """ creates default teams and requests. """
+        """ creates default teams and request_types. """
 
         for team in teams:
             query = FlicketTeam.query.filter_by(team=team).first()
@@ -295,14 +295,16 @@ class RunSetUP(Command):
                 if not silent:
                     print("team {} added.".format(team))
 
-        for request in requests:
-            query = FlicketRequest.query.filter_by(request=request).first()
+        for request_type in request_types:
+            query = FlicketRequestType.query.filter_by(
+                request_type=request_type
+            ).first()
             if not query:
-                add_request = FlicketRequest(request=request)
-                db.session.add(add_request)
+                add_request_type = FlicketRequestType(request_type=request_type)
+                db.session.add(add_request_type)
 
                 if silent is False:
-                    print("request {} added.".format(request))
+                    print("request_type {} added.".format(request_type))
 
     @staticmethod
     def set_email_config(silent=False):

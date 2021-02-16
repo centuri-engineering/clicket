@@ -75,10 +75,10 @@ from .flicket_admin.views import view_email_test
 from .flicket.views import assign
 
 # noinspection PyPep8
-from .flicket.views import requests
+from .flicket.views import request_types
 
 # noinspection PyPep8
-from .flicket.views import request
+from .flicket.views import request_type
 
 # noinspection PyPep8
 from .flicket.views import edit_status
@@ -139,7 +139,7 @@ from .flicket.views import view_ticket
 from .flicket_api.views import actions
 
 # noinspection PyPep8
-from .flicket_api.views import requests
+from .flicket_api.views import request_types
 
 # noinspection PyPep8
 from .flicket_api.views import teams

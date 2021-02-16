@@ -7,7 +7,7 @@ import json
 
 import plotly
 
-from application.flicket.models.flicket_models import FlicketRequest
+from application.flicket.models.flicket_models import FlicketRequestType
 from application.flicket.models.flicket_models import FlicketTeam
 from application.flicket.models.flicket_models import FlicketStatus, FlicketRequestStage
 
@@ -15,11 +15,11 @@ from application.flicket.models.flicket_models import FlicketStatus, FlicketRequ
 from application.flicket.models.flicket_models import FlicketTicket
 
 
-def count_request_tickets(request, stage):
+def count_request_tickets(request_type, stage):
     query = (
-        FlicketTicket.query.join(FlicketRequest)
+        FlicketTicket.query.join(FlicketRequestType)
         .join(FlicketRequestStage)
-        .filter(FlicketRequest.request == request)
+        .filter(FlicketRequestType.request_type == request_type)
         .filter(FlicketRequestStage.request_stage == stage)
     )
 
@@ -33,13 +33,13 @@ def create_pie_chart_dict():
     """
 
     stages = FlicketRequestStage.query
-    requests = FlicketRequest.query
+    request_types = FlicketRequestType.query
 
     graphs = []
 
-    for request in requests:
+    for request_type in request_types:
 
-        graph_title = request.request
+        graph_title = request_type.request_type
         graph_labels = []
         graph_values = []
         for stage in stages:

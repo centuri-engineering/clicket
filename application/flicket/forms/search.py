@@ -11,7 +11,7 @@ from .flicket_forms import does_user_exist
 
 from application.flicket.models.flicket_models import (
     FlicketTeam,
-    FlicketRequest,
+    FlicketRequestType,
     FlicketStatus,
     FlicketInstrument,
     FlicketRequestStage,
@@ -31,11 +31,13 @@ class SearchTicketForm(FlaskForm):
         ]
         self.team.choices.insert(0, (0, "team"))
 
-        self.request.choices = [
-            (c.id, c.request)
-            for c in FlicketRequest.query.order_by(FlicketRequest.request.asc()).all()
+        self.request_type.choices = [
+            (c.id, c.request_type)
+            for c in FlicketRequestType.query.order_by(
+                FlicketRequestType.request_type.asc()
+            ).all()
         ]
-        self.request.choices.insert(0, (0, "request"))
+        self.request_type.choices.insert(0, (0, "request"))
 
         self.username.choices = [
             (u.id, u.username)
@@ -59,7 +61,7 @@ class SearchTicketForm(FlaskForm):
 
     """ Search form. """
     team = SelectField(lazy_gettext("team"), coerce=int, validators=[])
-    request = SelectField(lazy_gettext("request"), coerce=int)
+    request_type = SelectField(lazy_gettext("request type"), coerce=int)
     status = SelectField(lazy_gettext("status"), coerce=int)
     username = SelectField(lazy_gettext("username"), coerce=int, validators=[])
     content = StringField(lazy_gettext("content"), validators=[])

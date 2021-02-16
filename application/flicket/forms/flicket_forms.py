@@ -20,7 +20,7 @@ from wtforms.validators import DataRequired, Length
 from wtforms.widgets import ListWidget, CheckboxInput
 
 from application.flicket.models.flicket_models import (
-    FlicketRequest,
+    FlicketRequestType,
     FlicketTeam,
     FlicketInstrument,
     FlicketRequestStage,
@@ -88,10 +88,10 @@ def does_team_exist(form, field):
     return True
 
 
-def does_request_exist(form, field):
+def does_request_type_exist(form, field):
     """"""
     result = (
-        FlicketRequest.query.filter_by(request=form.request.data)
+        FlicketRequestType.query.filter_by(request_type=form.request_type.data)
         .filter_by(team_id=form.team_id.data)
         .count()
     )
@@ -108,7 +108,9 @@ class CreateTicketForm(FlaskForm):
         self.instrument.choices = [
             (p.id, p.instrument) for p in FlicketInstrument.query.all()
         ]
-        self.request.choices = [(c.id, c.request) for c in FlicketRequest.query.all()]
+        self.request_type.choices = [
+            (c.id, c.request_type) for c in FlicketRequestType.query.all()
+        ]
         self.team.choices = [(c.id, c.team) for c in FlicketTeam.query.all()]
 
     """ Log in form. """
@@ -151,7 +153,7 @@ class CreateTicketForm(FlaskForm):
             ),
         ],
     )
-    request = SelectField(
+    request_type = SelectField(
         lazy_gettext("request"), validators=[DataRequired()], coerce=int
     )
     team = SelectField(lazy_gettext("team"), validators=[DataRequired()], coerce=int)
@@ -271,16 +273,16 @@ class TeamForm(FlaskForm):
 class RequestForm(FlaskForm):
     """ Request form. """
 
-    request = StringField(
-        lazy_gettext("Request"),
+    request_type = StringField(
+        lazy_gettext("Request_type"),
         validators=[
             DataRequired(),
             Length(
-                min=field_size["request_min_length"],
-                max=field_size["request_max_length"],
+                min=field_size["request_type_min_length"],
+                max=field_size["request_type_max_length"],
             ),
-            does_request_exist,
+            does_request_type_exist,
         ],
     )
 
-    submit = SubmitField(lazy_gettext("add request"), render_kw=form_class_button)
+    submit = SubmitField(lazy_gettext("add request_type"), render_kw=form_class_button)

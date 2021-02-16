@@ -15,7 +15,7 @@ from application.flicket.models.flicket_models import (
     FlicketTicket,
     FlicketUploads,
     FlicketPost,
-    FlicketRequest,
+    FlicketRequestType,
     FlicketTeam,
     FlicketHistory,
 )
@@ -108,51 +108,55 @@ def delete_post(post_id):
     return render_template("flicket_deletepost.html", form=form, post=post, title=title)
 
 
-# delete request
+# delete request_type
 @flicket_bp.route(
-    app.config["FLICKET"] + "delete/request/<int:request_id>/", methods=["GET", "POST"]
+    app.config["FLICKET"] + "delete/request_type/<int:request_type_id>/",
+    methods=["GET", "POST"],
 )
 @login_required
-def delete_request(request_id=False):
-    if request_id:
+def delete_request_type(request_type_id=False):
+    if request_type_id:
 
-        # check user is authorised to delete requests. Only admin or super_user can do this.
+        # check user is authorised to delete request_types. Only admin or super_user can do this.
         if not any([g.user.is_admin, g.user.is_super_user]):
             flash(
-                gettext("You are not authorised to delete requests."), category="warning"
+                gettext("You are not authorised to delete request_types."),
+                category="warning",
             )
-            return redirect("flicket_bp.requests")
+            return redirect("flicket_bp.request_types")
 
         form = ConfirmPassword()
 
-        requests = FlicketTicket.query.filter_by(request_id=request_id)
-        request = FlicketRequest.query.filter_by(id=request_id).first()
+        request_types = FlicketTicket.query.filter_by(request_type_id=request_type_id)
+        request_type = FlicketRequestType.query.filter_by(id=request_type_id).first()
 
-        # stop the deletion of requests assigned to tickets.
-        if requests.count() > 0:
+        # stop the deletion of request_types assigned to tickets.
+        if request_types.count() > 0:
             flash(
                 gettext(
                     (
-                        "Request is linked to posts. Request can not be deleted unless all posts / topics are removed"
+                        "Request_type is linked to posts. Request_type can not be deleted unless all posts / topics are removed"
                         " / relinked."
                     )
                 ),
                 category="danger",
             )
-            return redirect(url_for("flicket_bp.requests"))
+            return redirect(url_for("flicket_bp.request_types"))
 
         if form.validate_on_submit():
-            # delete request from database
-            request = FlicketRequest.query.filter_by(id=request_id).first()
+            # delete request_type from database
+            request_type = FlicketRequestType.query.filter_by(
+                id=request_type_id
+            ).first()
 
-            db.session.delete(request)
+            db.session.delete(request_type)
             # commit changes
             db.session.commit()
-            flash("Request deleted", category="success")
-            return redirect(url_for("flicket_bp.requests"))
+            flash("Request_type deleted", category="success")
+            return redirect(url_for("flicket_bp.request_types"))
 
-        notification = 'You are trying to delete request <span class="label label-default">{}</span> .'.format(
-            request.request
+        notification = 'You are trying to delete request_type <span class="label label-default">{}</span> .'.format(
+            request_type.request_type
         )
 
         title = gettext("Delete Request")
@@ -164,8 +168,7 @@ def delete_request(request_id=False):
 
 # delete team
 @flicket_bp.route(
-    app.config["FLICKET"] + "delete/team/<int:team_id>/",
-    methods=["GET", "POST"],
+    app.config["FLICKET"] + "delete/team/<int:team_id>/", methods=["GET", "POST"],
 )
 @login_required
 def delete_team(team_id=False):
@@ -174,8 +177,7 @@ def delete_team(team_id=False):
         # check user is authorised to delete teams. Only admin or super_user can do this.
         if not any([g.user.is_admin, g.user.is_super_user]):
             flash(
-                gettext("You are not authorised to delete teams."),
-                category="warning",
+                gettext("You are not authorised to delete teams."), category="warning",
             )
             return redirect("flicket_bp.teams")
 
@@ -206,8 +208,7 @@ def delete_team(team_id=False):
             # commit changes
             db.session.commit()
             flash(
-                'Team "{}" deleted.'.format(team.team),
-                category="success",
+                'Team "{}" deleted.'.format(team.team), category="success",
             )
             return redirect(url_for("flicket_bp.teams"))
 

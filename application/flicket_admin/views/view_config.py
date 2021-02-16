@@ -1,5 +1,5 @@
 #! usr/bin/python3
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 #
 # Flicket - copyright Paul Bourne: evereux@gmail.com
 
@@ -49,9 +49,9 @@ def config():
 
         config_details.csv_dump_limit = form.csv_dump_limit.data
 
-        config_details.change_request = form.change_request.data
-        config_details.change_request_only_admin_or_super_user = (
-            form.change_request_only_admin_or_super_user.data
+        config_details.change_request_type = form.change_request_type.data
+        config_details.change_request_type_only_admin_or_super_user = (
+            form.change_request_type_only_admin_or_super_user.data
         )
 
         # Don't change the password if nothing was entered.
@@ -87,9 +87,9 @@ def config():
 
     form.csv_dump_limit.data = config_details.csv_dump_limit
 
-    form.change_request.data = config_details.change_request
-    form.change_request_only_admin_or_super_user.data = (
-        config_details.change_request_only_admin_or_super_user
+    form.change_request_type.data = config_details.change_request_type
+    form.change_request_type_only_admin_or_super_user.data = (
+        config_details.change_request_type_only_admin_or_super_user
     )
 
     return render_template(

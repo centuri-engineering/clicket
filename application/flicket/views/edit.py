@@ -69,7 +69,7 @@ def edit_ticket(ticket_id):
             referee=form.referee.data,
             instrument=form.instrument.data,
             request_stage=1,
-            request=form.request.data,
+            request_type=form.request_type.data,
             team=form.team.data,
             files=request.files.getlist("file"),
             days=form.days.data,
@@ -84,7 +84,7 @@ def edit_ticket(ticket_id):
     form.referee.data = ticket.referee
     form.instrument.data = ticket.instrument_id
     form.title.data = ticket.title
-    form.request.data = ticket.request_id
+    form.request_type.data = ticket.request_type_id
     form.team.data = ticket.team_id
 
     title = gettext("Edit Ticket")

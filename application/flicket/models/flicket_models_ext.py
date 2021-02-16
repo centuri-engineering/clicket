@@ -13,7 +13,7 @@ from application.flicket.models.flicket_models import (
     FlicketStatus,
     FlicketInstrument,
     FlicketRequestStage,
-    FlicketRequest,
+    FlicketRequestType,
     FlicketTeam,
     FlicketSubscription,
     FlicketHistory,
@@ -38,7 +38,7 @@ class FlicketTicketExt:
         referee=None,
         instrument=None,
         request_stage=None,
-        request=None,
+        request_type=None,
         team=None,
         files=None,
         days=0,
@@ -49,7 +49,7 @@ class FlicketTicketExt:
         :param content:
         :param requester:
         :param instrument:
-        :param request:
+        :param request_type:
         :param files:
         :param days:
         :return:
@@ -57,7 +57,9 @@ class FlicketTicketExt:
 
         ticket_status = FlicketStatus.query.filter_by(status="Open").first()
         ticket_team = FlicketTeam.query.filter_by(id=int(team)).first()
-        ticket_request = FlicketRequest.query.filter_by(id=int(request)).first()
+        ticket_request_type = FlicketRequestType.query.filter_by(
+            id=int(request_type)
+        ).first()
         instrument = FlicketInstrument.query.filter_by(id=int(instrument)).first()
 
         request_stage = FlicketRequestStage.query.filter_by(request_stage="New").first()
@@ -78,7 +80,7 @@ class FlicketTicketExt:
             referee=referee,
             instrument=instrument,
             request_stage=request_stage,
-            request=ticket_request,
+            request_type=ticket_request_type,
             days=days,
         )
 
@@ -106,7 +108,7 @@ class FlicketTicketExt:
         referee=None,
         instrument=None,
         request_stage=None,
-        request=None,
+        request_type=None,
         team=None,
         files=None,
         form_uploads=None,
@@ -118,7 +120,7 @@ class FlicketTicketExt:
         :param title:
         :param user:
         :param content:
-        :param request:
+        :param request_type:
         :param files:
         :param form_uploads:
         :param days:
@@ -160,7 +162,9 @@ class FlicketTicketExt:
             id=int(request_stage)
         ).first()
 
-        ticket_request = FlicketRequest.query.filter_by(id=int(request)).first()
+        ticket_request_type = FlicketRequestType.query.filter_by(
+            id=int(request_type)
+        ).first()
         ticket_team = FlicketTeam.query.filter_by(id=int(team)).first()
 
         ticket.content = content
@@ -171,7 +175,7 @@ class FlicketTicketExt:
         ticket.date_modified = datetime.datetime.now()
         ticket.instrument = instrument
         ticket.request_stage = request_stage
-        ticket.request = ticket_request
+        ticket.request_type = ticket_request_type
         ticket.team = ticket_team
         ticket.days = days
         # set status to Open

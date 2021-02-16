@@ -1,5 +1,5 @@
 #! usr/bin/python3
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 #
 # Flicket - copyright Paul Bourne: evereux@gmail.com
 
@@ -70,9 +70,11 @@ class ConfigForm(FlaskForm):
 
     csv_dump_limit = IntegerField(lazy_gettext("csv_dump_limit"), validators=[])
 
-    change_request = BooleanField(lazy_gettext("change_request"), validators=[])
-    change_request_only_admin_or_super_user = BooleanField(
-        lazy_gettext("change_request_only_admin_or_super_user"), validators=[]
+    change_request_type = BooleanField(
+        lazy_gettext("change_request_type"), validators=[]
+    )
+    change_request_type_only_admin_or_super_user = BooleanField(
+        lazy_gettext("change_request_type_only_admin_or_super_user"), validators=[]
     )
 
     submit = SubmitField(

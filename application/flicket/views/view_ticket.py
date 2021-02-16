@@ -171,10 +171,13 @@ def ticket_view(ticket_id, page=1):
     title = gettext("View Ticket")
 
     # display or not request change link
-    change_request = app.config["change_request"]
-    if change_request and app.config["change_request_only_admin_or_super_user"]:
+    change_request_type = app.config["change_request_type"]
+    if (
+        change_request_type
+        and app.config["change_request_type_only_admin_or_super_user"]
+    ):
         if not g.user.is_admin and not g.user.is_super_user:
-            change_request = False
+            change_request_type = False
 
     return render_template(
         "flicket_view.html",
@@ -183,6 +186,6 @@ def ticket_view(ticket_id, page=1):
         form=form,
         subscribers_form=subscribers_form,
         replies=replies,
-        change_request=change_request,
+        change_request=change_request_type,
         page=page,
     )

@@ -17,11 +17,11 @@ from application.flicket.models.flicket_models_ext import FlicketTicketExt
 @flicket_bp.route(app.config["FLICKET"] + "ticket_create/", methods=["GET", "POST"])
 @login_required
 def ticket_create():
-    # default request based on last submit (get from session)
+    # default request_type based on last submit (get from session)
     # using session, as information about last created ticket can be sensitive
     # in future it can be stored in extended user model instead
-    last_request = session.get("ticket_create_last_request")
-    form = CreateTicketForm(request=last_request)
+    last_request_type = session.get("ticket_create_last_request_type")
+    form = CreateTicketForm(request_type=last_request_type)
 
     if form.validate_on_submit():
         new_ticket = FlicketTicketExt.create_ticket(
@@ -32,7 +32,7 @@ def ticket_create():
             referee=form.referee.data,
             instrument=form.instrument.data,
             request_stage=1,
-            request=form.request.data,
+            request_type=form.request_type.data,
             team=form.team.data,
             days=form.days.data,
             files=request.files.getlist("file"),
@@ -40,7 +40,7 @@ def ticket_create():
 
         flash(gettext("New Ticket created."), category="success")
 
-        session["ticket_create_last_request"] = form.request.data
+        session["ticket_create_last_request_type"] = form.request_type.data
 
         return redirect(url_for("flicket_bp.ticket_view", ticket_id=new_ticket.id))
 

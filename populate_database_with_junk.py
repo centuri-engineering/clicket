@@ -15,7 +15,7 @@ from application import db
 from application.flicket.models.flicket_models import (
     FlicketTicket,
     FlicketStatus,
-    FlicketRequest,
+    FlicketRequestType,
     FlicketPost,
     field_size,
 )
@@ -43,11 +43,11 @@ def get_random_status():
     return FlicketStatus.query.filter_by(id=id_).first()
 
 
-def get_random_request():
-    request = FlicketRequest.query
-    id_ = randint(1, request.count())
+def get_random_request_type():
+    request_type = FlicketRequestType.query
+    id_ = randint(1, request_type.count())
 
-    return FlicketRequest.query.filter_by(id=id_).first()
+    return FlicketRequestType.query.filter_by(id=id_).first()
 
 
 def create_ticket_reply(new_ticket):
@@ -130,7 +130,7 @@ def topic_creation(num_topics_):
             date_added=datetime.datetime.now(),
             current_status=get_random_status(),
             ticket_priority=get_random_priority(),
-            request=get_random_request(),
+            request_type=get_random_request_type(),
             assigned=get_random_user(),
         )
 

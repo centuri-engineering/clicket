@@ -37,7 +37,7 @@ def tickets_view(page, is_my_view=False):
     # get request arguments from the url
     status = rq.args.get("status")
     team = rq.args.get("team")
-    request = rq.args.get("request")
+    request_type = rq.args.get("request_type")
     content = rq.args.get("content")
     requester = rq.args.get("requester")
     referee = rq.args.get("referee")
@@ -76,7 +76,7 @@ def tickets_view(page, is_my_view=False):
     ticket_query, form = FlicketTicket.query_tickets(
         form,
         team=team,
-        request=request,
+        request_type=request_type,
         status=status,
         user_id=user_id,
         content=content,
@@ -113,7 +113,7 @@ def tickets_view(page, is_my_view=False):
             number_results=number_results,
             status=status,
             team=team,
-            request=request,
+            request_type=request_type,
             instrument=instrument,
             request_stage=request_stage,
             user_id=user_id,
@@ -148,7 +148,7 @@ def tickets_csv():
     # get request arguments from the url
     status = rq.args.get("status")
     team = rq.args.get("team")
-    request = rq.args.get("request")
+    request_type = rq.args.get("request_type")
     content = rq.args.get("content")
     requester = rq.args.get("requester")
     referee = rq.args.get("referee")
@@ -156,7 +156,7 @@ def tickets_csv():
 
     ticket_query, form = FlicketTicket.query_tickets(
         team=team,
-        request=request,
+        request_type=request_type,
         status=status,
         user_id=user_id,
         content=content,
@@ -184,8 +184,8 @@ def tickets_csv():
             ticket.user.name,
             ticket.date_added.strftime("%Y-%m-%d"),
             ticket.num_replies,
-            clean_csv_data(ticket.request.team.team),
-            clean_csv_data(ticket.request.request),
+            clean_csv_data(ticket.request_type.team.team),
+            clean_csv_data(ticket.request_type.request_type),
             ticket.current_status.status,
             _name,
             app.config["base_url"],

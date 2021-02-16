@@ -21,8 +21,8 @@ field_size = {
     "status_max_length": 20,
     "team_min_length": 3,
     "team_max_length": 30,
-    "request_min_length": 3,
-    "request_max_length": 128,
+    "request_type_min_length": 3,
+    "request_type_max_length": 128,
     "filename_min_length": 3,
     "filename_max_length": 128,
     "action_max_length": 30,
@@ -89,38 +89,41 @@ class FlicketTeam(PaginatedAPIMixin, Base):
         return "<FlicketTeam: id={}, team={}>".format(self.id, self.team)
 
 
-class FlicketRequest(PaginatedAPIMixin, Base):
-    __tablename__ = "flicket_request"
+class FlicketRequestType(PaginatedAPIMixin, Base):
+    __tablename__ = "flicket_request_type"
 
     id = db.Column(db.Integer, primary_key=True)
-    request = db.Column(db.String(field_size["request_max_length"]))
+    request_type = db.Column(db.String(field_size["request_type_max_length"]))
 
-    def __init__(self, request):
+    def __init__(self, request_type):
         """
 
-        :param request:
+        :param request_type:
         """
-        self.request = request
+        self.request_type = request_type
 
     def to_dict(self):
         """
-        Returns a dictionary object about the request and its team
+        Returns a dictionary object about the request_type and its team
         :return:
         """
         data = {
             "id": self.id,
-            "request": self.request,
+            "request_type": self.request_type,
             "links": {
                 "self": app.config["base_url"]
-                + url_for("bp_api.get_request", id=self.id),
-                "requests": app.config["base_url"] + url_for("bp_api.get_requests"),
+                + url_for("bp_api.get_request_type", id=self.id),
+                "request_types": app.config["base_url"]
+                + url_for("bp_api.get_request_types"),
             },
         }
 
         return data
 
     def __repr__(self):
-        return "<FlicketRequest: id={}, request={}>".format(self.id, self.request)
+        return "<FlicketRequestType: id={}, request_type={}>".format(
+            self.id, self.request_type
+        )
 
 
 class FlicketInstrument(PaginatedAPIMixin, Base):
@@ -161,7 +164,7 @@ class FlicketRequestStage(PaginatedAPIMixin, Base):
 
     def to_dict(self):
         """
-        Returns a dictionary object about the request and its team
+        Returns a dictionary object about the request_type and its team
         :return:
         """
         data = {
@@ -204,8 +207,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
     status_id = db.Column(db.Integer, db.ForeignKey(FlicketStatus.id))
     current_status = db.relationship(FlicketStatus)
 
-    request_id = db.Column(db.Integer, db.ForeignKey(FlicketRequest.id))
-    request = db.relationship(FlicketRequest)
+    request_type_id = db.Column(db.Integer, db.ForeignKey(FlicketRequestType.id))
+    request_type = db.relationship(FlicketRequestType)
 
     team_id = db.Column(db.Integer, db.ForeignKey(FlicketTeam.id))
     team = db.relationship(FlicketTeam)
@@ -271,7 +274,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         """
 
         team = ""
-        request = ""
+        request_type = ""
         status = ""
         user_id = ""
         instrument = ""
@@ -285,9 +288,11 @@ class FlicketTicket(PaginatedAPIMixin, Base):
         # convert form inputs to it's table title
         if form.team.data:
             team = FlicketTeam.query.filter_by(id=form.team.data).first().team
-        if form.request.data:
-            request = (
-                FlicketRequest.query.filter_by(id=form.request.data).first().request
+        if form.request_type.data:
+            request_type = (
+                FlicketRequestType.query.filter_by(id=form.request_type.data)
+                .first()
+                .request_type
             )
 
         if form.status.data:
@@ -310,7 +315,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             url,
             content=form.content.data,
             team=team,
-            request=request,
+            request_type=request_type,
             status=status,
             user_id=user_id,
             instrument=instrument,
@@ -412,13 +417,17 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 )
                 if form:
                     form.team.data = FlicketTeam.query.filter_by(team=value).first().id
-            if key == "request" and value:
+            if key == "request_type" and value:
                 ticket_query = ticket_query.filter(
-                    FlicketTicket.request.has(FlicketRequest.request == value)
+                    FlicketTicket.request_type.has(
+                        FlicketRequestType.request_type == value
+                    )
                 )
                 if form:
-                    form.request.data = (
-                        FlicketRequest.query.filter_by(request=value).first().id
+                    form.request_type.data = (
+                        FlicketRequestType.query.filter_by(request_type=value)
+                        .first()
+                        .id
                     )
             if key == "user_id" and value:
                 # ticket_query = ticket_query.filter_by(assigned_id=int(value))
@@ -600,8 +609,8 @@ class FlicketTicket(PaginatedAPIMixin, Base):
                 "started_ny": app.config["base_url"]
                 + url_for("bp_api.get_user", id=self.started_id),
                 "modified_by": modified_by,
-                "request": app.config["base_url"]
-                + url_for("bp_api.get_request", id=self.request_id),
+                "request_type": app.config["base_url"]
+                + url_for("bp_api.get_request_type", id=self.request_type_id),
                 "team": app.config["base_url"]
                 + url_for("bp_api.get_team", id=self.team_id),
                 "status": app.config["base_url"]
@@ -633,7 +642,7 @@ class FlicketTicket(PaginatedAPIMixin, Base):
             f"id={self.id}, "
             f'title="{self.title}", '
             f"created_by={self.user}, "
-            f"request={self.request}"
+            f"request_type={self.request_type}"
             f"team={self.team}"
             f"status={self.current_status}"
             f"assigned={self.assigned}>"
