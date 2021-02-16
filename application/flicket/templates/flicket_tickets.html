@@ -14,7 +14,7 @@
                         href="{{ url_for('flicket_bp.tickets_csv',
                                          status=status,
                                          team=team,
-                                         request=request,
+                                         request_type=request_type,
                                          content=content,
                                          requester=requester,
                                          referee=referee,
@@ -41,7 +41,7 @@
                     {{ form.team(class="form-control form-control-sm flicket-tickets-content p-0", id="team") }}
                   </div>
                   <div class="col-md col-6 text-center">
-                    {{ form.request(class="form-control form-control-sm flicket-tickets-content p-0", id="request") }}
+                    {{ form.request_type(class="form-control form-control-sm flicket-tickets-content p-0", id="request_type") }}
                   </div>
                   <div class="col-md col-6 text-center">
                     {{ form.instrument(class="form-control form-control-sm flicket-tickets-content p-0", id="instrument") }}
@@ -172,7 +172,7 @@
                                     Request
                                 </div>
                                 <div class="flicket-tickets-content">
-                                    {{ t.request.request }}
+                                    {{ t.request_type.request_type }}
                                 </div>
                             </div>
                             <div class="col-md-2 col-6">

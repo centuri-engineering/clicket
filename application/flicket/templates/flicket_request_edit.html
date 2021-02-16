@@ -23,18 +23,18 @@
                     <div class="row">
                         <label class="sr-only">{{ _('Request') }}</label>
                         <div class="col">
-                            {{ form.request(class="form-control form-control-sm", title="request") }}
+                            {{ form.request_type(class="form-control form-control-sm", title="request_type") }}
                         </div>
                         <div class="col">
-                            <input class="btn btn-primary btn-sm" type="submit" value="edit request"/>
+                            <input class="btn btn-primary btn-sm" type="submit" value="edit request_type"/>
                         </div>
                     </div>
 
 
-                    {% if form.request.errors %}
+                    {% if form.request_type.errors %}
                         <div class="row">
                             <div class="alert alert-warning small">
-                                {% for error in form.request.errors %}
+                                {% for error in form.request_type.errors %}
                                     {{ error }}
                                 {% endfor %}
                             </div>

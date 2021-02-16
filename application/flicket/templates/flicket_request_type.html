@@ -15,31 +15,31 @@
             <div class="col">
                 <h2 class="flicket-title">#{{ ticket.id_zfill }} - {{ ticket.title }}</h2>
                 <p>
-                    {{ _('Type request and pick from drop down list to change request.') }} <a
-                        href="{{ url_for('flicket_bp.departments') }}" target="_blank">Available requests</a>.
+                    {{ _('Type request_type and pick from drop down list to change request_type.') }} <a
+                        href="{{ url_for('flicket_bp.departments') }}" target="_blank">Available request_types</a>.
                 </p>
                 <form action=""
                       class="form-horizontal"
                       enctype="multipart/form-data"
                       method="post"
-                      name="change_request">
+                      name="change_request_type">
                     {{ form.hidden_tag() }}
 
 
                     <div class="row">
-                        <label class="col-2 col-form-label" for="autocomplete-request">
-                            {{ form.request.label }}
+                        <label class="col-2 col-form-label" for="autocomplete-request_type">
+                            {{ form.request_type.label }}
                         </label>
                         <div class="col-3">
-                            {{ form.request(class="form-control form-control-sm", id="autocomplete-request") }}
+                            {{ form.request_type(class="form-control form-control-sm", id="autocomplete-request_type") }}
                         </div>
                         <div class="col-6">
                             {{ form.submit }}
                         </div>
                     </div>
-                    {% if form.request.errors %}
+                    {% if form.request_type.errors %}
                         <div class="alert alert-warning small">
-                            {% for error in form.request.errors %}
+                            {% for error in form.request_type.errors %}
                                 {{ error }}
                             {% endfor %}
                         </div>
@@ -51,5 +51,5 @@
 
     </div>
 
-    {% include('flicket_apijson_request.html') %}
+    {% include('flicket_apijson_request_type.html') %}
 {% endblock %}

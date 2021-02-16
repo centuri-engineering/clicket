@@ -1,0 +1,52 @@
+<script type="text/javascript">
+    $(function () {
+        $('#team').change(function () {
+            var id = $(this).val();
+            if (id != 0) {
+                $.ajax({
+                    url: '/flicket-api/request_types/?team_id=' + id,
+                    datatype: 'json',
+                    headers: {
+                        'Authorization' : 'Bearer {{ g.user.token }}'
+                    },
+                    success: function (data) {
+
+                        // use uri.js to pass the page uri
+                        // didn't use parseQuery because I got unexpected behaviour. it wouldn't filter keyword request_type properly
+                        // I should probably backport this to other restjson html files.
+                        var result = URI.parse(document.URL);
+                        // get value of request_type in uri
+                        result = result.query;
+                        result = URI.parseQuery(result).request_type;
+
+                        var request_type = document.getElementById('request_type');
+                        $(request_type).empty();
+                        $(request_type).append($('<option></option>').text('--request_types--').val('0'));
+                        for (var i = 0; i < data._meta.total_items; i++) {
+                            var cat_id = data.items[i].id;
+                            var cat_name = data.items[i].request_type;
+                            $(request_type).append($('<option></option>').text(cat_name).val(cat_id));
+                        }
+
+                        // set the preselected value
+                        if (result) {
+                            // find id of request_type
+                            for (var item in data.items) {
+                                var c = data.items[item].request_type;
+                                if (c === result) {
+                                    var request_type_id = data.items[item].id
+                                }
+                            }
+                            $(request_type).val(request_type_id)
+                        }
+                    }
+                });
+            } else {
+                var request_type = document.getElementById('request_type');
+                $(request_type).empty();
+                $(request_type).append($('<option></option>').text('--request_types--').val('0'));
+            }
+
+        }).change();
+    })
+</script>
