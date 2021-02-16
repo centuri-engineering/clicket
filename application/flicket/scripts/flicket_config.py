@@ -24,6 +24,6 @@ def set_flicket_config():
         use_auth_request=config.use_auth_request,
         auth_request=config.auth_request,
         csv_dump_limit=config.csv_dump_limit,
-        change_request=config.change_request,
-        change_request_only_admin_or_super_user=config.change_request_only_admin_or_super_user,
+        change_request_type=config.change_request_type,
+        change_request_type_only_admin_or_super_user=config.change_request_type_only_admin_or_super_user,
     )

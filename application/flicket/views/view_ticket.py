@@ -186,6 +186,6 @@ def ticket_view(ticket_id, page=1):
         form=form,
         subscribers_form=subscribers_form,
         replies=replies,
-        change_request=change_request_type,
+        change_request_type=change_request_type,
         page=page,
     )

@@ -31,8 +31,8 @@ class FlicketConfig(Base):
     :param str base_url: The sites base url. This is used to resolve urls for emails and links. Broken links are
       probably a result of not setting this value.
     :param str csv_dump_limit: The maximum number of rows exported to csv.
-    :param bool change_request: Enable/disable change request.
-    :param bool change_request_only_admin_or_super_user: Only admins or super users can change request.
+    :param bool change_request_type: Enable/disable change request.
+    :param bool change_request_type_only_admin_or_super_user: Only admins or super users can change request.
 
     """
 
@@ -76,8 +76,8 @@ class FlicketConfig(Base):
     csv_dump_limit = db.Column(db.Integer, default=1000)
 
     # features
-    change_request = db.Column(db.BOOLEAN, default=False)
-    change_request_only_admin_or_super_user = db.Column(db.BOOLEAN, default=False)
+    change_request_type = db.Column(db.BOOLEAN, default=False)
+    change_request_type_only_admin_or_super_user = db.Column(db.BOOLEAN, default=False)
 
     def __repr__(self):
         return "<FlicketConfig model class>"
