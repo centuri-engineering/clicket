@@ -171,27 +171,26 @@ def tickets_csv():
     date_stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     file_name = date_stamp + "ticketdump.csv"
 
-    csv_contents = (
-        "Ticket_ID,Title,Submitted By,Date,Replies,Domain,Status,Assigned,URL\n"
-    )
+    csv_contents = "Ticket_ID,Title,Submitted By,Date,Replies,Total Days,Institute,Domain,Assigned,URL\n"
     for ticket in ticket_query:
 
         if hasattr(ticket.assigned, "name"):
             _name = ticket.assigned.name
         else:
-            _name = "Not assigned"
+            _name = ticket.user.name
 
-        csv_contents += '{},{},"{}",{},{},{},{} - {},{},{},{}{}\n'.format(
-            ticket.id_zfill,
-            clean_csv_data(ticket.title),
-            ticket.user.name,
-            ticket.date_added.strftime("%Y-%m-%d"),
-            ticket.num_replies,
-            clean_csv_data(ticket.domain.domain),
-            ticket.current_status.status,
-            _name,
-            app.config["base_url"],
-            url_for("flicket_bp.ticket_view", ticket_id=ticket.id),
+        csv_contents += (
+            f"{ticket.id_zfill},"
+            f"{clean_csv_data(ticket.title)},"
+            f'"{ticket.user.name}",'
+            f'{ticket.date_added.strftime("%Y-%m-%d")},'
+            f"{ticket.num_replies},"
+            f"{ticket.total_days},"
+            f"{clean_csv_data(ticket.institute.institute)},"
+            f"{clean_csv_data(ticket.domain.domain)},"
+            f"{_name},"
+            f'{app.config["base_url"]}'
+            f'{url_for("flicket_bp.ticket_view", ticket_id=ticket.id)}\n'
         )
 
     return Response(
