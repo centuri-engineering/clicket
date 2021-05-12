@@ -140,7 +140,7 @@ class CreateTicketForm(FlaskForm):
         validators=[],
     )
     instrument = SelectField(
-        lazy_gettext("requester role"), validators=[DataRequired()], coerce=int
+        lazy_gettext("instrument"), validators=[DataRequired()], coerce=int
     )
 
     content = PageDownField(
@@ -202,7 +202,9 @@ class ReplyForm(FlaskForm):
             (s.id, s.request_stage) for s in FlicketRequestStage.query.all()
         ]
 
-    content = PageDownField(lazy_gettext("Reply"),)
+    content = PageDownField(
+        lazy_gettext("Reply"),
+    )
     file = FileField(lazy_gettext("Add Files"), render_kw={"multiple": True})
     request_stage = SelectField(
         lazy_gettext("request stage"), validators=[DataRequired()], coerce=int
@@ -262,7 +264,8 @@ class TeamForm(FlaskForm):
         validators=[
             DataRequired(),
             Length(
-                min=field_size["team_min_length"], max=field_size["team_max_length"],
+                min=field_size["team_min_length"],
+                max=field_size["team_max_length"],
             ),
             does_team_exist,
         ],
