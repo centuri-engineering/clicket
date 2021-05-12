@@ -3,6 +3,7 @@ version: '3.7'
 services:
   clicket_db:
     image: "postgres:11"
+    restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data/
       - backup:/backup
@@ -16,6 +17,7 @@ services:
       - 5432:5432
   web:
     build: .
+    restart: always
     command: python manage.py runserver
     volumes:
       - .:/usr/src/app/

@@ -89,6 +89,7 @@ def edit_ticket(ticket_id):
     form.title.data = ticket.title
     form.domain.data = ticket.domain_id
     form.institute.data = ticket.institute_id
+    form.days.data = ticket.days
 
     title = gettext("Edit Ticket")
     return render_template("flicket_edittopic.html", title=title, form=form)
