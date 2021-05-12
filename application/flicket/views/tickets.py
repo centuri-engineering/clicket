@@ -187,7 +187,6 @@ def tickets_csv():
             ticket.user.name,
             ticket.date_added.strftime("%Y-%m-%d"),
             ticket.num_replies,
-            clean_csv_data(ticket.domain.institute.institute),
             clean_csv_data(ticket.domain.domain),
             ticket.current_status.status,
             _name,
